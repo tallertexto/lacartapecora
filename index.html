@@ -60,7 +60,7 @@
       padding: 0 24px;
     }
 
-    /* HEADER & BRANDING RÍGIDO */
+    /* HEADER & BRANDING */
     header {
       padding: 56px 0 24px;
     }
@@ -319,12 +319,6 @@
       align-items: center;
       justify-content: center;
       flex-shrink: 0;
-      cursor: pointer;
-      transition: transform 0.2s ease;
-    }
-
-    .cover-wrapper:hover {
-      transform: scale(1.02);
     }
 
     .cover-wrapper img {
@@ -384,15 +378,16 @@
       font-weight: 800;
       color: var(--text-dark);
       line-height: 1.3;
-      cursor: pointer;
-    }
-
-    .book-title:hover {
-      color: var(--brand-accent);
     }
 
     .book-author {
       font-size: 0.9rem;
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+
+    .book-meta-extra {
+      font-size: 0.85rem;
       color: var(--text-muted);
       font-weight: 600;
     }
@@ -615,74 +610,6 @@
       color: var(--brand-accent);
     }
 
-    .modal-book-card {
-      max-width: 680px;
-      width: 92%;
-      max-height: 90vh;
-      overflow-y: auto;
-      text-align: left;
-      padding: 36px;
-    }
-
-    .modal-book-layout {
-      display: flex;
-      gap: 28px;
-      align-items: flex-start;
-    }
-
-    .modal-book-cover {
-      width: 180px;
-      height: 260px;
-      flex-shrink: 0;
-      background: transparent;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .modal-book-cover img {
-      max-width: 100%;
-      max-height: 100%;
-      object-fit: contain;
-    }
-
-    .modal-book-details {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      flex: 1;
-    }
-
-    .modal-book-title {
-      font-family: 'NT Wagner', 'Cormorant Garamond', Georgia, serif;
-      font-size: 1.8rem;
-      color: var(--brand-accent);
-      line-height: 1.2;
-    }
-
-    .modal-book-author {
-      font-size: 0.95rem;
-      font-weight: 700;
-      color: var(--text-dark);
-    }
-
-    .modal-book-meta-extra {
-      font-size: 0.85rem;
-      color: var(--text-muted);
-      font-weight: 600;
-      margin-top: -4px;
-    }
-
-    .modal-book-desc {
-      font-size: 0.9rem;
-      color: var(--text-dark);
-      line-height: 1.7;
-      text-align: justify;
-      max-height: 160px;
-      overflow-y: auto;
-      padding-right: 4px;
-    }
-
     footer {
       padding: 50px 0;
       text-align: center;
@@ -707,15 +634,6 @@
       }
       .book-actions, .btn {
         width: 100%;
-      }
-      .modal-book-layout {
-        flex-direction: column;
-        align-items: center;
-        text-align: center;
-      }
-      .modal-book-details {
-        align-items: center;
-        text-align: center;
       }
     }
   </style>
@@ -825,29 +743,6 @@
     </footer>
   </div>
 
-  <!-- MODAL DETALLE DE OBRA -->
-  <div id="modal-obra" class="modal-overlay" onclick="cerrarModalObraEnFondo(event)">
-    <div class="modal-card modal-book-card">
-      <button class="modal-close-btn" onclick="cerrarModalObra()">✕</button>
-      
-      <div class="modal-book-layout">
-        <div class="modal-book-cover" id="modal-cover-container"></div>
-        
-        <div class="modal-book-details">
-          <h2 id="modal-title" class="modal-book-title">Título de la Obra</h2>
-          <p id="modal-author" class="modal-book-author">Autor • Año</p>
-          <div id="modal-meta-extra" class="modal-book-meta-extra"></div>
-          
-          <div class="book-tags" id="modal-tags"></div>
-
-          <p id="modal-description" class="modal-book-desc">Reseña completa de la obra...</p>
-
-          <div class="book-actions" id="modal-action-container"></div>
-        </div>
-      </div>
-    </div>
-  </div>
-
   <!-- MODAL CONTACTO -->
   <div id="modal-contacto" class="modal-overlay" onclick="cerrarContactoEnFondo(event)">
     <div class="modal-card">
@@ -923,71 +818,6 @@
 
     function cerrarContactoEnFondo(event) {
       if (event.target.id === 'modal-contacto') cerrarContacto();
-    }
-
-    /* GESTIÓN DE MODAL DE OBRA CON LÍNEA ADICIONAL PARA ISBN Y DEPÓSITO LEGAL */
-    function abrirModalObraPorId(idLibro) {
-      const libro = librosData.find(l => (l.id == idLibro || l.titulo === idLibro));
-      if (!libro) return;
-
-      const titulo = libro.titulo || libro.title || 'Sin Título';
-      const autor = libro.autor || libro.author || 'Autor Desconocido';
-      const ano = libro.ano || libro.year || '';
-      const genero = libro.genero || libro.genre || '';
-      
-      const isbn = libro.isbn || '';
-      const depositoLegal = libro['deposito legal'] || libro.deposito_legal || '';
-      
-      const resenaCompleta = libro.resena || libro.description || libro.sinopsis || 'Sin reseña disponible.';
-      const url_portada = obtenerUrlPortada(libro);
-      const url_pdf = (libro.url_pdf || libro.pdf_url || libro.archivo || '#').trim();
-
-      const esDOI = url_pdf.includes('doi.org');
-      const textoBoton = esDOI ? 'Ver en Repositorio DOI' : 'Descargar PDF';
-      const etiquetaTipo = esDOI ? 'DOI / REPOSITORIO' : 'PDF';
-
-      document.getElementById('modal-title').textContent = titulo;
-      document.getElementById('modal-author').textContent = `${autor} ${ano ? '• ' + ano : ''}`;
-      
-      const metaExtraContainer = document.getElementById('modal-meta-extra');
-      let metaExtraText = [];
-      if (isbn) metaExtraText.push(`ISBN: ${isbn}`);
-      if (depositoLegal) metaExtraText.push(`D.L.: ${depositoLegal}`);
-      metaExtraContainer.textContent = metaExtraText.join('  |  ');
-      metaExtraContainer.style.display = metaExtraText.length > 0 ? 'block' : 'none';
-
-      document.getElementById('modal-description').textContent = resenaCompleta;
-
-      const tagsContainer = document.getElementById('modal-tags');
-      let tagsHTML = '';
-      if (genero) tagsHTML += `<span class="tag">${genero}</span>`;
-      tagsHTML += `<span class="tag">${etiquetaTipo}</span>`;
-      tagsContainer.innerHTML = tagsHTML;
-
-      const coverContainer = document.getElementById('modal-cover-container');
-      const fallbackSVG = `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="220" height="330" viewBox="0 0 220 330"><rect width="100%" height="100%" fill="%23b6afbf"/></svg>`;
-      coverContainer.innerHTML = `<img src="${url_portada}" alt="Portada de ${titulo}" onerror="this.onerror=null; this.src='${fallbackSVG}';">`;
-
-      const actionContainer = document.getElementById('modal-action-container');
-      if (url_pdf !== '#') {
-        actionContainer.innerHTML = `
-          <button class="btn" onclick="downloadPDF('${url_pdf}', '${titulo.replace(/[^a-z0-9]/gi, '_').toLowerCase()}.pdf')">
-            ${textoBoton}
-          </button>
-        `;
-      } else {
-        actionContainer.innerHTML = '';
-      }
-
-      document.getElementById('modal-obra').classList.add('active');
-    }
-
-    function cerrarModalObra() {
-      document.getElementById('modal-obra').classList.remove('active');
-    }
-
-    function cerrarModalObraEnFondo(event) {
-      if (event.target.id === 'modal-obra') cerrarModalObra();
     }
 
     function recortarTexto(texto, limitePalabras = 60) {
@@ -1067,8 +897,14 @@
         const autor = libro.autor || libro.author || 'Autor Desconocido';
         const ano = libro.ano || libro.year || '';
         const genero = libro.genero || libro.genre || '';
-        const resena = recortarTexto(libro.resena || libro.description || libro.sinopsis || 'Sin reseña.', 50);
-        const idLibro = libro.id || titulo;
+        const resena = libro.resena || libro.description || libro.sinopsis || 'Sin reseña.';
+        const isbn = libro.isbn || '';
+        const depositoLegal = libro['deposito legal'] || libro.deposito_legal || '';
+
+        let metaExtraText = [];
+        if (isbn) metaExtraText.push(`ISBN: ${isbn}`);
+        if (depositoLegal) metaExtraText.push(`D.L.: ${depositoLegal}`);
+        const metaExtraHTML = metaExtraText.length > 0 ? `<p class="book-meta-extra">${metaExtraText.join('  |  ')}</p>` : '';
 
         const url_portada = obtenerUrlPortada(libro);
         const url_pdf = (libro.url_pdf || libro.pdf_url || libro.archivo || '#').trim();
@@ -1079,17 +915,18 @@
         const slide = document.createElement('div');
         slide.className = 'slide-item';
         slide.innerHTML = `
-          <div class="cover-wrapper" onclick="abrirModalObraPorId('${idLibro}')">
+          <div class="cover-wrapper">
             <img src="${url_portada}" alt="Portada" loading="lazy" onerror="this.onerror=null; this.src='${fallbackSVG}';">
           </div>
           <div class="book-info">
-            <h3 class="book-title" onclick="abrirModalObraPorId('${idLibro}')">${titulo}</h3>
+            <h3 class="book-title">${titulo}</h3>
             <p class="book-author">${autor} ${ano ? '• ' + ano : ''}</p>
+            ${metaExtraHTML}
             <div class="book-tags">
               ${genero ? `<span class="tag">${genero}</span>` : ''}
               <span class="tag">${etiquetaTipo}</span>
             </div>
-            <p class="book-description">${resena} <span class="read-more" onclick="abrirModalObraPorId('${idLibro}')">(Seguir leyendo...)</span></p>
+            <p class="book-description">${resena}</p>
             <div class="book-actions">
               ${url_pdf !== '#' ? `<button class="btn" onclick="downloadPDF('${url_pdf}', '${titulo.replace(/[^a-z0-9]/gi, '_').toLowerCase()}.pdf')">${textoBoton}</button>` : ''}
             </div>
@@ -1121,8 +958,14 @@
         const autor = libro.autor || libro.author || 'Autor Desconocido';
         const ano = libro.ano || libro.year || '';
         const genero = libro.genero || libro.genre || '';
-        const resena = recortarTexto(libro.resena || libro.description || libro.sinopsis || 'Sin reseña.', 30);
-        const idLibro = libro.id || titulo;
+        const resena = libro.resena || libro.description || libro.sinopsis || 'Sin reseña.';
+        const isbn = libro.isbn || '';
+        const depositoLegal = libro['deposito legal'] || libro.deposito_legal || '';
+
+        let metaExtraText = [];
+        if (isbn) metaExtraText.push(`ISBN: ${isbn}`);
+        if (depositoLegal) metaExtraText.push(`D.L.: ${depositoLegal}`);
+        const metaExtraHTML = metaExtraText.length > 0 ? `<p class="book-meta-extra">${metaExtraText.join('  |  ')}</p>` : '';
 
         const url_portada = obtenerUrlPortada(libro);
         const url_pdf = (libro.url_pdf || libro.pdf_url || libro.archivo || '#').trim();
@@ -1133,17 +976,18 @@
         const card = document.createElement('div');
         card.className = 'obra-card-item';
         card.innerHTML = `
-          <div class="cover-wrapper" onclick="abrirModalObraPorId('${idLibro}')">
+          <div class="cover-wrapper">
             <img src="${url_portada}" alt="Portada" loading="lazy" onerror="this.onerror=null; this.src='${fallbackSVG}';">
           </div>
           <div class="book-info">
-            <h3 class="book-title" onclick="abrirModalObraPorId('${idLibro}')">${titulo}</h3>
+            <h3 class="book-title">${titulo}</h3>
             <p class="book-author">${autor} ${ano ? '• ' + ano : ''}</p>
+            ${metaExtraHTML}
             <div class="book-tags">
               ${genero ? `<span class="tag">${genero}</span>` : ''}
               <span class="tag">${etiquetaTipo}</span>
             </div>
-            <p class="p-desc">${resena} <span class="read-more" onclick="abrirModalObraPorId('${idLibro}')">(Seguir leyendo...)</span></p>
+            <p class="book-description">${resena}</p>
             <div class="book-actions">
               ${url_pdf !== '#' ? `<button class="btn" onclick="downloadPDF('${url_pdf}', '${titulo.replace(/[^a-z0-9]/gi, '_').toLowerCase()}.pdf')">${textoBoton}</button>` : ''}
             </div>
