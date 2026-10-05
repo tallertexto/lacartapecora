@@ -73,7 +73,6 @@
       gap: 20px;
     }
 
-    /* LOGO ACTÚA COMO BOTÓN HOME */
     .logo-container {
       width: 110px;
       height: 110px;
@@ -91,7 +90,6 @@
 
     .logo-container:hover {
       transform: scale(1.03);
-      box-shadow: none;
     }
 
     .logo-container img {
@@ -158,7 +156,6 @@
       color: var(--brand-accent);
     }
 
-    /* VISTAS CONTENEDORAS */
     .page-view {
       display: none;
     }
@@ -204,7 +201,7 @@
       line-height: 1.7;
     }
 
-    /* SECCIÓN DE TALLERES */
+    /* TALLERES */
     .talleres-section {
       margin: 40px 0 70px;
       display: flex;
@@ -237,7 +234,7 @@
       line-height: 1.8;
     }
 
-    /* SECCIÓN OBRAS Y AUTORES */
+    /* OBRAS Y AUTORES */
     .obras-section {
       width: 100%;
       margin: 0 auto 70px auto;
@@ -290,7 +287,6 @@
       gap: 24px;
     }
 
-    /* GRID COMPLETO DE OBRAS Y AUTORES */
     .obras-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
@@ -318,13 +314,17 @@
       background: transparent;
       box-shadow: none;
       border: none;
-      border-radius: 0;
       padding: 0;
-      overflow: hidden;
       display: flex;
       align-items: center;
       justify-content: center;
       flex-shrink: 0;
+      cursor: pointer;
+      transition: transform 0.2s ease;
+    }
+
+    .cover-wrapper:hover {
+      transform: scale(1.02);
     }
 
     .cover-wrapper img {
@@ -332,13 +332,9 @@
       max-width: 100%;
       height: 100%;
       object-fit: contain;
-      border: none;
-      border-radius: 0;
-      outline: none;
       display: block;
     }
 
-    /* ESTILOS ESPECÍFICOS PARA LA FOTO DEL AUTOR */
     .author-avatar-wrapper {
       width: 150px;
       height: 150px;
@@ -388,6 +384,11 @@
       font-weight: 800;
       color: var(--text-dark);
       line-height: 1.3;
+      cursor: pointer;
+    }
+
+    .book-title:hover {
+      color: var(--brand-accent);
     }
 
     .book-author {
@@ -471,10 +472,6 @@
       color: var(--brand-accent);
     }
 
-    .slider-btn:active {
-      box-shadow: var(--nm-pressed);
-    }
-
     .slider-dots {
       display: flex;
       gap: 8px;
@@ -523,11 +520,6 @@
       transform: translateY(1px);
     }
 
-    .btn:active {
-      box-shadow: var(--nm-pressed);
-    }
-
-    /* MODAL DE CONTACTO */
     .modal-overlay {
       position: fixed;
       top: 0;
@@ -623,6 +615,67 @@
       color: var(--brand-accent);
     }
 
+    .modal-book-card {
+      max-width: 680px;
+      width: 92%;
+      max-height: 90vh;
+      overflow-y: auto;
+      text-align: left;
+      padding: 36px;
+    }
+
+    .modal-book-layout {
+      display: flex;
+      gap: 28px;
+      align-items: flex-start;
+    }
+
+    .modal-book-cover {
+      width: 180px;
+      height: 260px;
+      flex-shrink: 0;
+      background: transparent;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal-book-cover img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+    }
+
+    .modal-book-details {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      flex: 1;
+    }
+
+    .modal-book-title {
+      font-family: 'NT Wagner', 'Cormorant Garamond', Georgia, serif;
+      font-size: 1.8rem;
+      color: var(--brand-accent);
+      line-height: 1.2;
+    }
+
+    .modal-book-author {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--text-dark);
+    }
+
+    .modal-book-desc {
+      font-size: 0.9rem;
+      color: var(--text-dark);
+      line-height: 1.7;
+      text-align: justify;
+      max-height: 160px;
+      overflow-y: auto;
+      padding-right: 4px;
+    }
+
     footer {
       padding: 50px 0;
       text-align: center;
@@ -636,24 +689,26 @@
         grid-template-columns: 1fr;
         gap: 30px;
       }
-
       .slide-item {
         flex-direction: column;
         align-items: center;
         text-align: center;
       }
-
       .book-info {
         align-items: center;
         text-align: center;
       }
-
-      .book-actions {
+      .book-actions, .btn {
         width: 100%;
       }
-
-      .btn {
-        width: 100%;
+      .modal-book-layout {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+      }
+      .modal-book-details {
+        align-items: center;
+        text-align: center;
       }
     }
   </style>
@@ -661,10 +716,8 @@
 <body>
 
   <div class="container">
-    <!-- ENCABEZADO PERSISTENTE/RÍGIDO -->
     <header>
       <div class="header-layout">
-        <!-- El Logo actúa como Home -->
         <button class="logo-container" onclick="irAInicio()" title="Volver al Inicio">
           <img src="Logo_200_02.png" alt="Logo Cartapecora" onerror="this.style.display='none';">
         </button>
@@ -685,7 +738,6 @@
       </div>
     </header>
 
-    <!-- PANTALLA PRINCIPAL (HOME) -->
     <main id="view-home" class="page-view active-view">
       <section class="about-section">
         <article class="about-card">
@@ -705,14 +757,10 @@
 
       <section id="catalogo" class="obras-section">
         <h2 class="section-title-center">Destacados</h2>
-        
         <div class="slider-container">
           <div class="slider-track-wrapper">
-            <div id="catalog-track" class="slider-track">
-              <!-- Carga dinámica desde Supabase -->
-            </div>
+            <div id="catalog-track" class="slider-track"></div>
           </div>
-
           <div class="slider-controls" id="slider-controls" style="display: none;">
             <button class="slider-btn" id="prev-btn" aria-label="Anterior">‹</button>
             <div class="slider-dots" id="slider-dots"></div>
@@ -722,27 +770,20 @@
       </section>
     </main>
 
-    <!-- PANTALLA COMPLETA SECCIÓN OBRAS -->
     <main id="view-obras" class="page-view">
       <section class="obras-section">
         <h2 class="section-title-center">Catálogo General de Obras</h2>
-        <div id="obras-grid-container" class="obras-grid">
-          <!-- Carga dinámica de cuadrícula -->
-        </div>
+        <div id="obras-grid-container" class="obras-grid"></div>
       </section>
     </main>
 
-    <!-- PANTALLA COMPLETA SECCIÓN AUTORES -->
     <main id="view-autores" class="page-view">
       <section class="obras-section">
         <h2 class="section-title-center">Autores Registrados</h2>
-        <div id="autores-grid-container" class="obras-grid">
-          <!-- Carga dinámica de autores desde Supabase -->
-        </div>
+        <div id="autores-grid-container" class="obras-grid"></div>
       </section>
     </main>
 
-    <!-- PANTALLA COMPLETA SECCIÓN TALLERES -->
     <main id="view-talleres" class="page-view">
       <section class="talleres-section">
         <h2 class="section-title-center">Taller de Textos</h2>
@@ -763,12 +804,33 @@
     </footer>
   </div>
 
-  <!-- VENTANA MODAL DE CONTACTO -->
+  <!-- MODAL DETALLE DE OBRA (Soporta ISBN y Depósito Legal) -->
+  <div id="modal-obra" class="modal-overlay" onclick="cerrarModalObraEnFondo(event)">
+    <div class="modal-card modal-book-card">
+      <button class="modal-close-btn" onclick="cerrarModalObra()">✕</button>
+      
+      <div class="modal-book-layout">
+        <div class="modal-book-cover" id="modal-cover-container"></div>
+        
+        <div class="modal-book-details">
+          <h2 id="modal-title" class="modal-book-title">Título de la Obra</h2>
+          <p id="modal-author" class="modal-book-author">Autor • Año</p>
+          
+          <div class="book-tags" id="modal-tags"></div>
+
+          <p id="modal-description" class="modal-book-desc">Reseña completa de la obra...</p>
+
+          <div class="book-actions" id="modal-action-container"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL CONTACTO -->
   <div id="modal-contacto" class="modal-overlay" onclick="cerrarContactoEnFondo(event)">
     <div class="modal-card">
       <button class="modal-close-btn" onclick="cerrarContacto()">✕</button>
       <h2>Contacto</h2>
-      
       <div class="modal-info">
         <div class="modal-item">
           <strong>Correo Electrónico</strong>
@@ -783,7 +845,6 @@
           Lunes a Viernes: 9:00 AM - 6:00 PM
         </div>
       </div>
-
       <button class="btn" onclick="cerrarContacto()">Cerrar</button>
     </div>
   </div>
@@ -804,7 +865,6 @@
     let librosData = [];
     let autoresData = [];
 
-    /* MANEJO DE NAVEGACIÓN Y PANTALLAS */
     function irAInicio() {
       document.querySelectorAll('.page-view').forEach(view => view.classList.remove('active-view'));
       document.getElementById('view-home').classList.add('active-view');
@@ -840,35 +900,83 @@
     }
 
     function cerrarContactoEnFondo(event) {
-      if (event.target.id === 'modal-contacto') {
-        cerrarContacto();
+      if (event.target.id === 'modal-contacto') cerrarContacto();
+    }
+
+    /* GESTIÓN DE MODAL DE OBRA CON NUEVOS CAMPOS */
+    function abrirModalObraPorId(idLibro) {
+      const libro = librosData.find(l => (l.id == idLibro || l.titulo === idLibro));
+      if (!libro) return;
+
+      const titulo = libro.titulo || libro.title || 'Sin Título';
+      const autor = libro.autor || libro.author || 'Autor Desconocido';
+      const ano = libro.ano || libro.year || '';
+      const genero = libro.genero || libro.genre || '';
+      
+      // Captura segura de los campos exactos de Supabase
+      const isbn = libro.isbn || '';
+      const depositoLegal = libro['deposito legal'] || libro.deposito_legal || '';
+      
+      const resenaCompleta = libro.resena || libro.description || libro.sinopsis || 'Sin reseña disponible.';
+      const url_portada = obtenerUrlPortada(libro);
+      const url_pdf = (libro.url_pdf || libro.pdf_url || libro.archivo || '#').trim();
+
+      const esDOI = url_pdf.includes('doi.org');
+      const textoBoton = esDOI ? 'Ver en Repositorio DOI' : 'Descargar PDF';
+      const etiquetaTipo = esDOI ? 'DOI / REPOSITORIO' : 'PDF';
+
+      document.getElementById('modal-title').textContent = titulo;
+      document.getElementById('modal-author').textContent = `${autor} ${ano ? '• ' + ano : ''}`;
+      document.getElementById('modal-description').textContent = resenaCompleta;
+
+      // Generación dinámica de etiquetas en el modal
+      const tagsContainer = document.getElementById('modal-tags');
+      let tagsHTML = '';
+      if (genero) tagsHTML += `<span class="tag">${genero}</span>`;
+      tagsHTML += `<span class="tag">${etiquetaTipo}</span>`;
+      if (isbn) tagsHTML += `<span class="tag">ISBN: ${isbn}</span>`;
+      if (depositoLegal) tagsHTML += `<span class="tag">D.L.: ${depositoLegal}</span>`;
+      tagsContainer.innerHTML = tagsHTML;
+
+      const coverContainer = document.getElementById('modal-cover-container');
+      const fallbackSVG = `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="220" height="330" viewBox="0 0 220 330"><rect width="100%" height="100%" fill="%23b6afbf"/></svg>`;
+      coverContainer.innerHTML = `<img src="${url_portada}" alt="Portada de ${titulo}" onerror="this.onerror=null; this.src='${fallbackSVG}';">`;
+
+      const actionContainer = document.getElementById('modal-action-container');
+      if (url_pdf !== '#') {
+        actionContainer.innerHTML = `
+          <button class="btn" onclick="downloadPDF('${url_pdf}', '${titulo.replace(/[^a-z0-9]/gi, '_').toLowerCase()}.pdf')">
+            ${textoBoton}
+          </button>
+        `;
+      } else {
+        actionContainer.innerHTML = '';
       }
+
+      document.getElementById('modal-obra').classList.add('active');
+    }
+
+    function cerrarModalObra() {
+      document.getElementById('modal-obra').classList.remove('active');
+    }
+
+    function cerrarModalObraEnFondo(event) {
+      if (event.target.id === 'modal-obra') cerrarModalObra();
     }
 
     function recortarTexto(texto, limitePalabras = 60) {
       if (!texto) return '';
       const palabras = texto.trim().split(/\s+/);
-      if (palabras.length <= limitePalabras) {
-        return texto;
-      }
-      const textoCortado = palabras.slice(0, limitePalabras).join(' ');
-      return `${textoCortado}... <span class="read-more" onclick="toggleResena(this)" data-full="${encodeURIComponent(texto)}">(Seguir leyendo...)</span>`;
-    }
-
-    function toggleResena(elemento) {
-      const textoCompleto = decodeURIComponent(elemento.getAttribute('data-full'));
-      const contenedor = elemento.parentElement;
-      contenedor.innerHTML = textoCompleto;
+      if (palabras.length <= limitePalabras) return texto;
+      return palabras.slice(0, limitePalabras).join(' ') + '...';
     }
 
     function downloadPDF(url, filename) {
       if (!url || url === '#') return;
-
       if (url.includes('doi.org') || (!url.includes('supabase.co') && url.startsWith('http'))) {
         window.open(url, '_blank', 'noopener,noreferrer');
         return;
       }
-
       fetch(url)
         .then(response => {
           if (!response.ok) throw new Error('Error en la descarga');
@@ -885,7 +993,6 @@
           window.URL.revokeObjectURL(blobUrl);
         })
         .catch(err => {
-          console.warn('Redireccionando a apertura directa:', err);
           window.open(url, '_blank');
         });
     }
@@ -893,26 +1000,10 @@
     function obtenerUrlPortada(libro) {
       const fallbackSVG = `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="220" height="330" viewBox="0 0 220 330"><rect width="100%" height="100%" fill="%23b6afbf"/></svg>`;
       let rawPortada = (libro.url_portada || libro.cover_url || libro.imagen || libro.portada || '').trim();
-
       if (rawPortada) {
-        if (rawPortada.includes('preview=')) {
-          try {
-            const match = rawPortada.match(/preview=([^&]+)/);
-            if (match && match[1]) {
-              const cleanFile = decodeURIComponent(match[1]).replace(/^\//, '');
-              return `${SUPABASE_URL}/storage/v1/object/public/PORTADAS/${encodeURIComponent(cleanFile)}`;
-            }
-          } catch (e) {
-            console.warn('Error decodificando parámetro preview:', e);
-          }
-        } 
-        else if (rawPortada.startsWith('http://') || rawPortada.startsWith('https://')) {
-          return rawPortada;
-        } 
-        else {
-          const cleanFile = decodeURIComponent(rawPortada).replace(/^\//, '');
-          return `${SUPABASE_URL}/storage/v1/object/public/PORTADAS/${encodeURIComponent(cleanFile)}`;
-        }
+        if (rawPortada.startsWith('http://') || rawPortada.startsWith('https://')) return rawPortada;
+        const cleanFile = decodeURIComponent(rawPortada).replace(/^\//, '');
+        return `${SUPABASE_URL}/storage/v1/object/public/PORTADAS/${encodeURIComponent(cleanFile)}`;
       }
       return fallbackSVG;
     }
@@ -920,19 +1011,14 @@
     function obtenerUrlFotoAutor(autor) {
       const fallbackSVG = `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="150" height="150" viewBox="0 0 150 150"><rect width="100%" height="100%" fill="%23b6afbf"/></svg>`;
       let rawFoto = (autor.foto_url || autor.imagen || autor.foto || '').trim();
-
       if (rawFoto) {
-        if (rawFoto.startsWith('http://') || rawFoto.startsWith('https://')) {
-          return rawFoto;
-        } else {
-          const cleanFile = decodeURIComponent(rawFoto).replace(/^\//, '');
-          return `${SUPABASE_URL}/storage/v1/object/public/AUTORES/${encodeURIComponent(cleanFile)}`;
-        }
+        if (rawFoto.startsWith('http://') || rawFoto.startsWith('https://')) return rawFoto;
+        const cleanFile = decodeURIComponent(rawFoto).replace(/^\//, '');
+        return `${SUPABASE_URL}/storage/v1/object/public/AUTORES/${encodeURIComponent(cleanFile)}`;
       }
       return fallbackSVG;
     }
 
-    /* RENDERIZADO SLIDER (INICIO) */
     function renderSlider(libros) {
       const track = document.getElementById('catalog-track');
       const controls = document.getElementById('slider-controls');
@@ -955,41 +1041,31 @@
         const autor = libro.autor || libro.author || 'Autor Desconocido';
         const ano = libro.ano || libro.year || '';
         const genero = libro.genero || libro.genre || '';
-        
-        const resenaOriginal = libro.resena || libro.description || libro.sinopsis || 'Sin reseña disponible.';
-        const resena = recortarTexto(resenaOriginal, 60);
+        const resena = recortarTexto(libro.resena || libro.description || libro.sinopsis || 'Sin reseña.', 50);
+        const idLibro = libro.id || titulo;
 
         const url_portada = obtenerUrlPortada(libro);
         const url_pdf = (libro.url_pdf || libro.pdf_url || libro.archivo || '#').trim();
-
         const esDOI = url_pdf.includes('doi.org');
         const textoBoton = esDOI ? 'Ver en Repositorio DOI' : 'Descargar PDF';
-        const etiquetaTipo = esDOI ? 'DOI / REPOSITORIO' : 'PDF';
+        const etiquetaTipo = esDOI ? 'DOI' : 'PDF';
 
         const slide = document.createElement('div');
         slide.className = 'slide-item';
-
         slide.innerHTML = `
-          <div class="cover-wrapper">
-            <img src="${url_portada}" alt="Portada de ${titulo}" loading="lazy" onerror="this.onerror=null; this.src='${fallbackSVG}';">
+          <div class="cover-wrapper" onclick="abrirModalObraPorId('${idLibro}')">
+            <img src="${url_portada}" alt="Portada" loading="lazy" onerror="this.onerror=null; this.src='${fallbackSVG}';">
           </div>
           <div class="book-info">
-            <h3 class="book-title">${titulo}</h3>
+            <h3 class="book-title" onclick="abrirModalObraPorId('${idLibro}')">${titulo}</h3>
             <p class="book-author">${autor} ${ano ? '• ' + ano : ''}</p>
-            
             <div class="book-tags">
               ${genero ? `<span class="tag">${genero}</span>` : ''}
               <span class="tag">${etiquetaTipo}</span>
             </div>
-
-            <p class="book-description">${resena}</p>
-
+            <p class="book-description">${resena} <span class="read-more" onclick="abrirModalObraPorId('${idLibro}')">(Seguir leyendo...)</span></p>
             <div class="book-actions">
-              ${url_pdf !== '#' ? `
-                <button class="btn" onclick="downloadPDF('${url_pdf}', '${titulo.replace(/[^a-z0-9]/gi, '_').toLowerCase()}.pdf')">
-                  ${textoBoton}
-                </button>
-              ` : ''}
+              ${url_pdf !== '#' ? `<button class="btn" onclick="downloadPDF('${url_pdf}', '${titulo.replace(/[^a-z0-9]/gi, '_').toLowerCase()}.pdf')">${textoBoton}</button>` : ''}
             </div>
           </div>
         `;
@@ -1005,16 +1081,13 @@
       updateSlider();
     }
 
-    /* RENDERIZADO PANTALLA OBRAS */
     function renderGridObras(libros) {
       const gridContainer = document.getElementById('obras-grid-container');
       gridContainer.innerHTML = '';
-
       if (!libros || libros.length === 0) {
-        gridContainer.innerHTML = '<p style="color: var(--text-muted); font-size: 0.9rem; text-align: center; grid-column: 1/-1;">No hay obras disponibles para mostrar.</p>';
+        gridContainer.innerHTML = '<p style="color: var(--text-muted); text-align: center; grid-column: 1/-1;">No hay obras disponibles.</p>';
         return;
       }
-
       const fallbackSVG = `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="220" height="330" viewBox="0 0 220 330"><rect width="100%" height="100%" fill="%23b6afbf"/></svg>`;
 
       libros.forEach(libro => {
@@ -1022,40 +1095,31 @@
         const autor = libro.autor || libro.author || 'Autor Desconocido';
         const ano = libro.ano || libro.year || '';
         const genero = libro.genero || libro.genre || '';
-        const resenaOriginal = libro.resena || libro.description || libro.sinopsis || 'Sin reseña disponible.';
-        const resena = recortarTexto(resenaOriginal, 40);
+        const resena = recortarTexto(libro.resena || libro.description || libro.sinopsis || 'Sin reseña.', 30);
+        const idLibro = libro.id || titulo;
 
         const url_portada = obtenerUrlPortada(libro);
         const url_pdf = (libro.url_pdf || libro.pdf_url || libro.archivo || '#').trim();
-
         const esDOI = url_pdf.includes('doi.org');
         const textoBoton = esDOI ? 'Ver Repositorio' : 'Descargar PDF';
         const etiquetaTipo = esDOI ? 'DOI' : 'PDF';
 
         const card = document.createElement('div');
         card.className = 'obra-card-item';
-
         card.innerHTML = `
-          <div class="cover-wrapper">
-            <img src="${url_portada}" alt="Portada de ${titulo}" loading="lazy" onerror="this.onerror=null; this.src='${fallbackSVG}';">
+          <div class="cover-wrapper" onclick="abrirModalObraPorId('${idLibro}')">
+            <img src="${url_portada}" alt="Portada" loading="lazy" onerror="this.onerror=null; this.src='${fallbackSVG}';">
           </div>
           <div class="book-info">
-            <h3 class="book-title">${titulo}</h3>
+            <h3 class="book-title" onclick="abrirModalObraPorId('${idLibro}')">${titulo}</h3>
             <p class="book-author">${autor} ${ano ? '• ' + ano : ''}</p>
-            
             <div class="book-tags">
               ${genero ? `<span class="tag">${genero}</span>` : ''}
               <span class="tag">${etiquetaTipo}</span>
             </div>
-
-            <p class="book-description">${resena}</p>
-
+            <p class="p-desc">${resena} <span class="read-more" onclick="abrirModalObraPorId('${idLibro}')">(Seguir leyendo...)</span></p>
             <div class="book-actions">
-              ${url_pdf !== '#' ? `
-                <button class="btn" onclick="downloadPDF('${url_pdf}', '${titulo.replace(/[^a-z0-9]/gi, '_').toLowerCase()}.pdf')">
-                  ${textoBoton}
-                </button>
-              ` : ''}
+              ${url_pdf !== '#' ? `<button class="btn" onclick="downloadPDF('${url_pdf}', '${titulo.replace(/[^a-z0-9]/gi, '_').toLowerCase()}.pdf')">${textoBoton}</button>` : ''}
             </div>
           </div>
         `;
@@ -1063,33 +1127,28 @@
       });
     }
 
-    /* RENDERIZADO PANTALLA AUTORES */
     function renderGridAutores(autores) {
       const gridContainer = document.getElementById('autores-grid-container');
       gridContainer.innerHTML = '';
-
       if (!autores || autores.length === 0) {
-        gridContainer.innerHTML = '<p style="color: var(--text-muted); font-size: 0.9rem; text-align: center; grid-column: 1/-1;">No hay autores registrados.</p>';
+        gridContainer.innerHTML = '<p style="color: var(--text-muted); text-align: center; grid-column: 1/-1;">No hay autores.</p>';
         return;
       }
-
       const fallbackSVG = `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="150" height="150" viewBox="0 0 150 150"><rect width="100%" height="100%" fill="%23b6afbf"/></svg>`;
 
       autores.forEach(autorItem => {
-        const nombre = autorItem.nombre || autorItem.name || 'Autor Sin Nombre';
-        const biodataOriginal = autorItem.biodata || autorItem.biografia || autorItem.bio || 'Sin biografía disponible.';
-        const biodata = recortarTexto(biodataOriginal, 40);
+        const nombre = autorItem.nombre || autorItem.name || 'Sin Nombre';
+        const biodata = recortarTexto(autorItem.biodata || autorItem.biografia || autorItem.bio || 'Sin biografía.', 35);
         const urlFoto = obtenerUrlFotoAutor(autorItem);
 
         const card = document.createElement('div');
         card.className = 'obra-card-item';
-
         card.innerHTML = `
           <div class="author-avatar-wrapper">
-            <img src="${urlFoto}" alt="Fotografía de ${nombre}" loading="lazy" onerror="this.onerror=null; this.src='${fallbackSVG}';">
+            <img src="${urlFoto}" alt="Foto" loading="lazy" onerror="this.onerror=null; this.src='${fallbackSVG}';">
           </div>
           <div class="book-info">
-            <h3 class="book-title" style="font-size: 1.3rem;">${nombre}</h3>
+            <h3 class="book-title" style="font-size: 1.3rem; cursor: default;">${nombre}</h3>
             <p class="author-bio">${biodata}</p>
           </div>
         `;
@@ -1099,27 +1158,18 @@
 
     function goToSlide(index) {
       if (totalSlides === 0) return;
-      if (index < 0) {
-        currentIndex = totalSlides - 1;
-      } else if (index >= totalSlides) {
-        currentIndex = 0;
-      } else {
-        currentIndex = index;
-      }
+      if (index < 0) currentIndex = totalSlides - 1;
+      else if (index >= totalSlides) currentIndex = 0;
+      else currentIndex = index;
       updateSlider();
     }
 
     function updateSlider() {
       const track = document.getElementById('catalog-track');
       track.style.transform = `translateX(-${currentIndex * 100}%)`;
-
       const dots = document.querySelectorAll('.dot');
       dots.forEach((dot, idx) => {
-        if (idx === currentIndex) {
-          dot.classList.add('active');
-        } else {
-          dot.classList.remove('active');
-        }
+        dot.classList.toggle('active', idx === currentIndex);
       });
     }
 
@@ -1127,54 +1177,27 @@
     document.getElementById('next-btn').addEventListener('click', () => goToSlide(currentIndex + 1));
 
     async function loadBooks() {
-      if (!supabaseClient) {
-        console.error("El SDK de Supabase no se cargó correctamente.");
-        return;
-      }
-
+      if (!supabaseClient) return;
       try {
-        let { data: libros, error } = await supabaseClient
-          .from('libros')
-          .select('*');
-
-        if (error) {
-          const fallback = await supabaseClient.from('books').select('*');
-          if (!fallback.error) {
-            libros = fallback.data;
-          } else {
-            throw error;
-          }
-        }
-
+        let { data: libros, error } = await supabaseClient.from('libros').select('*');
+        if (error) throw error;
         librosData = libros || [];
         renderSlider(librosData);
-
       } catch (err) {
-        console.error('Error al conectar con la tabla libros:', err.message);
-        const track = document.getElementById('catalog-track');
-        track.innerHTML = '<p style="color: var(--text-muted); font-size: 0.85rem; text-align: center; width: 100%;">No se pudo conectar con el banco de datos. Verifica las políticas RLS (Row Level Security) en Supabase.</p>';
+        console.error('Error cargando libros:', err.message);
       }
     }
 
     async function loadAuthors() {
       if (!supabaseClient) return;
-
       try {
-        let { data: autores, error } = await supabaseClient
-          .from('autores')
-          .select('*');
-
-        if (!error) {
-          autoresData = autores || [];
-        } else {
-          console.error('Error cargando autores:', error.message);
-        }
+        let { data: autores, error } = await supabaseClient.from('autores').select('*');
+        if (!error) autoresData = autores || [];
       } catch (err) {
-        console.error('Error al conectar con la tabla autores:', err.message);
+        console.error('Error cargando autores:', err.message);
       }
     }
 
-    // Inicialización de datos
     loadBooks();
     loadAuthors();
   </script>
