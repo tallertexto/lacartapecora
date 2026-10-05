@@ -786,11 +786,11 @@
 
     <main id="view-talleres" class="page-view">
       <section class="talleres-section">
-        <h2 class="section-title-center">Taller de Textos</h2>
+        <h2 class="section-title-center" id="taller-titulo">Taller de Textos</h2>
         <article class="talleres-card">
-          <h2>Reseña</h2>
-          <p>
-            El Taller de Textos tiene por finalidad ayudar a las personas a consolidar sus impulsos creativos en un relato. Este proceso es paulatino y va acorde a la consolidación del progreso del participante. Escribir no requiere tener conocimientos previos de literatura o escritura, solo es necesario querer expresar. Partimos de la idea de que todos tenemos un estilo oculto y por medio de los ejercicios iremos depurando lo que está demás, dejando solo la voz del autor. Hemos venido desarrollando el taller para jóvenes y adultos interesados, es un trabajo complejo porque la mayor complicación es la predisposición a escribir, las personas que ingresan vienen con la idea de que solo con teoría lograrán algo y no es así, se enfrentan a una autocensura innecesaria. En este período hemos conseguido que la mayoría de los participantes logre escribir un relato de manera coherente, puntual y sobre todo desde su estilo, ya solo dejamos en ellos la responsabilidad de darle caracter a su estilo por medio de la lectura constante y el oficio. Nuestras talleres son virtuales para adultos y semipresenciales para jóvenes y niños.
+          <h2 id="taller-subtitulo">Reseña</h2>
+          <p id="taller-resena">
+            Cargando información del taller desde Supabase...
           </p>
         </article>
       </section>
@@ -913,7 +913,6 @@
       const ano = libro.ano || libro.year || '';
       const genero = libro.genero || libro.genre || '';
       
-      // Captura segura de los campos exactos de Supabase
       const isbn = libro.isbn || '';
       const depositoLegal = libro['deposito legal'] || libro.deposito_legal || '';
       
@@ -929,7 +928,6 @@
       document.getElementById('modal-author').textContent = `${autor} ${ano ? '• ' + ano : ''}`;
       document.getElementById('modal-description').textContent = resenaCompleta;
 
-      // Generación dinámica de etiquetas en el modal
       const tagsContainer = document.getElementById('modal-tags');
       let tagsHTML = '';
       if (genero) tagsHTML += `<span class="tag">${genero}</span>`;
@@ -1138,8 +1136,10 @@
 
       autores.forEach(autorItem => {
         const nombre = autorItem.nombre || autorItem.name || 'Sin Nombre';
-        const biodata = recortarTexto(autorItem.biodata || autorItem.biografia || autorItem.bio || 'Sin biografía.', 35);
+        const biografiaCompleta = autorItem.biodata || autorItem.biografia || autorItem.bio || 'Sin biografía.';
+        const biodataRecortada = recortarTexto(biografiaCompleta, 35);
         const urlFoto = obtenerUrlFotoAutor(autorItem);
+        const idAutor = autorItem.id || nombre;
 
         const card = document.createElement('div');
         card.className = 'obra-card-item';
@@ -1149,11 +1149,23 @@
           </div>
           <div class="book-info">
             <h3 class="book-title" style="font-size: 1.3rem; cursor: default;">${nombre}</h3>
-            <p class="author-bio">${biodata}</p>
+            <p class="author-bio">
+              <span id="bio-text-${idAutor}">${biodataRecortada}</span>
+              ${biografiaCompleta.split(/\s+/).length > 35 ? `<span class="read-more" id="btn-bio-${idAutor}" onclick="expandirBiografia('${idAutor}', \`${encodeURIComponent(biografiaCompleta)}\`)">(Seguir leyendo...)</span>` : ''}
+            </p>
           </div>
         `;
         gridContainer.appendChild(card);
       });
+    }
+
+    function expandirBiografia(idAutor, biografiaCodificada) {
+      const textoElemento = document.getElementById(`bio-text-${idAutor}`);
+      const botonElemento = document.getElementById(`btn-bio-${idAutor}`);
+      if (textoElemento && botonElemento) {
+        textoElemento.textContent = decodeURIComponent(biografiaCodificada);
+        botonElemento.style.display = 'none';
+      }
     }
 
     function goToSlide(index) {
@@ -1198,8 +1210,29 @@
       }
     }
 
+    async function loadTalleres() {
+      if (!supabaseClient) return;
+      try {
+        let { data: talleres, error } = await supabaseClient.from('talleres').select('*');
+        if (error) throw error;
+        
+        if (talleres && talleres.length > 0) {
+          const taller = talleres[0];
+          if (taller.titulo) {
+            document.getElementById('taller-subtitulo').textContent = taller.titulo;
+          }
+          if (taller.resena) {
+            document.getElementById('taller-resena').textContent = taller.resena;
+          }
+        }
+      } catch (err) {
+        console.error('Error cargando talleres:', err.message);
+      }
+    }
+
     loadBooks();
     loadAuthors();
+    loadTalleres();
   </script>
 </body>
 </html>
