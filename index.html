@@ -666,6 +666,14 @@
       color: var(--text-dark);
     }
 
+    /* NUEVA LÍNEA LIMPIA PARA ISBN Y DEPÓSITO LEGAL */
+    .modal-book-meta-extra {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      font-weight: 600;
+      margin-top: -4px;
+    }
+
     .modal-book-desc {
       font-size: 0.9rem;
       color: var(--text-dark);
@@ -772,19 +780,19 @@
 
     <main id="view-obras" class="page-view">
       <section class="obras-section">
-        <!-- TARJETA INFORMATIVA: CONVOCATORIA PARA AUTORES -->
-        <article class="about-card" style="width: 100%; max-width: 900px; margin-bottom: 20px; text-align: center;">
-          <h2 style="font-size: 1.1rem; margin-bottom: 12px;">¿Quieres participar y compartir tu obra?</h2>
-          <p style="text-align: center; margin-bottom: 20px;">
+        <!-- TARJETA INFORMATIVA: CONVOCATORIA PARA AUTORES (COMPACTADA Y CORREGIDA) -->
+        <article class="about-card" style="width: 100%; max-width: 820px; margin-bottom: 20px; text-align: center; padding: 28px 32px;">
+          <h2 style="font-size: 1rem; margin-bottom: 8px;">¿Quieres participar y compartir tu obra?</h2>
+          <p style="text-align: center; margin-bottom: 16px; font-size: 0.9rem;">
             Si deseas compartir tu obra (publicada, agotada en edición física o libro editado/publicado digitalmente), envía al correo de contacto los siguientes requisitos:
           </p>
-          <ul style="list-style: none; display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; margin-bottom: 24px; font-size: 0.9rem; font-weight: 600; color: var(--text-dark);">
-            <li style="background: var(--bg); box-shadow: var(--nm-pressed); padding: 8px 16px; border-radius: var(--radius-pill);">📄 Biodata (300 palabras máx.)</li>
-            <li style="background: var(--bg); box-shadow: var(--nm-pressed); padding: 8px 16px; border-radius: var(--radius-pill);">📚 Libro en formato PDF</li>
-            <li style="background: var(--bg); box-shadow: var(--nm-pressed); padding: 8px 16px; border-radius: var(--radius-pill);">📸 Foto del Autor</li>
-            <li style="background: var(--bg); box-shadow: var(--nm-pressed); padding: 8px 16px; border-radius: var(--radius-pill);">📝 Reseña del libro (200 palabras máx.)</li>
+          <ul style="list-style: none; display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-bottom: 18px; font-size: 0.85rem; font-weight: 600; color: var(--text-dark);">
+            <li style="background: var(--bg); box-shadow: var(--nm-pressed); padding: 6px 14px; border-radius: var(--radius-pill);">📄 Biodata (300 palabras máx.)</li>
+            <li style="background: var(--bg); box-shadow: var(--nm-pressed); padding: 6px 14px; border-radius: var(--radius-pill);">📚 Libro en formato PDF</li>
+            <li style="background: var(--bg); box-shadow: var(--nm-pressed); padding: 6px 14px; border-radius: var(--radius-pill);">📸 Foto del autor</li>
+            <li style="background: var(--bg); box-shadow: var(--nm-pressed); padding: 6px 14px; border-radius: var(--radius-pill);">📝 Reseña del libro (200 palabras máx.)</li>
           </ul>
-          <button class="btn" onclick="abrirContacto()">Enviar Requisitos vía Email</button>
+          <button class="btn" style="padding: 10px 22px; font-size: 0.78rem;" onclick="abrirContacto()">Enviar Requisitos vía Email</button>
         </article>
 
         <h2 class="section-title-center">Catálogo General de Obras</h2>
@@ -819,7 +827,7 @@
     </footer>
   </div>
 
-  <!-- MODAL DETALLE DE OBRA (Soporta ISBN y Depósito Legal) -->
+  <!-- MODAL DETALLE DE OBRA -->
   <div id="modal-obra" class="modal-overlay" onclick="cerrarModalObraEnFondo(event)">
     <div class="modal-card modal-book-card">
       <button class="modal-close-btn" onclick="cerrarModalObra()">✕</button>
@@ -830,6 +838,7 @@
         <div class="modal-book-details">
           <h2 id="modal-title" class="modal-book-title">Título de la Obra</h2>
           <p id="modal-author" class="modal-book-author">Autor • Año</p>
+          <div id="modal-meta-extra" class="modal-book-meta-extra"></div>
           
           <div class="book-tags" id="modal-tags"></div>
 
@@ -918,7 +927,7 @@
       if (event.target.id === 'modal-contacto') cerrarContacto();
     }
 
-    /* GESTIÓN DE MODAL DE OBRA CON NUEVOS CAMPOS */
+    /* GESTIÓN DE MODAL DE OBRA CON LÍNEA ADICIONAL PARA ISBN Y DEPÓSITO LEGAL */
     function abrirModalObraPorId(idLibro) {
       const libro = librosData.find(l => (l.id == idLibro || l.titulo === idLibro));
       if (!libro) return;
@@ -941,14 +950,21 @@
 
       document.getElementById('modal-title').textContent = titulo;
       document.getElementById('modal-author').textContent = `${autor} ${ano ? '• ' + ano : ''}`;
+      
+      // Mostrar ISBN y Depósito Legal debajo en una siguiente línea
+      const metaExtraContainer = document.getElementById('modal-meta-extra');
+      let metaExtraText = [];
+      if (isbn) metaExtraText.push(`ISBN: ${isbn}`);
+      if (depositoLegal) metaExtraText.push(`D.L.: ${depositoLegal}`);
+      metaExtraContainer.textContent = metaExtraText.join('  |  ');
+      metaExtraContainer.style.display = metaExtraText.length > 0 ? 'block' : 'none';
+
       document.getElementById('modal-description').textContent = resenaCompleta;
 
       const tagsContainer = document.getElementById('modal-tags');
       let tagsHTML = '';
       if (genero) tagsHTML += `<span class="tag">${genero}</span>`;
       tagsHTML += `<span class="tag">${etiquetaTipo}</span>`;
-      if (isbn) tagsHTML += `<span class="tag">ISBN: ${isbn}</span>`;
-      if (depositoLegal) tagsHTML += `<span class="tag">D.L.: ${depositoLegal}</span>`;
       tagsContainer.innerHTML = tagsHTML;
 
       const coverContainer = document.getElementById('modal-cover-container');
