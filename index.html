@@ -743,7 +743,7 @@
         <article class="about-card">
           <h2>Visión</h2>
           <p>
-            Ser el repositorio y canal cultural de acceso libre más relevante de la región, destacando por democratizar la literatura e impulsar el trabajo de nuestros creadores sin fronteras físicas. Nos proyectamos como una comunidad virtual incluyente donde la lectura gratuita de obras en PDF y la promoción de talleres literarios se complementen, visibilizando a nuestros escritores y conectando su voz con lectores de todo el mundo.
+            Consolidarnos como la plataforma digital de referencia regional para la preservación, circulación y lectura de libre acceso de obras locales. Aspiramos a ser un espacio cultural innovador que rescate la memoria colectiva y sirva como vitrina activa para la proyección de los talleres y espacios de formación de nuestros autores y profesionales, transformando la forma en que la comunidad descubre, valora y conecta con el talento de nuestra tierra.
           </p>
         </article>
 
@@ -772,6 +772,21 @@
 
     <main id="view-obras" class="page-view">
       <section class="obras-section">
+        <!-- TARJETA INFORMATIVA: CONVOCATORIA PARA AUTORES -->
+        <article class="about-card" style="width: 100%; max-width: 900px; margin-bottom: 20px; text-align: center;">
+          <h2 style="font-size: 1.1rem; margin-bottom: 12px;">¿Quieres participar y compartir tu obra?</h2>
+          <p style="text-align: center; margin-bottom: 20px;">
+            Si deseas compartir tu obra (publicada, agotada en edición física o libro editado/publicado digitalmente), envía al correo de contacto los siguientes requisitos:
+          </p>
+          <ul style="list-style: none; display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; margin-bottom: 24px; font-size: 0.9rem; font-weight: 600; color: var(--text-dark);">
+            <li style="background: var(--bg); box-shadow: var(--nm-pressed); padding: 8px 16px; border-radius: var(--radius-pill);">📄 Biodata (300 palabras máx.)</li>
+            <li style="background: var(--bg); box-shadow: var(--nm-pressed); padding: 8px 16px; border-radius: var(--radius-pill);">📚 Libro en formato PDF</li>
+            <li style="background: var(--bg); box-shadow: var(--nm-pressed); padding: 8px 16px; border-radius: var(--radius-pill);">📸 Foto del Autor</li>
+            <li style="background: var(--bg); box-shadow: var(--nm-pressed); padding: 8px 16px; border-radius: var(--radius-pill);">📝 Reseña del libro (200 palabras máx.)</li>
+          </ul>
+          <button class="btn" onclick="abrirContacto()">Enviar Requisitos vía Email</button>
+        </article>
+
         <h2 class="section-title-center">Catálogo General de Obras</h2>
         <div id="obras-grid-container" class="obras-grid"></div>
       </section>
