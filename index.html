@@ -115,34 +115,38 @@
       font-weight: 600;
     }
 
-    /* NAVEGACIÓN */
+    /* NAVEGACIÓN SIMÉTRICA */
     .main-nav {
       margin-top: 16px;
+      width: 100%;
     }
 
     .nav-list {
       display: flex;
       justify-content: center;
       align-items: center;
-      gap: 16px;
+      gap: 14px;
       list-style: none;
       flex-wrap: wrap;
     }
 
     .nav-link {
       text-decoration: none;
-      font-size: 0.82rem;
+      font-size: 0.8rem;
       font-weight: 700;
       text-transform: uppercase;
-      letter-spacing: 0.1em;
+      letter-spacing: 0.08em;
       color: var(--text-dark);
-      padding: 12px 24px;
+      padding: 12px 18px;
+      min-width: 130px; /* Anchura simétrica garantizada */
+      text-align: center;
       border-radius: var(--radius-pill);
       background: var(--bg);
       box-shadow: var(--nm-pill);
       transition: all 0.2s ease;
       cursor: pointer;
       border: none;
+      display: inline-block;
     }
 
     .nav-link:hover {
@@ -164,18 +168,18 @@
       display: block;
     }
 
-    /* VISIÓN Y MISIÓN */
+    /* VISIÓN Y MISIÓN MÁS COMPACTAS */
     .about-section {
-      margin: 50px 0 60px;
+      margin: 40px 0 50px;
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 40px;
+      gap: 30px;
     }
 
     .about-card {
       background: var(--bg);
       box-shadow: var(--nm-flat);
-      padding: 40px;
+      padding: 30px 32px;
       border-radius: var(--radius-large);
       transition: transform 0.3s ease, box-shadow 0.3s ease;
     }
@@ -186,19 +190,19 @@
     }
 
     .about-card h2 {
-      font-size: 0.85rem;
+      font-size: 0.8rem;
       text-transform: uppercase;
       letter-spacing: 0.18em;
       color: var(--brand-accent);
-      margin-bottom: 14px;
+      margin-bottom: 10px;
       font-weight: 700;
     }
 
     .about-card p {
-      font-size: 0.95rem;
+      font-size: 0.9rem;
       color: var(--text-dark);
       text-align: justify;
-      line-height: 1.7;
+      line-height: 1.6;
     }
 
     /* TALLERES */
@@ -212,29 +216,29 @@
     .talleres-card {
       background: var(--bg);
       box-shadow: var(--nm-flat);
-      padding: 40px;
+      padding: 36px;
       border-radius: var(--radius-large);
       width: 100%;
       max-width: 900px;
     }
 
     .talleres-card h2 {
-      font-size: 0.9rem;
+      font-size: 0.85rem;
       text-transform: uppercase;
       letter-spacing: 0.18em;
       color: var(--brand-accent);
-      margin-bottom: 18px;
+      margin-bottom: 14px;
       font-weight: 700;
     }
 
     .talleres-card p {
-      font-size: 0.98rem;
+      font-size: 0.95rem;
       color: var(--text-dark);
       text-align: justify;
-      line-height: 1.8;
+      line-height: 1.7;
     }
 
-    /* OBRAS Y AUTORES */
+    /* OBRAS, PAPERS Y ENSAYOS */
     .obras-section {
       width: 100%;
       margin: 0 auto 70px auto;
@@ -417,7 +421,6 @@
       text-align: justify;
     }
 
-    /* Estilos del Botón de Desplegable In-situ (Acordeón) */
     .btn-toggle-inline {
       background: none;
       border: none;
@@ -627,7 +630,7 @@
     @media (max-width: 768px) {
       .about-section {
         grid-template-columns: 1fr;
-        gap: 30px;
+        gap: 24px;
       }
       .slide-item {
         flex-direction: column;
@@ -640,6 +643,10 @@
       }
       .book-actions, .btn {
         width: 100%;
+      }
+      .nav-link {
+        flex: 1 1 42%; /* En móviles pequeños se acomodan simétricamente en bloques de 2 */
+        min-width: unset;
       }
     }
   </style>
@@ -663,6 +670,8 @@
             <li><button class="nav-link" id="btn-obras" onclick="irASeccion('obras')">Obras</button></li>
             <li><button class="nav-link" id="btn-autores" onclick="irASeccion('autores')">Autores</button></li>
             <li><button class="nav-link" id="btn-talleres" onclick="irASeccion('talleres')">Talleres</button></li>
+            <li><button class="nav-link" id="btn-papers" onclick="irASeccion('papers')">Papers</button></li>
+            <li><button class="nav-link" id="btn-ensayos" onclick="irASeccion('ensayos')">Ensayos</button></li>
             <li><button class="nav-link" id="btn-contacto" onclick="abrirContacto()">Contacto</button></li>
           </ul>
         </nav>
@@ -674,14 +683,14 @@
         <article class="about-card">
           <h2>Visión</h2>
           <p>
-            Consolidarnos como la plataforma digital de referencia regional para la preservación, circulación y lectura de libre acceso de obras locales. Aspiramos a ser un espacio cultural innovador que rescate la memoria colectiva y sirva como vitrina activa para la proyección de los talleres y espacios de formación de nuestros autores y profesionales, transformando la forma en que la comunidad descubre, valora y conecta con el talento de nuestra tierra.
+            Consolidarnos como la plataforma digital de referencia regional para la preservación, circulación y lectura de libre acceso de obras locales, rescatando la memoria colectiva y sirviendo como vitrina activa para la proyección de los creadores de nuestra tierra.
           </p>
         </article>
 
         <article class="about-card">
           <h2>Misión</h2>
           <p>
-            La Cartapecora es un archivo literario digital diseñado para democratizar la lectura mediante el acceso libre y gratuito a las obras en PDF de los autores de nuestra región. Funcionamos como un canal dinámico que acorta las distancias entre creadores y lectores, además de ser una plataforma para la difusión y promoción de talleres virtuales impartidos por escritores y especialistas. Salvaguardamos la memoria escrita mientras potenciamos la formación y la cultura literaria en nuestra comunidad.
+            Democratizar la lectura mediante el acceso libre y gratuito a obras en PDF y la difusión de talleres virtuales. Funcionalmente, acortamos distancias entre creadores y lectores, salvaguardando la memoria escrita y potenciando la cultura regional.
           </p>
         </article>
       </section>
@@ -741,6 +750,22 @@
       </section>
     </main>
 
+    <!-- VISTA PAPERS -->
+    <main id="view-papers" class="page-view">
+      <section class="obras-section">
+        <h2 class="section-title-center">Publicación académica</h2>
+        <div id="papers-grid-container" class="obras-grid"></div>
+      </section>
+    </main>
+
+    <!-- VISTA ENSAYOS -->
+    <main id="view-ensayos" class="page-view">
+      <section class="obras-section">
+        <h2 class="section-title-center">Ensayos Críticos</h2>
+        <div id="ensayos-grid-container" class="obras-grid"></div>
+      </section>
+    </main>
+
     <footer style="display: flex; align-items: center; justify-content: center; gap: 10px; flex-wrap: wrap;">
       <a href="https://hitscounter.dev" target="_blank" rel="noopener noreferrer" style="display: inline-flex; align-items: center;">
         <img src="https://hitscounter.dev/api/hit?url=https%3A%2F%2Ftallertexto.github.io%2Flacartapecora&color=9F430A" alt="Hits Counter" style="vertical-align: middle;">
@@ -787,6 +812,8 @@
     let totalSlides = 0;
     let librosData = [];
     let autoresData = [];
+    let papersData = [];
+    let ensayosData = [];
 
     function irAInicio() {
       document.querySelectorAll('.page-view').forEach(view => view.classList.remove('active-view'));
@@ -810,6 +837,14 @@
       } else if (seccion === 'talleres') {
         document.getElementById('view-talleres').classList.add('active-view');
         document.getElementById('btn-talleres').classList.add('active');
+      } else if (seccion === 'papers') {
+        document.getElementById('view-papers').classList.add('active-view');
+        document.getElementById('btn-papers').classList.add('active');
+        renderGridPapers(papersData);
+      } else if (seccion === 'ensayos') {
+        document.getElementById('view-ensayos').classList.add('active-view');
+        document.getElementById('btn-ensayos').classList.add('active');
+        renderGridEnsayos(ensayosData);
       }
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
@@ -826,19 +861,16 @@
       if (event.target.id === 'modal-contacto') cerrarContacto();
     }
 
-    /* LÓGICA DE CONMUTACIÓN / ACORDEÓN IN-SITU PARA TEXTOS LARGOS */
     function toggleTextoInSitu(idElemento, prefix, textoCodificado, limitePalabras = 28) {
       const textoElemento = document.getElementById(`${prefix}-text-${idElemento}`);
       const botonElemento = document.getElementById(`${prefix}-btn-${idElemento}`);
       const textoCompleto = decodeURIComponent(textoCodificado);
 
       if (botonElemento.dataset.expanded === "false") {
-        // Expandir
         textoElemento.textContent = textoCompleto;
         botonElemento.textContent = " (Mostrar menos)";
         botonElemento.dataset.expanded = "true";
       } else {
-        // Contraer
         const palabras = textoCompleto.trim().split(/\s+/);
         textoElemento.textContent = palabras.slice(0, limitePalabras).join(' ') + '...';
         botonElemento.textContent = " (Seguir leyendo...)";
@@ -861,7 +893,7 @@
           const blobUrl = window.URL.createObjectURL(blob);
           const a = document.createElement('a');
           a.href = blobUrl;
-          a.download = filename || 'obra-cartapecora.pdf';
+          a.download = filename || 'documento-cartapecora.pdf';
           document.body.appendChild(a);
           a.click();
           a.remove();
@@ -870,6 +902,16 @@
         .catch(err => {
           window.open(url, '_blank');
         });
+    }
+
+    function obtenerUrlPDF(item) {
+      let rawPdf = (item.url_pdf || item.pdf_url || item.archivo || '').trim();
+      if (rawPdf) {
+        if (rawPdf.startsWith('http://') || rawPdf.startsWith('https://')) return rawPdf;
+        const cleanFile = decodeURIComponent(rawPdf).replace(/^\//, '');
+        return `${SUPABASE_URL}/storage/v1/object/public/PDFS/${encodeURIComponent(cleanFile)}`;
+      }
+      return '#';
     }
 
     function obtenerUrlPortada(libro) {
@@ -921,7 +963,6 @@
         const isbn = libro.isbn || '';
         const depositoLegal = libro['deposito legal'] || libro.deposito_legal || '';
 
-        // Cálculo de recorte de reseña
         const palabrasResena = resenaCompleta.trim().split(/\s+/);
         const esResenaLarga = palabrasResena.length > 28;
         const resenaInicial = esResenaLarga ? palabrasResena.slice(0, 28).join(' ') + '...' : resenaCompleta;
@@ -999,7 +1040,6 @@
         const isbn = libro.isbn || '';
         const depositoLegal = libro['deposito legal'] || libro.deposito_legal || '';
 
-        // Cálculo de recorte de reseña
         const palabrasResena = resenaCompleta.trim().split(/\s+/);
         const esResenaLarga = palabrasResena.length > 28;
         const resenaInicial = esResenaLarga ? palabrasResena.slice(0, 28).join(' ') + '...' : resenaCompleta;
@@ -1064,7 +1104,6 @@
         const nombre = autorItem.nombre || autorItem.name || 'Sin Nombre';
         const biografiaCompleta = autorItem.biodata || autorItem.biografia || autorItem.bio || 'Sin biografía.';
         
-        // Cálculo de recorte de biografía
         const palabrasBio = biografiaCompleta.trim().split(/\s+/);
         const esBioLarga = palabrasBio.length > 35;
         const bioInicial = esBioLarga ? palabrasBio.slice(0, 35).join(' ') + '...' : biografiaCompleta;
@@ -1091,6 +1130,112 @@
                 > (Seguir leyendo...)</button>
               ` : ''}
             </p>
+          </div>
+        `;
+        gridContainer.appendChild(card);
+      });
+    }
+
+    function renderGridPapers(papers) {
+      const gridContainer = document.getElementById('papers-grid-container');
+      gridContainer.innerHTML = '';
+      if (!papers || papers.length === 0) {
+        gridContainer.innerHTML = '<p style="color: var(--text-muted); text-align: center; grid-column: 1/-1;">No hay papers disponibles.</p>';
+        return;
+      }
+
+      papers.forEach((paper, idx) => {
+        const idPaper = paper.id || `paper-${idx}`;
+        const titulo = paper.titulo || paper.title || 'Sin Título';
+        const autor = paper.autor || paper.author || 'Autor Desconocido';
+        const resumenCompleto = paper.resumen || paper.abstract || paper.descripcion || 'Sin resumen disponible.';
+
+        const palabrasResumen = resumenCompleto.trim().split(/\s+/);
+        const esLargo = palabrasResumen.length > 30;
+        const resumenInicial = esLargo ? palabrasResumen.slice(0, 30).join(' ') + '...' : resumenCompleto;
+        const resumenCodificado = encodeURIComponent(resumenCompleto);
+
+        const url_pdf = obtenerUrlPDF(paper);
+
+        const card = document.createElement('div');
+        card.className = 'obra-card-item';
+        card.style.alignItems = 'flex-start';
+        card.style.textAlign = 'left';
+        card.innerHTML = `
+          <div class="book-info" style="align-items: flex-start; text-align: left; width: 100%;">
+            <h3 class="book-title">${titulo}</h3>
+            <p class="book-author">${autor}</p>
+            <div class="book-tags">
+              <span class="tag">PAPER</span>
+              <span class="tag">PDF</span>
+            </div>
+            <p class="book-description" style="margin-top: 8px;">
+              <span id="paper-resumen-text-${idPaper}">${resumenInicial}</span>
+              ${esLargo ? `
+                <button 
+                  id="paper-resumen-btn-${idPaper}" 
+                  class="btn-toggle-inline" 
+                  data-expanded="false" 
+                  onclick="toggleTextoInSitu('${idPaper}', 'paper-resumen', '${resumenCodificado}', 30)"
+                > (Seguir leyendo...)</button>
+              ` : ''}
+            </p>
+            <div class="book-actions">
+              ${url_pdf !== '#' ? `<button class="btn" onclick="downloadPDF('${url_pdf}', '${titulo.replace(/[^a-z0-9]/gi, '_').toLowerCase()}.pdf')">Descargar PDF</button>` : ''}
+            </div>
+          </div>
+        `;
+        gridContainer.appendChild(card);
+      });
+    }
+
+    function renderGridEnsayos(ensayos) {
+      const gridContainer = document.getElementById('ensayos-grid-container');
+      gridContainer.innerHTML = '';
+      if (!ensayos || ensayos.length === 0) {
+        gridContainer.innerHTML = '<p style="color: var(--text-muted); text-align: center; grid-column: 1/-1;">No hay ensayos disponibles.</p>';
+        return;
+      }
+
+      ensayos.forEach((ensayo, idx) => {
+        const idEnsayo = ensayo.id || `ensayo-${idx}`;
+        const titulo = ensayo.titulo || ensayo.title || 'Sin Título';
+        const autor = ensayo.autor || ensayo.author || 'Autor Desconocido';
+        const resumenCompleto = ensayo.resumen || ensayo.abstract || ensayo.descripcion || 'Sin resumen disponible.';
+
+        const palabrasResumen = resumenCompleto.trim().split(/\s+/);
+        const esLargo = palabrasResumen.length > 30;
+        const resumenInicial = esLargo ? palabrasResumen.slice(0, 30).join(' ') + '...' : resumenCompleto;
+        const resumenCodificado = encodeURIComponent(resumenCompleto);
+
+        const url_pdf = obtenerUrlPDF(ensayo);
+
+        const card = document.createElement('div');
+        card.className = 'obra-card-item';
+        card.style.alignItems = 'flex-start';
+        card.style.textAlign = 'left';
+        card.innerHTML = `
+          <div class="book-info" style="align-items: flex-start; text-align: left; width: 100%;">
+            <h3 class="book-title">${titulo}</h3>
+            <p class="book-author">${autor}</p>
+            <div class="book-tags">
+              <span class="tag">ENSAYO</span>
+              <span class="tag">PDF</span>
+            </div>
+            <p class="book-description" style="margin-top: 8px;">
+              <span id="ensayo-resumen-text-${idEnsayo}">${resumenInicial}</span>
+              ${esLargo ? `
+                <button 
+                  id="ensayo-resumen-btn-${idEnsayo}" 
+                  class="btn-toggle-inline" 
+                  data-expanded="false" 
+                  onclick="toggleTextoInSitu('${idEnsayo}', 'ensayo-resumen', '${resumenCodificado}', 30)"
+                > (Seguir leyendo...)</button>
+              ` : ''}
+            </p>
+            <div class="book-actions">
+              ${url_pdf !== '#' ? `<button class="btn" onclick="downloadPDF('${url_pdf}', '${titulo.replace(/[^a-z0-9]/gi, '_').toLowerCase()}.pdf')">Descargar PDF</button>` : ''}
+            </div>
           </div>
         `;
         gridContainer.appendChild(card);
@@ -1159,9 +1304,31 @@
       }
     }
 
+    async function loadPapers() {
+      if (!supabaseClient) return;
+      try {
+        let { data: papers, error } = await supabaseClient.from('papers').select('*');
+        if (!error) papersData = papers || [];
+      } catch (err) {
+        console.error('Error cargando papers:', err.message);
+      }
+    }
+
+    async function loadEnsayos() {
+      if (!supabaseClient) return;
+      try {
+        let { data: ensayos, error } = await supabaseClient.from('ensayos').select('*');
+        if (!error) ensayosData = ensayos || [];
+      } catch (err) {
+        console.error('Error cargando ensayos:', err.message);
+      }
+    }
+
     loadBooks();
     loadAuthors();
     loadTalleres();
+    loadPapers();
+    loadEnsayos();
   </script>
 </body>
 </html>
