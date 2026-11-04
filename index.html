@@ -1,1311 +1,777 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>CARTAPECORA — Archivo Literario Virtual</title>
-  
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700;800&display=swap" rel="stylesheet">
-
-  <!-- SDK de Supabase desde CDN -->
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
-  <style>
-    @font-face {
-      font-family: 'NT Wagner';
-      src: local('NT Wagner'), local('NTWagner-Regular');
-      font-display: swap;
-    }
-
-    :root {
-      --bg: #D6CFE1;
-      --text-dark: #222222;
-      --text-muted: #4D4657;
-      --brand-accent: #9F430A;
-      
-      --nm-flat: 12px 12px 24px #b6afbf, -12px -12px 24px #f6efff;
-      --nm-flat-hover: 16px 16px 32px #b6afbf, -16px -16px 32px #f6efff;
-      --nm-pressed: inset 5px 5px 10px #b6afbf, inset -5px -5px 10px #f6efff;
-      --nm-pill: 8px 8px 16px #b6afbf, -8px -8px 16px #f6efff;
-      --nm-pill-hover: 4px 4px 10px #b6afbf, -4px -4px 10px #f6efff;
-
-      --radius-large: 28px;
-      --radius-medium: 18px;
-      --radius-pill: 50px;
-    }
-
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
-    html {
-      scroll-behavior: smooth;
-    }
-
-    body {
-      font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-      background-color: var(--bg);
-      color: var(--text-dark);
-      line-height: 1.6;
-      -webkit-font-smoothing: antialiased;
-    }
-
-    .container {
-      max-width: 1080px;
-      margin: 0 auto;
-      padding: 0 24px;
-    }
-
-    /* HEADER & BRANDING */
-    header {
-      padding: 56px 0 24px;
-    }
-
-    .header-layout {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      text-align: center;
-      gap: 20px;
-    }
-
-    .logo-container {
-      width: 110px;
-      height: 110px;
-      border-radius: 0;
-      background: transparent;
-      box-shadow: none;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 0;
-      transition: transform 0.3s ease;
-      cursor: pointer;
-      border: none;
-    }
-
-    .logo-container:hover {
-      transform: scale(1.03);
-    }
-
-    .logo-container img {
-      width: 100%;
-      height: 100%;
-      object-fit: contain;
-    }
-
-    .brand-title {
-      font-family: 'NT Wagner', 'Cormorant Garamond', Georgia, serif;
-      font-size: 2.4rem;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      font-weight: 800;
-      color: var(--brand-accent);
-    }
-
-    .brand-subtitle {
-      font-size: 0.85rem;
-      color: var(--text-muted);
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      font-weight: 600;
-    }
-
-    /* NAVEGACIÓN SIMÉTRICA */
-    .main-nav {
-      margin-top: 16px;
-      width: 100%;
-    }
-
-    .nav-list {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 14px;
-      list-style: none;
-      flex-wrap: wrap;
-    }
-
-    .nav-link {
-      text-decoration: none;
-      font-size: 0.8rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      color: var(--text-dark);
-      padding: 12px 18px;
-      min-width: 130px;
-      text-align: center;
-      border-radius: var(--radius-pill);
-      background: var(--bg);
-      box-shadow: var(--nm-pill);
-      transition: all 0.2s ease;
-      cursor: pointer;
-      border: none;
-      display: inline-block;
-    }
-
-    .nav-link:hover {
-      box-shadow: var(--nm-pill-hover);
-      color: var(--brand-accent);
-      transform: translateY(1px);
-    }
-
-    .nav-link:active, .nav-link.active {
-      box-shadow: var(--nm-pressed);
-      color: var(--brand-accent);
-    }
-
-    .page-view {
-      display: none;
-    }
-
-    .page-view.active-view {
-      display: block;
-    }
-
-    /* VISIÓN Y MISIÓN MÁS COMPACTAS */
-    .about-section {
-      margin: 40px 0 50px;
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 30px;
-    }
-
-    .about-card {
-      background: var(--bg);
-      box-shadow: var(--nm-flat);
-      padding: 30px 32px;
-      border-radius: var(--radius-large);
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
-    }
-
-    .about-card:hover {
-      transform: translateY(-2px);
-      box-shadow: var(--nm-flat-hover);
-    }
-
-    .about-card h2 {
-      font-size: 0.8rem;
-      text-transform: uppercase;
-      letter-spacing: 0.18em;
-      color: var(--brand-accent);
-      margin-bottom: 10px;
-      font-weight: 700;
-    }
-
-    .about-card p {
-      font-size: 0.9rem;
-      color: var(--text-dark);
-      text-align: justify;
-      line-height: 1.6;
-    }
-
-    /* TALLERES */
-    .talleres-section {
-      margin: 40px 0 70px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-
-    .talleres-card {
-      background: var(--bg);
-      box-shadow: var(--nm-flat);
-      padding: 36px;
-      border-radius: var(--radius-large);
-      width: 100%;
-      max-width: 900px;
-    }
-
-    .talleres-card h2 {
-      font-size: 0.85rem;
-      text-transform: uppercase;
-      letter-spacing: 0.18em;
-      color: var(--brand-accent);
-      margin-bottom: 14px;
-      font-weight: 700;
-    }
-
-    .talleres-card p {
-      font-size: 0.95rem;
-      color: var(--text-dark);
-      text-align: justify;
-      line-height: 1.7;
-    }
-
-    /* OBRAS, PAPERS Y ENSAYOS */
-    .obras-section {
-      width: 100%;
-      margin: 0 auto 70px auto;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 20px;
-    }
-
-    .section-title-center {
-      font-size: 1.1rem;
-      text-transform: uppercase;
-      letter-spacing: 0.14em;
-      color: var(--text-dark);
-      font-weight: 800;
-      text-align: center;
-      margin-bottom: 20px;
-    }
-
-    .slider-container {
-      position: relative;
-      width: 100%;
-      background: var(--bg);
-      box-shadow: var(--nm-flat);
-      border-radius: var(--radius-large);
-      padding: 36px 32px;
-      display: flex;
-      flex-direction: column;
-      gap: 20px;
-      overflow: hidden;
-    }
-
-    .slider-track-wrapper {
-      width: 100%;
-      overflow: hidden;
-    }
-
-    .slider-track {
-      display: flex;
-      transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
-      width: 100%;
-    }
-
-    .slide-item {
-      min-width: 100%;
-      box-sizing: border-box;
-      display: flex;
-      flex-direction: row;
-      align-items: flex-start;
-      gap: 24px;
-    }
-
-    .obras-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-      gap: 30px;
-      width: 100%;
-      margin-bottom: 50px;
-    }
-
-    .obra-card-item {
-      background: var(--bg);
-      box-shadow: var(--nm-flat);
-      border-radius: var(--radius-large);
-      padding: 28px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 16px;
-      text-align: center;
-    }
-
-    .cover-wrapper {
-      width: auto;
-      max-width: 220px;
-      height: 300px;
-      background: transparent;
-      box-shadow: none;
-      border: none;
-      padding: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-    }
-
-    .cover-wrapper img {
-      width: auto;
-      max-width: 100%;
-      height: 100%;
-      object-fit: contain;
-      display: block;
-    }
-
-    .author-avatar-wrapper {
-      width: 150px;
-      height: 150px;
-      border-radius: 50%;
-      box-shadow: var(--nm-pill);
-      overflow: hidden;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin-bottom: 8px;
-      background: var(--bg);
-      flex-shrink: 0;
-    }
-
-    .author-avatar-wrapper img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-
-    .author-bio {
-      font-size: 0.9rem;
-      color: var(--text-dark);
-      line-height: 1.6;
-      text-align: justify;
-      margin-top: 6px;
-    }
-
-    .book-info {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      text-align: left;
-      align-items: flex-start;
-      flex: 1;
-      width: 100%;
-    }
-
-    .obra-card-item .book-info {
-      align-items: center;
-      text-align: center;
-    }
-
-    .book-title {
-      font-family: 'NT Wagner', 'Cormorant Garamond', Georgia, serif;
-      font-size: 1.5rem;
-      font-weight: 800;
-      color: var(--text-dark);
-      line-height: 1.3;
-    }
-
-    .book-author {
-      font-size: 0.9rem;
-      color: var(--text-muted);
-      font-weight: 600;
-    }
-
-    .book-meta-extra {
-      font-size: 0.85rem;
-      color: var(--text-muted);
-      font-weight: 600;
-    }
-
-    .book-tags {
-      display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
-    }
-
-    .tag {
-      font-size: 0.7rem;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      background: var(--bg);
-      box-shadow: var(--nm-pressed);
-      color: var(--text-dark);
-      padding: 4px 12px;
-      border-radius: 20px;
-      font-weight: 700;
-    }
-
-    .book-description {
-      font-size: 0.9rem;
-      color: var(--text-dark);
-      line-height: 1.6;
-      text-align: justify;
-    }
-
-    .btn-toggle-inline {
-      background: none;
-      border: none;
-      color: var(--brand-accent);
-      font-weight: 700;
-      cursor: pointer;
-      padding: 0;
-      margin-left: 4px;
-      font-size: inherit;
-      font-family: inherit;
-      display: inline;
-      text-decoration: underline;
-    }
-
-    .btn-toggle-inline:hover {
-      opacity: 0.8;
-    }
-
-    .book-actions {
-      margin-top: 12px;
-      width: 100%;
-    }
-
-    .slider-controls {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-top: 10px;
-      padding-top: 16px;
-      border-top: 1px solid rgba(0,0,0,0.05);
-      width: 100%;
-    }
-
-    .slider-btn {
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      background: var(--bg);
-      box-shadow: var(--nm-pill);
-      border: none;
-      color: var(--text-dark);
-      font-weight: 800;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: all 0.2s ease;
-      font-size: 1.2rem;
-    }
-
-    .slider-btn:hover {
-      box-shadow: var(--nm-pill-hover);
-      color: var(--brand-accent);
-    }
-
-    .slider-dots {
-      display: flex;
-      gap: 8px;
-    }
-
-    .dot {
-      width: 10px;
-      height: 10px;
-      border-radius: 50%;
-      background: var(--bg);
-      box-shadow: var(--nm-pressed);
-      cursor: pointer;
-      transition: all 0.3s ease;
-    }
-
-    .dot.active {
-      background: var(--brand-accent);
-      box-shadow: none;
-      width: 22px;
-      border-radius: 10px;
-    }
-
-    .btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      padding: 12px 28px;
-      border-radius: var(--radius-pill);
-      background: var(--bg);
-      box-shadow: var(--nm-pill);
-      color: var(--text-dark);
-      text-decoration: none;
-      font-size: 0.82rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      transition: all 0.2s ease;
-      cursor: pointer;
-      border: none;
-    }
-
-    .btn:hover {
-      box-shadow: var(--nm-pill-hover);
-      color: var(--brand-accent);
-      transform: translateY(1px);
-    }
-
-    .modal-overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.4);
-      backdrop-filter: blur(4px);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 1000;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.3s ease;
-    }
-
-    .modal-overlay.active {
-      opacity: 1;
-      pointer-events: auto;
-    }
-
-    .modal-card {
-      background: var(--bg);
-      box-shadow: var(--nm-flat);
-      border-radius: var(--radius-large);
-      padding: 40px;
-      max-width: 480px;
-      width: 90%;
-      position: relative;
-      text-align: center;
-      transform: translateY(20px);
-      transition: transform 0.3s ease;
-    }
-
-    .modal-overlay.active .modal-card {
-      transform: translateY(0);
-    }
-
-    .modal-card h2 {
-      font-family: 'NT Wagner', 'Cormorant Garamond', Georgia, serif;
-      font-size: 1.8rem;
-      color: var(--brand-accent);
-      margin-bottom: 20px;
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-    }
-
-    .modal-info {
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-      margin-bottom: 28px;
-      text-align: left;
-    }
-
-    .modal-item {
-      background: var(--bg);
-      box-shadow: var(--nm-pressed);
-      padding: 14px 20px;
-      border-radius: var(--radius-medium);
-      font-size: 0.9rem;
-      color: var(--text-dark);
-    }
-
-    .modal-item strong {
-      color: var(--brand-accent);
-      display: block;
-      font-size: 0.75rem;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      margin-bottom: 2px;
-    }
-
-    .modal-close-btn {
-      position: absolute;
-      top: 16px;
-      right: 16px;
-      width: 36px;
-      height: 36px;
-      border-radius: 50%;
-      border: none;
-      background: var(--bg);
-      box-shadow: var(--nm-pill);
-      cursor: pointer;
-      font-weight: bold;
-      color: var(--text-dark);
-      transition: all 0.2s ease;
-    }
-
-    .modal-close-btn:hover {
-      box-shadow: var(--nm-pill-hover);
-      color: var(--brand-accent);
-    }
-
-    footer {
-      padding: 50px 0;
-      text-align: center;
-      font-size: 0.85rem;
-      color: var(--text-muted);
-      font-weight: 600;
-    }
-
-    @media (max-width: 768px) {
-      .about-section {
-        grid-template-columns: 1fr;
-        gap: 24px;
-      }
-      .slide-item {
-        flex-direction: column;
-        align-items: center;
-        text-align: center;
-      }
-      .book-info {
-        align-items: center;
-        text-align: center;
-      }
-      .book-actions, .btn {
-        width: 100%;
-      }
-      .nav-link {
-        flex: 1 1 42%;
-        min-width: unset;
-      }
-    }
-  </style>
+    <meta charset="UTF-8">
+    <!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- ETIQUETA DE VERIFICACIÓN DE GOOGLE SEARCH CONSOLE -->
+    <meta name="google-site-verification" content="PEG_AQUI_TU_CODIGO_UNICO" />
+
+    <title>EL REINO - Augusto Aníbal Toledo</title>
+    <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;1,400&family=Source+Serif+4:ital,opsz,wght=300;400;600;700&family=Space+Grotesk:wght@400;700&family=Fira+Code:wght=300;500&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+    <!-- Resto de tus estilos y scripts... -->
 </head>
-<body>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EL REINO - Augusto Aníbal Toledo</title>
+    <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght=0,400;0,500;1,400&family=Source+Serif+4:ital,opsz,wght=300;400;600;700&family=Space+Grotesk:wght=400;700&family=Fira+Code:wght=300;500&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+    
+    <!-- Supabase JavaScript Library -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        serif: ['"Source Serif 4"', 'Lora', 'serif'],
+                        mono: ['"Space Grotesk"', 'monospace'],
+                        code: ['"Fira Code"', 'monospace'],
+                    },
+                    animation: {
+                        fadeIn: 'fadeIn 0.5s ease-out forwards',
+                    },
+                    keyframes: {
+                        fadeIn: {
+                            '0%': { opacity: '0', transform: 'translateY(4px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { font-family: 'Source Serif 4', serif; }
+        .custom-scrollbar::-webkit-scrollbar { width: 4px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: #121212; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #2c2c2c; border-radius: 2px; }
+        
+        .poem-card {
+            background: #09090b;
+            border: 1px solid #18181b;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .collage-canvas {
+            position: relative;
+            width: 100%;
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px dashed rgba(239, 68, 68, 0.1);
+            overflow: hidden;
+        }
+        .collage-item {
+            position: absolute;
+            transform: translate(-50%, -50%);
+            white-space: nowrap;
+            transition: all 0.3s ease;
+        }
 
-  <div class="container">
-    <header>
-      <div class="header-layout">
-        <button class="logo-container" onclick="irAInicio()" title="Volver al Inicio">
-          <img src="Logo_200_02.png" alt="Logo Cartapecora" onerror="this.style.display='none';">
-        </button>
+        #poemBodyContainer blockquote {
+            font-size: 0.875rem;
+            padding-left: 1.5rem;
+            border-left: 2px solid #3f3f46;
+            color: #a1a1aa;
+            margin-bottom: 1.5rem;
+            font-style: italic;
+            display: block;
+        }
 
-        <div>
-          <h1 class="brand-title">LA CARTAPECORA</h1>
-          <p class="brand-subtitle">Archivo Literario Digital & Depósito Cultural Regional</p>
-        </div>
+        /* DISEÑO DE SANGRÍA FRANCESA */
+        .sangria-francesa-aplicada {
+            padding-left: 2rem;
+            text-indent: -2rem;
+        }
+    </style>
+</head>
+<body class="bg-[#121316] text-[#E4E4E7] selection:bg-amber-950 selection:text-amber-200">
 
-        <nav class="main-nav">
-          <ul class="nav-list">
-            <li><button class="nav-link" id="btn-obras" onclick="irASeccion('obras')">Obras</button></li>
-            <li><button class="nav-link" id="btn-autores" onclick="irASeccion('autores')">Autores</button></li>
-            <li><button class="nav-link" id="btn-talleres" onclick="irASeccion('talleres')">Talleres</button></li>
-            <li><button class="nav-link" id="btn-papers" onclick="irASeccion('papers')">Papers</button></li>
-            <li><button class="nav-link" id="btn-ensayos" onclick="irASeccion('ensayos')">Ensayos</button></li>
-            <li><button class="nav-link" id="btn-contacto" onclick="abrirContacto()">Contacto</button></li>
-          </ul>
-        </nav>
-      </div>
-    </header>
-
-    <main id="view-home" class="page-view active-view">
-      <section class="about-section">
-        <article class="about-card">
-          <h2>Visión</h2>
-          <p>
-            Consolidarnos como la plataforma digital de referencia regional para la preservación, circulación y lectura de libre acceso de obras locales, rescatando la memoria colectiva y sirviendo como vitrina activa para la proyección de los creadores de nuestra tierra.
-          </p>
-        </article>
-
-        <article class="about-card">
-          <h2>Misión</h2>
-          <p>
-            Democratizar la lectura mediante el acceso libre y gratuito a obras en PDF y la difusión de talleres virtuales. Funcionalmente, acortamos distancias entre creadores y lectores, salvaguardando la memoria escrita y potenciando la cultura regional.
-          </p>
-        </article>
-      </section>
-
-      <section id="catalogo" class="obras-section">
-        <h2 class="section-title-center">Destacados</h2>
-        <div class="slider-container">
-          <div class="slider-track-wrapper">
-            <div id="catalog-track" class="slider-track"></div>
-          </div>
-          <div class="slider-controls" id="slider-controls" style="display: none;">
-            <button class="slider-btn" id="prev-btn" aria-label="Anterior">‹</button>
-            <div class="slider-dots" id="slider-dots"></div>
-            <button class="slider-btn" id="next-btn" aria-label="Siguiente">›</button>
-          </div>
-        </div>
-      </section>
-    </main>
-
-    <main id="view-obras" class="page-view">
-      <section class="obras-section" style="max-width: 820px; margin: 0 auto 50px auto; text-align: center;">
-        <h2 style="font-size: 1.1rem; text-transform: uppercase; letter-spacing: 0.14em; color: var(--brand-accent); margin-bottom: 14px; font-weight: 800;">¿Quieres participar y compartir tu obra?</h2>
-        <p style="font-size: 0.92rem; color: var(--text-dark); line-height: 1.7; margin-bottom: 16px; text-align: justify;">
-          Si deseas compartir tu obra (publicada, agotada en edición física o libro editado/publicado digitalmente), envía al correo de contacto los siguientes requisitos: biodata (300 palabras máx.), foto del autor, libro (PDF), reseña del libro (200 palabras máx.).
-        </p>
-        <button class="btn" style="padding: 12px 32px; font-size: 0.82rem;" onclick="abrirContacto()">Enviar Requisitos vía Email</button>
-      </section>
-
-      <section class="obras-section">
-        <h2 class="section-title-center">Catálogo General de Obras</h2>
-        <div id="obras-grid-container" class="obras-grid"></div>
-      </section>
-    </main>
-
-    <main id="view-autores" class="page-view">
-      <section class="obras-section">
-        <h2 class="section-title-center">Autores Registrados</h2>
-        <div id="autores-grid-container" class="obras-grid"></div>
-      </section>
-    </main>
-
-    <main id="view-talleres" class="page-view">
-      <section class="talleres-section">
-        <h2 class="section-title-center" id="taller-titulo">Taller de Textos</h2>
-        <article class="talleres-card">
-          <h2 id="taller-subtitulo">Reseña</h2>
-          <p id="taller-resena">
-            Cargando información del taller desde Supabase...
-          </p>
-        </article>
-      </section>
-    </main>
-
-    <!-- VISTA PAPERS -->
-    <main id="view-papers" class="page-view">
-      <section class="obras-section">
-        <h2 class="section-title-center">Publicación académica</h2>
-        <div id="papers-grid-container" class="obras-grid"></div>
-      </section>
-    </main>
-
-    <!-- VISTA ENSAYOS -->
-    <main id="view-ensayos" class="page-view">
-      <section class="obras-section">
-        <h2 class="section-title-center">Ensayos Críticos</h2>
-        <div id="ensayos-grid-container" class="obras-grid"></div>
-      </section>
-    </main>
-
-    <footer style="display: flex; align-items: center; justify-content: center; gap: 10px; flex-wrap: wrap;">
-      <a href="https://hitscounter.dev" target="_blank" rel="noopener noreferrer" style="display: inline-flex; align-items: center;">
-        <img src="https://hitscounter.dev/api/hit?url=https%3A%2F%2Ftallertexto.github.io%2Flacartapecora&color=9F430A" alt="Hits Counter" style="vertical-align: middle;">
-      </a>
-      <p>© <span id="year"></span> AATC. Todos los derechos reservados.</p>
-    </footer>
+  <!-- PORTADA DE BIENVENIDA / OVERLAY -->
+  <div id="welcomeOverlay" class="fixed inset-0 bg-[#121316] z-[9999] flex items-center justify-center p-8 transition-all duration-700 ease-in-out">
+    <div class="max-w-3xl w-full font-code text-sm text-zinc-600 select-none leading-relaxed text-justify break-all tracking-[0.15em]">
+      01001100011000010010000001100011011010010110011001101110011001100001001000000011100110110100101100110010101101101011100000111001001110011011010010110011001010110110101110000011100100111001101101001011001100101011011010111000001110010011110010010000001100011011000010110010001100001100101100101100000100100000011001010010110110101101111001101BIENVENIDOS0<span class="text-amber-400 font-bold inline-block whitespace-nowrap">SITIO</span>100100000011100100110010101110011011101010BIENVENIDOS11100110000100100000011101010110111000<button onclick="irAPortadas()" class="text-amber-400 font-bold hover:text-amber-300 transition-all duration-300 focus:outline-none cursor-pointer hover:scale-105 active:scale-95 inline-block whitespace-nowrap border-b border-amber-400/40 hover:border-amber-300">LIBROS</button>011100110110100101100110010101101<a href="https://tallertexto.github.io/lacartapecora/" target="_blank" rel="noopener noreferrer" class="font-bold text-amber-300 hover:text-amber-200 bg-amber-500/20 hover:bg-amber-500/30 border border-amber-400/60 rounded px-2 py-0.5 transition-all duration-300 mx-1 focus:outline-none cursor-pointer hover:scale-105 active:scale-95 inline-block text-xs font-code tracking-normal">LA_CARTAPECORA</a>10010011001001101110011011110110011001101001011001100110<button onclick="irDirectoATerminal()" class="font-bold text-amber-300 hover:text-amber-200 bg-amber-500/20 hover:bg-amber-500/30 border border-amber-400/60 rounded px-2 py-0.5 transition-all duration-300 mx-1 focus:outline-none cursor-pointer hover:scale-105 active:scale-95 inline-block text-xs font-code tracking-normal">INTERFAZ_CODE</button>01ROMPE_LOS_CODIGOS_1110011001100110100101100110011010010110111001001100001001000000111100100100000011000110_<button onclick="entrarAlReino()" class="font-bold text-lg text-amber-400 hover:text-amber-300 transition-all duration-300 mx-1 focus:outline-none cursor-pointer hover:scale-105 active:scale-95 inline-block border-b border-amber-400">ENTRAR</button>_011011100110010000001100101011011000110000100100000001110011011010010110011001010110110101110000011100100110010<span class="text-amber-400 font-bold inline-block whitespace-nowrap">METAMORFOSIS</span>011011100110000101100100011000010010000001110000011000010111001001100101011000110110100100100000<span class="text-amber-400 font-bold inline-block whitespace-nowrap">NADA</span>10010110000100100000011100110110001100101011011010110010001001100001011100100110111001110110010110000100000<button onclick="irAAutor()" class="font-bold text-amber-300 hover:text-amber-200 bg-amber-500/20 hover:bg-amber-500/30 border border-amber-400/60 rounded px-2 py-0.5 transition-all duration-300 mx-1 focus:outline-none cursor-pointer hover:scale-105 active:scale-95 inline-block text-xs font-code tracking-normal">AUTOR</button>011011010110010201101110011011100110111001001011000010010000001110011011010010110001100101011011010110010001001100001011100100110011001110110010110000100000<span class="text-amber-400 font-bold inline-block whitespace-nowrap">GREGORSAMSA</span>0110010101110011011101000110001001100001000000110110001100001001000000110010101110011011100111000011001010111001001100000100000<span class="text-amber-400 font-bold inline-block whitespace-nowrap">ESPERA</span>0110000100100000011000100100000101100100011000110110010101101101011100000100<span class="text-amber-400 font-bold inline-block whitespace-nowrap">LINEAS</span>011011000110100101101110011001010110000101110011001000000110011100001000001101100011001110011001000000
+    </div>
   </div>
 
-  <!-- MODAL CONTACTO -->
-  <div id="modal-contacto" class="modal-overlay" onclick="cerrarContactoEnFondo(event)">
-    <div class="modal-card">
-      <button class="modal-close-btn" onclick="cerrarContacto()">✕</button>
-      <h2>Contacto</h2>
-      <div class="modal-info">
-        <div class="modal-item">
-          <strong>Correo Electrónico</strong>
-          augusto.atc@gmail.com
-        </div>
-        <div class="modal-item">
-          <strong>Ubicación</strong>
-          Tacna, Perú
-        </div>
-        <div class="modal-item">
-          <strong>Horario de Atención</strong>
-          Lunes a Viernes: 9:00 AM - 6:00 PM
+  <!-- HEADER -->
+  <header class="h-24 fixed top-0 left-0 right-0 bg-[#121316]/90 backdrop-blur-md border-b border-zinc-800/80 z-50">
+    <div class="max-w-7xl mx-auto px-6 h-full flex items-center justify-between">
+      <div class="flex items-center gap-4">
+        <button onclick="reabrirPortadaInicio()" class="font-mono text-amber-500 hover:text-amber-400 tracking-widest text-xs border border-amber-500/30 hover:border-amber-500/60 bg-amber-950/10 hover:bg-amber-950/30 px-2 py-1 rounded transition-all flex items-center gap-1.5 cursor-pointer">
+          <span class="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse"></span>
+          PORTAL: ACTIVO
+        </button>
+        <div>
+          <h1 class="text-2xl font-light tracking-[0.2em] uppercase text-zinc-100 cursor-pointer select-none" onclick="reabrirPortadaInicio()">El Reino</h1>
+          <p class="text-[9px] font-mono text-zinc-500 tracking-wider">PANORAMA (2008 - 2026)</p>
         </div>
       </div>
-      <button class="btn" onclick="cerrarContacto()">Cerrar</button>
+      
+      <div class="flex items-center gap-3">
+        <button onclick="changeActiveView('grid')" id="gridNavBtn"
+                class="px-4 py-2 bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 rounded-lg text-xs font-mono tracking-wider transition-colors flex items-center gap-2 cursor-pointer">
+          <i class="fa-solid fa-circle-nodes text-zinc-500"></i>
+          <span>SECCIONES</span>
+        </button>
+
+        <button onclick="changeActiveView('terminal')" id="terminalNavBtn"
+                class="px-4 py-2 bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 rounded-lg text-xs font-mono tracking-wider transition-colors flex items-center gap-2 cursor-pointer">
+          <i class="fa-solid fa-terminal text-amber-500"></i>
+          <span>TERMINAL SOFONÍAS</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <div class="pt-24">
+    <!-- PANTALLA 0: GALERÍA DE PORTADAS (LIBROS) -->
+    <div id="coversView" class="hidden p-8 animate-fadeIn min-h-[calc(100vh-6rem)]">
+      <div class="max-w-6xl mx-auto flex flex-col gap-8">
+        <div class="border-b border-zinc-800/80 pb-4 flex items-center justify-between">
+          <h2 class="font-mono text-sm tracking-widest font-bold uppercase text-amber-500">PORTADAS DEL REINO</h2>
+          <span class="font-mono text-xs text-zinc-500 tracking-wider">EDICIONES PUBLICADAS</span>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-8 items-stretch justify-center">
+          <div class="bg-zinc-950 p-4 flex flex-col items-center shadow-xl">
+            <img src="https://kpvucfktjnuqltuvgflx.supabase.co/storage/v1/object/public/portadas/1_primavera_extramuros.png" alt="Primavera Extramuros" class="w-full h-auto mb-4">
+            <h3 class="font-mono text-[10px] text-zinc-200 uppercase tracking-widest font-bold mt-auto text-center">Primavera Extramuros (2018)<br>Diseño: Jhon Toledo<br>Arte: W.M. Ccoto</h3>
+          </div>
+          <div class="bg-zinc-950 p-4 flex flex-col items-center shadow-xl">
+            <img src="https://kpvucfktjnuqltuvgflx.supabase.co/storage/v1/object/public/portadas/2_orbita_rota.png" alt="Órbita Rota" class="w-full h-auto mb-4">
+            <h3 class="font-mono text-[10px] text-zinc-200 uppercase tracking-widest font-bold mt-auto text-center">Órbita Rota (2019)<br>Diseño: Jhon Toledo<br>Arte: Andrés Pio Cotrina</h3>
+          </div>
+          <div class="bg-zinc-950 p-4 flex flex-col items-center shadow-xl">
+            <img src="https://kpvucfktjnuqltuvgflx.supabase.co/storage/v1/object/public/portadas/3_los_extramuros.png" alt="Los Extramuros" class="w-full h-auto mb-4">
+            <h3 class="font-mono text-[10px] text-zinc-200 uppercase tracking-widest font-bold mt-auto text-center">Los Extramuros (2024)<br>Diseño: Jhon Toledo<br>Arte: W.M. Ccoto</h3>
+          </div>
+          <div class="bg-zinc-950 p-4 flex flex-col items-center shadow-xl">
+            <img src="https://kpvucfktjnuqltuvgflx.supabase.co/storage/v1/object/public/portadas/4_EL%20REINO.png" alt="El Reino" class="w-full h-auto mb-4">
+            <h3 class="font-mono text-[10px] text-zinc-200 uppercase tracking-widest font-bold mt-auto text-center">El Reino (2026)<br><br></h3>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PANTALLA 1: GRID DE SECCIONES CON JERARQUÍA -->
+    <div id="gridView" class="hidden p-8 animate-fadeIn">
+      <div id="contenedor-tarjetas" class="max-w-6xl mx-auto flex flex-col gap-12"></div>
+    </div>
+
+    <!-- PANTALLA 2: LECTURA DE POEMAS -->
+    <div id="readView" class="min-h-[calc(100vh-6rem)] flex justify-center items-start p-6 lg:p-16">
+      <main class="max-w-3xl w-full flex flex-col gap-12">
+        <div id="poemWrapper" class="w-full">
+          <div id="poemMetadataHeader" class="mb-8 font-mono text-xs border-b border-zinc-800/40 pb-4 flex justify-between items-center">
+             <span id="poemBookLabel" class="text-amber-500 uppercase tracking-widest font-bold">EL REINO</span>
+             <span id="poemRenderBadge" class="text-zinc-500 border border-zinc-800 px-2 py-0.5 rounded text-[10px]">render: estandar</span>
+          </div>
+          <div id="poemContent" class="space-y-6">
+            <h2 id="poemTitle" class="text-3xl lg:text-4xl font-light tracking-wide text-zinc-100 uppercase">CARGANDO...</h2>
+            <div id="poemBodyContainer" class="text-lg text-zinc-300 font-light"></div>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <!-- PANTALLA 3: DATOS DEL AUTOR CON BIODATA COMPLETA -->
+    <div id="authorView" class="hidden min-h-[calc(100vh-6rem)] flex justify-center items-start p-6 lg:p-16 animate-fadeIn">
+      <main class="max-w-3xl w-full flex flex-col gap-8">
+        <div class="font-code text-xs text-amber-400/90 bg-zinc-950/60 p-8 rounded-xl border border-zinc-800/80 max-w-3xl mx-auto leading-relaxed space-y-4">
+          <p class="text-justify">
+            <strong class="text-amber-500 font-bold text-sm tracking-wide">AUGUSTO ANÍBAL TOLEDO (Tacna)</strong> siguió el rumbo de las letras y la lingüística, es egresado de la Universidad Nacional de San Agustín de Arequipa y con estudios de Maestría en Investigación e Innovación Científica en la Universidad Privada de Tacna. Su trayectoria cultural ha sido reconocida con la Resolución Municipal N.º 0299-2022 por su aporte literario y otra resolución en 2011 por organizar el conversatorio Perspectivas Literarias en la Región Sur en Tacna.
+          </p>
+          <p class="text-justify">
+            Su activa participación en el ecosistema cultural lo ha llevado a ser jurado para el Ministerio de Cultura, Gobiernos Regionales y UGELs de Arequipa y Tacna en certámenes como el Concurso Nacional de Oratoria (2024), PERÚ LEE (2023), el Premio José María Arguedas (2021 y 2023) y Poeta Joven (2018-2019).
+          </p>
+          <p class="text-justify">
+            Como poeta, obtuvo el primer puesto en los concursos Casa Basadre (2008) y Casa Zela (2009), y años después decidió publicar los títulos de los poemarios Primavera Extramuros (2018), Órbita Rota (2019) y Los Extramuros (2024). Además, ha colaborado en las revistas Cinosargo (Chile), Groenlandia (España) y Delirium Tremens (Perú), y fue integrado en la antología Buganvilla (2015).
+          </p>
+          <p class="text-justify">
+            Siempre dispuesto a compartir saberes, vuelca su experiencia en espacios académicos y de divulgación; en 2024, dictó charlas y talleres en el FESTILEC, el Centro Cultural Liber Forti y la Universidad Nacional Jorge Basadre Grohmann (bajo Resolución N°8149-2024-FECH). Esta labor formativa se complementa con el diseño de talleres de creación de textos desde 2018 y su constante participación en encuentros poéticos como los recitales.
+          </p>
+        </div>
+      </main>
+    </div>
+
+    <!-- PANTALLA 4: TERMINAL SOFONÍAS -->
+    <div id="terminalView" class="hidden min-h-[calc(100vh-6rem)] flex justify-center items-start p-6 lg:p-16 animate-fadeIn">
+      <main class="max-w-xl w-full flex flex-col gap-6">
+        <div class="border-b border-zinc-800/60 pb-4 flex items-center justify-between">
+          <div class="flex items-center gap-2">
+            <i class="fa-solid fa-terminal text-amber-500"></i>
+            <h2 class="text-lg font-mono tracking-wider uppercase text-zinc-100">ESPACIO SÍNCRONO</h2>
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="w-2 h-2 rounded-full bg-amber-500 animate-pulse"></span>
+            <span class="font-mono text-xs text-zinc-500">HABITANTES: <span id="visitCounter" class="text-amber-500 font-bold">00000050</span></span>
+          </div>
+        </div>
+
+        <div class="p-5 bg-black border border-amber-500/20 rounded-2xl">
+          <h4 class="font-mono text-xs text-amber-500 uppercase tracking-widest mb-2 flex items-center gap-2">
+            <i class="fa-solid fa-code"></i> TERMINAL SOFONÍAS
+          </h4>
+          <p class="text-zinc-500 text-[11px] mb-3 font-mono">Introduce los ocho dígitos del código binario del libro físico para romper el cifrado:</p>
+          <div class="flex gap-2">
+            <input type="text" id="binaryInput" placeholder="Ej: 00001010" maxlength="8" class="flex-1 bg-zinc-900 border border-zinc-800 rounded px-3 py-2 text-xs font-mono text-amber-400 focus:outline-none focus:border-amber-500">
+            <button onclick="decodeBinary()" class="bg-amber-600 hover:bg-amber-700 text-black font-mono text-xs font-bold px-4 py-2 rounded transition-colors cursor-pointer">
+              DESCIFRAR
+            </button>
+          </div>
+          <div id="binaryResult" class="mt-3 text-xs font-mono text-zinc-400 hidden p-3 bg-zinc-900 rounded border border-zinc-800"></div>
+        </div>
+
+        <div class="bg-[#18191C] border border-zinc-800 rounded-xl p-6 shadow-2xl space-y-6">
+          <div>
+            <div class="flex items-center gap-2 mb-3 text-amber-400 font-code text-xs tracking-wider uppercase font-semibold">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"></path></svg>
+              ECO DE LOS VISITANTES (GLOBAL)
+            </div>
+            <div id="ecosList" class="space-y-3 max-h-52 overflow-y-auto pr-1 custom-scrollbar">
+              <div class="p-3 bg-[#121316] border border-zinc-800/80 rounded-lg text-xs text-zinc-500 italic">Cargando ecos...</div>
+            </div>
+          </div>
+
+          <form id="echoForm" onsubmit="enviarEco(event)" class="space-y-3">
+            <input type="text" id="echoUser" placeholder="Seudónimo..." required class="w-full bg-[#121316] border border-zinc-800 focus:border-amber-500/60 rounded-lg px-4 py-2.5 text-xs text-zinc-200 placeholder-zinc-600 focus:outline-none transition-all font-code" />
+            <div class="relative">
+              <input type="text" id="echoMessage" placeholder="Escribe tu eco en el Reino..." required class="w-full bg-[#121316] border border-zinc-800 focus:border-amber-500/60 rounded-lg pl-4 pr-10 py-2.5 text-xs text-zinc-200 placeholder-zinc-600 focus:outline-none transition-all font-code" />
+              <button type="submit" class="absolute right-2 top-1/2 -translate-y-1/2 text-amber-400 hover:text-amber-300 p-1.5 transition-transform active:scale-95 cursor-pointer" title="Enviar eco">
+                <svg class="w-4 h-4 transform rotate-45" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path></svg>
+              </button>
+            </div>
+          </form>
+
+          <hr class="border-zinc-800/60 my-4" />
+
+          <div>
+            <div class="flex items-center gap-2 mb-3 text-amber-400 font-code text-xs tracking-wider uppercase font-semibold">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
+              CÓDIGOS DESCIFRADOS
+            </div>
+            <div id="codigosList" class="space-y-2 max-h-40 overflow-y-auto pr-1 custom-scrollbar font-code text-xs">
+              <div class="p-3 bg-[#121316] border border-zinc-800/80 rounded-lg text-xs text-zinc-500 italic">Cargando bitácora de códigos...</div>
+            </div>
+          </div>
+        </div>
+      </main>
     </div>
   </div>
 
   <script>
-    document.getElementById('year').textContent = new Date().getFullYear();
+    let activeView = 'read'; 
+    const SUPABASE_URL = "https://kpvucfktjnuqltuvgflx.supabase.co";
+    const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtwdnVjZmt0am51cWx0dXZnZmx4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQxMjk5MzIsImV4cCI6MjA5OTcwNTkzMn0.qV51Slxgz9pRnlGzLQB404SybQz4gOkDIbwSFnNxD-Q";
+    const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-    const SUPABASE_URL = 'https://xuiomosfnutsxrqjvszy.supabase.co';
-    const SUPABASE_ANON_KEY = 'sb_publishable_GOx8Ejp0p50ZZJGL0CqO9w_nllW8cbk';
-    
-    let supabaseClient = null;
-    if (typeof supabase !== 'undefined') {
-      supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-    }
+    let catalog = {};
 
-    let currentIndex = 0;
-    let totalSlides = 0;
-    let librosData = [];
-    let autoresData = [];
-    let papersData = [];
-    let ensayosData = [];
+    window.addEventListener('DOMContentLoaded', () => {
+        fetchPoemsFromSupabase();
+        initVisitCounter();
+        cargarEcos();
+        cargarCodigosDescifrados();
+    });
 
-    function irAInicio() {
-      document.querySelectorAll('.page-view').forEach(view => view.classList.remove('active-view'));
-      document.getElementById('view-home').classList.add('active-view');
-      document.querySelectorAll('.nav-link').forEach(btn => btn.classList.remove('active'));
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-
-    function irASeccion(seccion) {
-      document.querySelectorAll('.page-view').forEach(view => view.classList.remove('active-view'));
-      document.querySelectorAll('.nav-link').forEach(btn => btn.classList.remove('active'));
-
-      if (seccion === 'obras') {
-        document.getElementById('view-obras').classList.add('active-view');
-        document.getElementById('btn-obras').classList.add('active');
-        renderGridObras(librosData);
-      } else if (seccion === 'autores') {
-        document.getElementById('view-autores').classList.add('active-view');
-        document.getElementById('btn-autores').classList.add('active');
-        renderGridAutores(autoresData);
-      } else if (seccion === 'talleres') {
-        document.getElementById('view-talleres').classList.add('active-view');
-        document.getElementById('btn-talleres').classList.add('active');
-      } else if (seccion === 'papers') {
-        document.getElementById('view-papers').classList.add('active-view');
-        document.getElementById('btn-papers').classList.add('active');
-        renderGridPapers(papersData);
-      } else if (seccion === 'ensayos') {
-        document.getElementById('view-ensayos').classList.add('active-view');
-        document.getElementById('btn-ensayos').classList.add('active');
-        renderGridEnsayos(ensayosData);
+    async function registrarPulsion(tipoAccion, detallesObj = {}) {
+      try {
+        const pseudonimo = document.getElementById("echoUser")?.value || 'HABITANTE_ANÓNIMO';
+        await _supabase.from('interacciones').insert([{
+          tipo_accion: tipoAccion,
+          poema_key: detallesObj.key || null,
+          poema_titulo: detallesObj.title || null,
+          pseudonimo: pseudonimo,
+          detalles: JSON.stringify(detallesObj)
+        }]);
+      } catch (err) {
+        console.warn("No se pudo registrar la pulsión:", err.message);
       }
-      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
-    function abrirContacto() {
-      document.getElementById('modal-contacto').classList.add('active');
+    async function initVisitCounter() {
+      try {
+        let { data, error } = await _supabase
+          .from('Contador')
+          .select('visitas')
+          .eq('id', 1)
+          .maybeSingle();
+
+        if (error) throw error;
+        
+        let totalVisitas = data && data.visitas >= 50 ? data.visitas : 50;
+
+        if (!localStorage.getItem('visited_global_user')) {
+          localStorage.setItem('visited_global_user', 'true');
+          totalVisitas = totalVisitas + 1;
+
+          await _supabase
+            .from('Contador')
+            .update({ visitas: totalVisitas })
+            .eq('id', 1);
+
+          registrarPulsion('NUEVO_HABITANTE_INGRESADO');
+        }
+
+        document.getElementById('visitCounter').textContent = String(totalVisitas).padStart(8, '0');
+
+        _supabase
+          .channel('cambios-contador')
+          .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'Contador', filter: 'id=eq.1' }, payload => {
+            if (payload.new && typeof payload.new.visitas === 'number') {
+              let realtimeVisitas = payload.new.visitas < 50 ? 50 : payload.new.visitas;
+              document.getElementById('visitCounter').textContent = String(realtimeVisitas).padStart(8, '0');
+            }
+          })
+          .subscribe();
+
+      } catch (err) {
+        console.error("Error en el contador:", err.message);
+        document.getElementById('visitCounter').textContent = "00000050";
+      }
     }
 
-    function cerrarContacto() {
-      document.getElementById('modal-contacto').classList.remove('active');
+    async function cargarEcos() {
+      const container = document.getElementById("ecosList");
+      if (!container) return;
+
+      const { data: ecos, error } = await _supabase
+        .from('ecos')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+      if (error || !ecos) {
+        container.innerHTML = `<div class="text-zinc-600 text-xs italic p-2">Error al cargar ecos.</div>`;
+        return;
+      }
+
+      if (ecos.length === 0) {
+        container.innerHTML = `<div class="text-zinc-600 text-xs italic p-2">Aún no hay ecos en el Reino.</div>`;
+        return;
+      }
+
+      container.innerHTML = ecos.map(eco => `
+        <div class="p-3 bg-[#121316] border border-zinc-800/80 rounded-lg">
+          <div class="text-[10px] font-code text-amber-400 uppercase tracking-wider font-semibold mb-1">
+            ${eco.pseudonimo || 'ANÓNIMO'}
+          </div>
+          <p class="text-xs text-zinc-300 font-sans leading-relaxed">${eco.mensaje}</p>
+        </div>
+      `).join('');
+
+      _supabase
+        .channel('ecos-live')
+        .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'ecos' }, () => cargarEcos())
+        .subscribe();
     }
 
-    function cerrarContactoEnFondo(event) {
-      if (event.target.id === 'modal-contacto') cerrarContacto();
-    }
+    async function enviarEco(event) {
+      event.preventDefault();
+      const userInput = document.getElementById("echoUser");
+      const msgInput = document.getElementById("echoMessage");
 
-    function toggleTextoInSitu(idElemento, prefix, textoCodificado, limitePalabras = 28) {
-      const textoElemento = document.getElementById(`${prefix}-text-${idElemento}`);
-      const botonElemento = document.getElementById(`${prefix}-btn-${idElemento}`);
-      const textoCompleto = decodeURIComponent(textoCodificado);
+      const pseudonimo = userInput?.value.trim() || '';
+      const mensaje = msgInput?.value.trim() || '';
 
-      if (botonElemento.dataset.expanded === "false") {
-        textoElemento.textContent = textoCompleto;
-        botonElemento.textContent = " (Mostrar menos)";
-        botonElemento.dataset.expanded = "true";
+      if (!pseudonimo || !mensaje) return;
+
+      const { error } = await _supabase.from('ecos').insert([{ pseudonimo, mensaje }]);
+
+      if (error) {
+        alert("Error al enviar el eco. Revisa tu conexión.");
       } else {
-        const palabras = textoCompleto.trim().split(/\s+/);
-        textoElemento.textContent = palabras.slice(0, limitePalabras).join(' ') + '...';
-        botonElemento.textContent = " (Seguir leyendo...)";
-        botonElemento.dataset.expanded = "false";
+        registrarPulsion('PULSION_ECO_ENVIADO', { pseudonimo, mensaje });
+        msgInput.value = '';
+        cargarEcos();
       }
     }
 
-    function downloadPDF(url, filename) {
-      if (!url || url === '#') return;
-      if (url.includes('doi.org') || (!url.includes('supabase.co') && url.startsWith('http'))) {
-        window.open(url, '_blank', 'noopener,noreferrer');
-        return;
-      }
-      window.open(url, '_blank', 'noopener,noreferrer');
-    }
+    async function cargarCodigosDescifrados() {
+      const container = document.getElementById("codigosList");
+      if (!container) return;
 
-    function obtenerUrlPDF(item) {
-      let rawPdf = (item.url_pdf || item.pdf_url || item.archivo || '').trim();
-      if (rawPdf) {
-        if (rawPdf.startsWith('http://') || rawPdf.startsWith('https://')) return rawPdf;
-        const cleanFile = decodeURIComponent(rawPdf).replace(/^\//, '');
-        return `${SUPABASE_URL}/storage/v1/object/public/PDFS/${encodeURIComponent(cleanFile)}`;
-      }
-      return '#';
-    }
+      const { data: codigos, error } = await _supabase
+        .from('codigos_descifrados')
+        .select('*')
+        .order('created_at', { ascending: false });
 
-    function obtenerUrlPortada(libro) {
-      const fallbackSVG = `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="220" height="330" viewBox="0 0 220 330"><rect width="100%" height="100%" fill="%23b6afbf"/></svg>`;
-      let rawPortada = (libro.url_portada || libro.cover_url || libro.imagen || libro.portada || '').trim();
-      if (rawPortada) {
-        if (rawPortada.startsWith('http://') || rawPortada.startsWith('https://')) return rawPortada;
-        const cleanFile = decodeURIComponent(rawPortada).replace(/^\//, '');
-        return `${SUPABASE_URL}/storage/v1/object/public/PORTADAS/${encodeURIComponent(cleanFile)}`;
-      }
-      return fallbackSVG;
-    }
-
-    function obtenerUrlFotoAutor(autor) {
-      const fallbackSVG = `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="150" height="150" viewBox="0 0 150 150"><rect width="100%" height="100%" fill="%23b6afbf"/></svg>`;
-      let rawFoto = (autor.foto_url || autor.imagen || autor.foto || '').trim();
-      if (rawFoto) {
-        if (rawFoto.startsWith('http://') || rawFoto.startsWith('https://')) return rawFoto;
-        const cleanFile = decodeURIComponent(rawFoto).replace(/^\//, '');
-        return `${SUPABASE_URL}/storage/v1/object/public/AUTORES/${encodeURIComponent(cleanFile)}`;
-      }
-      return fallbackSVG;
-    }
-
-    function renderSlider(libros) {
-      const track = document.getElementById('catalog-track');
-      const controls = document.getElementById('slider-controls');
-      const dotsContainer = document.getElementById('slider-dots');
-
-      track.innerHTML = '';
-      dotsContainer.innerHTML = '';
-      totalSlides = libros.length;
-
-      if (totalSlides === 0) {
-        track.innerHTML = '<p style="color: var(--text-muted); font-size: 0.9rem; text-align: center; width: 100%;">No hay publicaciones en este momento.</p>';
-        controls.style.display = 'none';
+      if (error || !codigos) {
+        container.innerHTML = `<div class="text-zinc-600 text-xs italic p-2">Sin registros de códigos.</div>`;
         return;
       }
 
-      const fallbackSVG = `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="220" height="330" viewBox="0 0 220 330"><rect width="100%" height="100%" fill="%23b6afbf"/></svg>`;
-
-      libros.forEach((libro, idx) => {
-        const idLibro = libro.id || `slide-${idx}`;
-        const titulo = libro.titulo || libro.title || 'Sin Título';
-        const autor = libro.autor || libro.author || 'Autor Desconocido';
-        const ano = libro.ano || libro.year || '';
-        const genero = libro.genero || libro.genre || '';
-        const resenaCompleta = libro.resena || libro.description || libro.sinopsis || 'Sin reseña.';
-        const isbn = libro.isbn || '';
-        const depositoLegal = libro['deposito legal'] || libro.deposito_legal || '';
-
-        const palabrasResena = resenaCompleta.trim().split(/\s+/);
-        const esResenaLarga = palabrasResena.length > 28;
-        const resenaInicial = esResenaLarga ? palabrasResena.slice(0, 28).join(' ') + '...' : resenaCompleta;
-        const resenaCodificada = encodeURIComponent(resenaCompleta);
-
-        let metaExtraText = [];
-        if (isbn) metaExtraText.push(`ISBN: ${isbn}`);
-        if (depositoLegal) metaExtraText.push(`D.L.: ${depositoLegal}`);
-        const metaExtraHTML = metaExtraText.length > 0 ? `<p class="book-meta-extra">${metaExtraText.join('  |  ')}</p>` : '';
-
-        const url_portada = obtenerUrlPortada(libro);
-        const url_pdf = (libro.url_pdf || libro.pdf_url || libro.archivo || '#').trim();
-        const esDOI = url_pdf.includes('doi.org');
-        const textoBoton = esDOI ? 'Ver en Repositorio DOI' : 'Descargar PDF';
-        const etiquetaTipo = esDOI ? 'DOI' : 'PDF';
-
-        const slide = document.createElement('div');
-        slide.className = 'slide-item';
-        slide.innerHTML = `
-          <div class="cover-wrapper">
-            <img src="${url_portada}" alt="Portada" loading="lazy" onerror="this.onerror=null; this.src='${fallbackSVG}';">
-          </div>
-          <div class="book-info">
-            <h3 class="book-title">${titulo}</h3>
-            <p class="book-author">${autor} ${ano ? '• ' + ano : ''}</p>
-            ${metaExtraHTML}
-            <div class="book-tags">
-              ${genero ? `<span class="tag">${genero}</span>` : ''}
-              <span class="tag">${etiquetaTipo}</span>
-            </div>
-            <p class="book-description">
-              <span id="slider-resena-text-${idLibro}">${resenaInicial}</span>
-              ${esResenaLarga ? `
-                <button 
-                  id="slider-resena-btn-${idLibro}" 
-                  class="btn-toggle-inline" 
-                  data-expanded="false" 
-                  onclick="toggleTextoInSitu('${idLibro}', 'slider-resena', '${resenaCodificada}', 28)"
-                > (Seguir leyendo...)</button>
-              ` : ''}
-            </p>
-            <div class="book-actions">
-              ${url_pdf !== '#' ? `<button class="btn" onclick="downloadPDF('${url_pdf}', '${titulo.replace(/[^a-z0-9]/gi, '_').toLowerCase()}.pdf')">${textoBoton}</button>` : ''}
-            </div>
-          </div>
-        `;
-        track.appendChild(slide);
-
-        const dot = document.createElement('div');
-        dot.className = `dot ${idx === 0 ? 'active' : ''}`;
-        dot.addEventListener('click', () => goToSlide(idx));
-        dotsContainer.appendChild(dot);
-      });
-
-      controls.style.display = totalSlides > 1 ? 'flex' : 'none';
-      updateSlider();
-    }
-
-    function renderGridObras(libros) {
-      const gridContainer = document.getElementById('obras-grid-container');
-      gridContainer.innerHTML = '';
-      if (!libros || libros.length === 0) {
-        gridContainer.innerHTML = '<p style="color: var(--text-muted); text-align: center; grid-column: 1/-1;">No hay obras disponibles.</p>';
-        return;
-      }
-      const fallbackSVG = `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="220" height="330" viewBox="0 0 220 330"><rect width="100%" height="100%" fill="%23b6afbf"/></svg>`;
-
-      libros.forEach((libro, idx) => {
-        const idLibro = libro.id || `grid-${idx}`;
-        const titulo = libro.titulo || libro.title || 'Sin Título';
-        const autor = libro.autor || libro.author || 'Autor Desconocido';
-        const ano = libro.ano || libro.year || '';
-        const genero = libro.genero || libro.genre || '';
-        const resenaCompleta = libro.resena || libro.description || libro.sinopsis || 'Sin reseña.';
-        const isbn = libro.isbn || '';
-        const depositoLegal = libro['deposito legal'] || libro.deposito_legal || '';
-
-        const palabrasResena = resenaCompleta.trim().split(/\s+/);
-        const esResenaLarga = palabrasResena.length > 28;
-        const resenaInicial = esResenaLarga ? palabrasResena.slice(0, 28).join(' ') + '...' : resenaCompleta;
-        const resenaCodificada = encodeURIComponent(resenaCompleta);
-
-        let metaExtraText = [];
-        if (isbn) metaExtraText.push(`ISBN: ${isbn}`);
-        if (depositoLegal) metaExtraText.push(`D.L.: ${depositoLegal}`);
-        const metaExtraHTML = metaExtraText.length > 0 ? `<p class="book-meta-extra">${metaExtraText.join('  |  ')}</p>` : '';
-
-        const url_portada = obtenerUrlPortada(libro);
-        const url_pdf = (libro.url_pdf || libro.pdf_url || libro.archivo || '#').trim();
-        const esDOI = url_pdf.includes('doi.org');
-        const textoBoton = esDOI ? 'Ver Repositorio' : 'Descargar PDF';
-        const etiquetaTipo = esDOI ? 'DOI' : 'PDF';
-
-        const card = document.createElement('div');
-        card.className = 'obra-card-item';
-        card.innerHTML = `
-          <div class="cover-wrapper">
-            <img src="${url_portada}" alt="Portada" loading="lazy" onerror="this.onerror=null; this.src='${fallbackSVG}';">
-          </div>
-          <div class="book-info">
-            <h3 class="book-title">${titulo}</h3>
-            <p class="book-author">${autor} ${ano ? '• ' + ano : ''}</p>
-            ${metaExtraHTML}
-            <div class="book-tags">
-              ${genero ? `<span class="tag">${genero}</span>` : ''}
-              <span class="tag">${etiquetaTipo}</span>
-            </div>
-            <p class="book-description">
-              <span id="grid-resena-text-${idLibro}">${resenaInicial}</span>
-              ${esResenaLarga ? `
-                <button 
-                  id="grid-resena-btn-${idLibro}" 
-                  class="btn-toggle-inline" 
-                  data-expanded="false" 
-                  onclick="toggleTextoInSitu('${idLibro}', 'grid-resena', '${resenaCodificada}', 28)"
-                > (Seguir leyendo...)</button>
-              ` : ''}
-            </p>
-            <div class="book-actions">
-              ${url_pdf !== '#' ? `<button class="btn" onclick="downloadPDF('${url_pdf}', '${titulo.replace(/[^a-z0-9]/gi, '_').toLowerCase()}.pdf')">${textoBoton}</button>` : ''}
-            </div>
-          </div>
-        `;
-        gridContainer.appendChild(card);
-      });
-    }
-
-    function renderGridAutores(autores) {
-      const gridContainer = document.getElementById('autores-grid-container');
-      gridContainer.innerHTML = '';
-      if (!autores || autores.length === 0) {
-        gridContainer.innerHTML = '<p style="color: var(--text-muted); text-align: center; grid-column: 1/-1;">No hay autores.</p>';
-        return;
-      }
-      const fallbackSVG = `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="150" height="150" viewBox="0 0 150 150"><rect width="100%" height="100%" fill="%23b6afbf"/></svg>`;
-
-      autores.forEach((autorItem, idx) => {
-        const idAutor = autorItem.id || `autor-${idx}`;
-        const nombre = autorItem.nombre || autorItem.name || 'Sin Nombre';
-        const biografiaCompleta = autorItem.biodata || autorItem.biografia || autorItem.bio || 'Sin biografía.';
-        
-        const palabrasBio = biografiaCompleta.trim().split(/\s+/);
-        const esBioLarga = palabrasBio.length > 35;
-        const bioInicial = esBioLarga ? palabrasBio.slice(0, 35).join(' ') + '...' : biografiaCompleta;
-        const bioCodificada = encodeURIComponent(biografiaCompleta);
-
-        const urlFoto = obtenerUrlFotoAutor(autorItem);
-
-        const card = document.createElement('div');
-        card.className = 'obra-card-item';
-        card.innerHTML = `
-          <div class="author-avatar-wrapper">
-            <img src="${urlFoto}" alt="Foto" loading="lazy" onerror="this.onerror=null; this.src='${fallbackSVG}';">
-          </div>
-          <div class="book-info">
-            <h3 class="book-title" style="font-size: 1.3rem; cursor: default;">${nombre}</h3>
-            <p class="author-bio">
-              <span id="bio-text-${idAutor}">${bioInicial}</span>
-              ${esBioLarga ? `
-                <button 
-                  id="bio-btn-${idAutor}" 
-                  class="btn-toggle-inline" 
-                  data-expanded="false" 
-                  onclick="toggleTextoInSitu('${idAutor}', 'bio', '${bioCodificada}', 35)"
-                > (Seguir leyendo...)</button>
-              ` : ''}
-            </p>
-          </div>
-        `;
-        gridContainer.appendChild(card);
-      });
-    }
-
-    function renderGridPapers(papers) {
-      const gridContainer = document.getElementById('papers-grid-container');
-      gridContainer.innerHTML = '';
-      if (!papers || papers.length === 0) {
-        gridContainer.innerHTML = '<p style="color: var(--text-muted); text-align: center; grid-column: 1/-1;">No hay papers disponibles.</p>';
+      if (codigos.length === 0) {
+        container.innerHTML = `<div class="text-zinc-600 text-xs italic p-2">Ningún código ha sido descifrado aún.</div>`;
         return;
       }
 
-      papers.forEach((paper, idx) => {
-        const idPaper = paper.id || `paper-${idx}`;
-        const titulo = paper.titulo || paper.title || 'Sin Título';
-        const autor = paper.autor || paper.author || 'Autor Desconocido';
-        const resumenCompleto = paper.resumen || paper.abstract || paper.descripcion || 'Sin resumen disponible.';
+      container.innerHTML = codigos.map(item => `
+        <div class="p-2.5 bg-[#121316] border border-zinc-800/80 rounded-lg flex items-center justify-between">
+          <span class="text-amber-400/90 font-mono font-bold tracking-widest">${item.codigo}</span>
+          <span class="text-[11px] text-zinc-400">Descifrado por: <strong class="text-zinc-200">${item.pseudonimo || 'HABITANTE'}</strong></span>
+        </div>
+      `).join('');
 
-        const palabrasResumen = resumenCompleto.trim().split(/\s+/);
-        const esLargo = palabrasResumen.length > 30;
-        const resumenInicial = esLargo ? palabrasResumen.slice(0, 30).join(' ') + '...' : resumenCompleto;
-        const resumenCodificado = encodeURIComponent(resumenCompleto);
-
-        const url_pdf = obtenerUrlPDF(paper);
-
-        const card = document.createElement('div');
-        card.className = 'obra-card-item';
-        card.style.alignItems = 'flex-start';
-        card.style.textAlign = 'left';
-        card.innerHTML = `
-          <div class="book-info" style="align-items: flex-start; text-align: left; width: 100%;">
-            <h3 class="book-title">${titulo}</h3>
-            <p class="book-author">${autor}</p>
-            <div class="book-tags">
-              <span class="tag">PAPER</span>
-              <span class="tag">PDF</span>
-            </div>
-            <p class="book-description" style="margin-top: 8px;">
-              <span id="paper-resumen-text-${idPaper}">${resumenInicial}</span>
-              ${esLargo ? `
-                <button 
-                  id="paper-resumen-btn-${idPaper}" 
-                  class="btn-toggle-inline" 
-                  data-expanded="false" 
-                  onclick="toggleTextoInSitu('${idPaper}', 'paper-resumen', '${resumenCodificado}', 30)"
-                > (Seguir leyendo...)</button>
-              ` : ''}
-            </p>
-            <div class="book-actions">
-              ${url_pdf !== '#' ? `<button class="btn" onclick="downloadPDF('${url_pdf}', '${titulo.replace(/[^a-z0-9]/gi, '_').toLowerCase()}.pdf')">Descargar PDF</button>` : ''}
-            </div>
-          </div>
-        `;
-        gridContainer.appendChild(card);
-      });
+      _supabase
+        .channel('codigos-live')
+        .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'codigos_descifrados' }, () => cargarCodigosDescifrados())
+        .subscribe();
     }
 
-    function renderGridEnsayos(ensayos) {
-      const gridContainer = document.getElementById('ensayos-grid-container');
-      gridContainer.innerHTML = '';
-      if (!ensayos || ensayos.length === 0) {
-        gridContainer.innerHTML = '<p style="color: var(--text-muted); text-align: center; grid-column: 1/-1;">No hay ensayos disponibles.</p>';
-        return;
+    async function registrarCodigoDescifrado(codigoIngresado, nombreUsuario) {
+      const pseudonimo = nombreUsuario || document.getElementById("echoUser")?.value || 'HABITANTE';
+      const { error } = await _supabase.from('codigos_descifrados').insert([{ 
+        codigo: codigoIngresado.toUpperCase(), 
+        pseudonimo: pseudonimo 
+      }]);
+
+      if (!error) {
+        registrarPulsion('PULSION_CODIGO_DESCIFRADO', { codigo: codigoIngresado });
+        cargarCodigosDescifrados();
       }
-
-      ensayos.forEach((ensayo, idx) => {
-        const idEnsayo = ensayo.id || `ensayo-${idx}`;
-        const titulo = ensayo.titulo || ensayo.title || 'Sin Título';
-        const autor = ensayo.autor || ensayo.author || 'Autor Desconocido';
-        const resumenCompleto = ensayo.resumen || ensayo.abstract || ensayo.descripcion || 'Sin resumen disponible.';
-
-        const palabrasResumen = resumenCompleto.trim().split(/\s+/);
-        const esLargo = palabrasResumen.length > 30;
-        const resumenInicial = esLargo ? palabrasResumen.slice(0, 30).join(' ') + '...' : resumenCompleto;
-        const resumenCodificado = encodeURIComponent(resumenCompleto);
-
-        const url_pdf = obtenerUrlPDF(ensayo);
-
-        const card = document.createElement('div');
-        card.className = 'obra-card-item';
-        card.style.alignItems = 'flex-start';
-        card.style.textAlign = 'left';
-        card.innerHTML = `
-          <div class="book-info" style="align-items: flex-start; text-align: left; width: 100%;">
-            <h3 class="book-title">${titulo}</h3>
-            <p class="book-author">${autor}</p>
-            <div class="book-tags">
-              <span class="tag">ENSAYO</span>
-              <span class="tag">PDF</span>
-            </div>
-            <p class="book-description" style="margin-top: 8px;">
-              <span id="ensayo-resumen-text-${idEnsayo}">${resumenInicial}</span>
-              ${esLargo ? `
-                <button 
-                  id="ensayo-resumen-btn-${idEnsayo}" 
-                  class="btn-toggle-inline" 
-                  data-expanded="false" 
-                  onclick="toggleTextoInSitu('${idEnsayo}', 'ensayo-resumen', '${resumenCodificado}', 30)"
-                > (Seguir leyendo...)</button>
-              ` : ''}
-            </p>
-            <div class="book-actions">
-              ${url_pdf !== '#' ? `<button class="btn" onclick="downloadPDF('${url_pdf}', '${titulo.replace(/[^a-z0-9]/gi, '_').toLowerCase()}.pdf')">Descargar PDF</button>` : ''}
-            </div>
-          </div>
-        `;
-        gridContainer.appendChild(card);
-      });
     }
 
-    function goToSlide(index) {
-      if (totalSlides === 0) return;
-      if (index < 0) currentIndex = totalSlides - 1;
-      else if (index >= totalSlides) currentIndex = 0;
-      else currentIndex = index;
-      updateSlider();
-    }
-
-    function updateSlider() {
-      const track = document.getElementById('catalog-track');
-      track.style.transform = `translateX(-${currentIndex * 100}%)`;
-      const dots = document.querySelectorAll('.dot');
-      dots.forEach((dot, idx) => {
-        dot.classList.toggle('active', idx === currentIndex);
-      });
-    }
-
-    document.getElementById('prev-btn').addEventListener('click', () => goToSlide(currentIndex - 1));
-    document.getElementById('next-btn').addEventListener('click', () => goToSlide(currentIndex + 1));
-
-    async function loadBooks() {
-      if (!supabaseClient) return;
+    async function fetchPoemsFromSupabase() {
       try {
-        let { data: libros, error } = await supabaseClient.from('libros').select('*');
-        if (error) throw error;
-        librosData = libros || [];
-        renderSlider(librosData);
-      } catch (err) {
-        console.error('Error cargando libros:', err.message);
-      }
-    }
-
-    async function loadAuthors() {
-      if (!supabaseClient) return;
-      try {
-        let { data: autores, error } = await supabaseClient.from('autores').select('*');
-        if (!error) autoresData = autores || [];
-      } catch (err) {
-        console.error('Error cargando autores:', err.message);
-      }
-    }
-
-    async function loadTalleres() {
-      if (!supabaseClient) return;
-      try {
-        let { data: talleres, error } = await supabaseClient.from('talleres').select('*');
+        const { data, error } = await _supabase.from('poemas').select('*');
         if (error) throw error;
         
-        if (talleres && talleres.length > 0) {
-          const taller = talleres[0];
-          if (taller.titulo) {
-            document.getElementById('taller-subtitulo').textContent = taller.titulo;
+        const nuevoCatalogo = {};
+        data.forEach(poema => {
+          if (poema.is_hidden === true) return; 
+
+          nuevoCatalogo[poema.key] = {
+            title: poema.titulo,
+            book: poema.book,
+            book_title: poema.book,
+            tipo_render: poema.tipo_render,
+            body_raw: poema.contenido,
+            binary_code: poema.binary_code,
+            is_hidden: poema.is_hidden,
+            metadatos_diseno: typeof poema.metadatos_diseno === 'string'
+              ? JSON.parse(poema.metadatos_diseno)
+              : poema.metadatos_diseno
+          };
+        });
+        
+        catalog = nuevoCatalogo;
+        dibujarGridDePoemas();
+        
+        // Solo selecciona el poema si la vista actual requiere la lectura
+        const defaultKey = catalog['silencio'] ? 'silencio' : Object.keys(catalog)[0];
+        if (defaultKey && activeView === 'read') {
+          selectPoem(defaultKey, false);
+        }
+
+      } catch (err) {
+        console.error("Error cargando poemas desde Supabase:", err.message);
+      }
+    }
+
+    function aplicarSangriaFrancesa(container) {
+      const versosDOM = container.querySelectorAll('p');
+      versosDOM.forEach(verso => {
+        const clon = verso.cloneNode(true);
+        clon.style.position = 'absolute';
+        clon.style.whiteSpace = 'nowrap';
+        clon.style.visibility = 'hidden';
+        clon.style.width = 'auto';
+        document.body.appendChild(clon);
+        
+        if (verso.offsetWidth < clon.offsetWidth) {
+          verso.classList.add('sangria-francesa-aplicada');
+        }
+        document.body.removeChild(clon);
+      });
+    }
+
+    function selectPoem(key, trackPulsion = true) {
+      const poema = catalog[key];
+      if (!poema) return;
+      
+      changeActiveView('read');
+      
+      const tituloHTML = document.getElementById('poemTitle'); 
+      const container = document.getElementById('poemBodyContainer');
+      const bookLabel = document.getElementById('poemBookLabel');
+      
+      bookLabel.textContent = poema.book_title || 'EL REINO';
+      
+      let bookTextColor = 'text-amber-500';
+      const bkLower = (poema.book || '').toLowerCase();
+      if (bkLower.includes('primavera')) {
+        bookTextColor = 'text-emerald-500';
+      } else if (bkLower.includes('orbita') || bkLower.includes('órbita')) {
+        bookTextColor = 'text-cyan-400';
+      }
+      
+      bookLabel.className = `font-mono text-xs uppercase tracking-widest font-bold ${bookTextColor}`;
+      
+      const renderActual = poema.tipo_render || 'estandar';
+      document.getElementById('poemRenderBadge').textContent = `render: ${renderActual}`;
+      
+      if (renderActual === 'terminal' || renderActual === 'preformateado') {
+        tituloHTML.className = "text-6xl md:text-7xl font-code text-amber-500 tracking-wider font-bold mb-6 uppercase animate-fadeIn font-mono";
+      } else {
+        tituloHTML.className = "text-3xl lg:text-4xl font-light tracking-wide text-zinc-100 uppercase font-serif mb-4";
+      }
+      
+      tituloHTML.textContent = poema.title || 'SIN TÍTULO';
+      const rawText = poema.body_raw ? String(poema.body_raw) : '';
+      container.innerHTML = ''; 
+
+      if (trackPulsion) {
+        registrarPulsion('POEMA_LEIDO', { key: key, title: poema.title, book: poema.book });
+      }
+      
+      switch (renderActual) {
+        case 'estandar':
+        case 'tradicional':
+          container.className = "text-lg leading-none text-zinc-300 font-light font-serif whitespace-normal space-y-1.5 animate-fadeIn";
+          const fragmentoEstandar = document.createDocumentFragment();
+          const lineasEstandar = rawText.split(/\\n|\n/);
+          
+          let blockquoteActual = null;
+
+          lineasEstandar.forEach(linea => {
+            const lineaLimpia = linea.trim();
+
+            if (lineaLimpia.startsWith('>') || lineaLimpia.startsWith('<blockquote>')) {
+              if (!blockquoteActual) {
+                blockquoteActual = document.createElement('blockquote');
+                blockquoteActual.className = "border-l-2 border-zinc-600 pl-4 my-4 italic text-zinc-400 text-base space-y-1";
+                fragmentoEstandar.appendChild(blockquoteActual);
+              }
+              const pEpigrafe = document.createElement('p');
+              pEpigrafe.innerHTML = lineaLimpia.replace(/^>|<\/?blockquote>/g, '').trim();
+              blockquoteActual.appendChild(pEpigrafe);
+            } else {
+              blockquoteActual = null;
+              const pVerso = document.createElement('p');
+              if (!lineaLimpia) {
+                pVerso.innerHTML = '&nbsp;';
+                pVerso.className = 'h-6'; 
+              } else {
+                pVerso.innerHTML = lineaLimpia;
+              }
+              fragmentoEstandar.appendChild(pVerso);
+            }
+          });
+          
+          container.appendChild(fragmentoEstandar);
+          aplicarSangriaFrancesa(container);
+          break;
+
+        case 'preformateado':
+        case 'terminal':
+          container.className = "font-code text-sm text-amber-400/90 bg-zinc-950/60 p-6 rounded-xl border border-zinc-800/80 whitespace-pre-wrap overflow-x-auto leading-relaxed space-y-4 animate-fadeIn";
+          container.innerHTML = rawText.replace(/\\n/g, '<br>').replace(/\n/g, '<br>') || 'Este poema aún no tiene contenido.';
+          break;
+
+        case 'tabular_grid':
+          container.className = "flex flex-col gap-4 font-mono text-base text-cyan-100/90 animate-fadeIn";
+          const lineasTabulares = rawText.split('\\n');
+          lineasTabulares.forEach(linea => {
+            const columnas = linea.split('||');
+            const filaDiv = document.createElement('div');
+            if (poema.metadatos_diseno && poema.metadatos_diseno.mobile_stack) {
+              filaDiv.className = "flex flex-col md:grid md:grid-cols-2 gap-4 border-l-2 border-zinc-800 md:border-l-0 pl-3 md:pl-0";
+            } else {
+              filaDiv.className = "grid grid-cols-2 gap-4";
+            }
+            columnas.forEach(col => {
+              const colSpan = document.createElement('div');
+              colSpan.className = "whitespace-pre-line";
+              colSpan.innerHTML = col.trim().replace(/\\n/g, '<br>').replace(/\n/g, '<br>');
+              filaDiv.appendChild(colSpan);
+            });
+            container.appendChild(filaDiv);
+          });
+          break;
+
+        case 'collage_libre':
+          container.className = "animate-fadeIn";
+          const canvas = document.createElement('div');
+          canvas.className = "collage-canvas rounded-xl shadow-inner shadow-black";
+          canvas.style.aspectRatio = (poema.metadatos_diseno && poema.metadatos_diseno.aspect_ratio) || "1/1";
+          if (poema.metadatos_diseno && poema.metadatos_diseno.elementos) {
+            poema.metadatos_diseno.elementos.forEach(el => {
+              const span = document.createElement('span');
+              span.className = `collage-item ${el.font || 'font-serif'}`;
+              span.style.left = `${el.x}%`;
+              span.style.top = `${el.y}%`;
+              span.style.fontSize = el.size || '1rem';
+              span.style.fontWeight = el.weight || 'normal';
+              span.style.fontStyle = el.style || 'normal';
+              span.style.color = el.color || '#E4E4E7';
+              span.innerHTML = el.texto.replace(/\\n/g, '<br>').replace(/\n/g, '<br>');
+              canvas.appendChild(span);
+            });
           }
-          if (taller.resena) {
-            document.getElementById('taller-resena').textContent = taller.resena;
-          }
+          container.appendChild(canvas);
+          break;
+
+        default:
+          container.className = "text-lg leading-relaxed text-zinc-300 font-light font-serif whitespace-normal space-y-4 animate-fadeIn";
+          container.innerHTML = rawText.replace(/\\n/g, '<br>').replace(/\n/g, '<br>');
+          break;
+      }
+    }
+
+    function dibujarGridDePoemas() {
+      const contenedor = document.getElementById('contenedor-tarjetas');
+      if (!contenedor) return;
+      contenedor.innerHTML = ''; 
+
+      const secciones = [
+        { id: 'el-reino', titulo: 'EL REINO', subtitulo: 'PRIMERA SECCIÓN', color: 'text-amber-500', borderHover: 'hover:border-amber-500/40', badgeColor: 'text-amber-500', matches: ['el-reino', 'el reino'] },
+        { id: 'orbita-rota', titulo: 'ÓRBITA ROTA', subtitulo: 'SEGUNDA SECCIÓN', color: 'text-cyan-400', borderHover: 'hover:border-cyan-500/40', badgeColor: 'text-cyan-400', matches: ['orbita-rota', 'órbita-rota', 'orbita rota', 'órbita rota'] },
+        { id: 'primavera-extramuros', titulo: 'PRIMAVERA EXTRAMUROS', subtitulo: 'TERCERA SECCIÓN', color: 'text-emerald-500', borderHover: 'hover:border-emerald-500/40', badgeColor: 'text-emerald-500', matches: ['primavera-extramuros', 'primavera extramuros'] }
+      ];
+
+      secciones.forEach(sec => {
+        const poemasDeSeccion = Object.keys(catalog).filter(key => {
+          const poema = catalog[key];
+          if (poema.is_hidden) return false;
+          const bookVal = (poema.book || '').toLowerCase().trim();
+          return sec.matches.some(m => bookVal.includes(m));
+        });
+
+        if (poemasDeSeccion.length > 0) {
+          const secWrapper = document.createElement('div');
+          secWrapper.className = 'space-y-4';
+
+          secWrapper.innerHTML = `
+            <div class="border-b border-zinc-800/80 pb-2 flex items-center justify-between">
+              <h2 class="font-mono text-sm tracking-widest font-bold uppercase ${sec.color}">${sec.titulo}</h2>
+              <span class="font-mono text-[10px] text-zinc-600 tracking-wider uppercase">${sec.subtitulo}</span>
+            </div>
+          `;
+
+          const gridDiv = document.createElement('div');
+          gridDiv.className = 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6';
+
+          poemasDeSeccion.forEach(key => {
+            const poema = catalog[key];
+            const card = document.createElement('div');
+            card.className = `bg-zinc-950 border border-zinc-900 p-6 rounded-2xl transition-all cubic-bezier(0.4, 0, 0.2, 1) cursor-pointer group ${sec.borderHover}`;
+
+            const rawContent = poema.body_raw ? String(poema.body_raw) : '';
+            const extracto = rawContent.replace(/\\n/g, ' ').replace(/\n/g, ' ').substring(0, 95) + '...';
+
+            card.innerHTML = `
+              <div class="font-mono text-xs ${sec.badgeColor} mb-2 uppercase tracking-wider">${poema.book_title || sec.titulo}</div>
+              <h3 class="text-xl font-bold text-zinc-100 group-hover:text-zinc-50 transition-colors uppercase">${poema.title || 'Sin Título'}</h3>
+              <p class="font-mono text-zinc-500 text-[11px] mt-3 line-clamp-2 leading-relaxed tracking-wide">${extracto || 'Sin contenido disponible.'}</p>
+            `;
+            card.onclick = () => { selectPoem(key, true); };
+            gridDiv.appendChild(card);
+          });
+
+          secWrapper.appendChild(gridDiv);
+          contenedor.appendChild(secWrapper);
+        }
+      });
+    }
+
+    async function decodeBinary() {
+      const codeInput = document.getElementById('binaryInput').value.trim();
+      const resultDiv = document.getElementById('binaryResult');
+      
+      if (!codeInput) return;
+      
+      try {
+        const { data, error } = await _supabase
+          .from('poemas')
+          .select('*')
+          .eq('binary_code', codeInput);
+          
+        if (error) throw error;
+        
+        if (data && data.length > 0) {
+          const poemaOculto = data[0];
+          await registrarCodigoDescifrado(codeInput, document.getElementById("echoUser")?.value);
+
+          catalog[poemaOculto.key] = {
+            title: poemaOculto.titulo,
+            book: poemaOculto.book,
+            book_title: poemaOculto.book,
+            tipo_render: poemaOculto.tipo_render,
+            body_raw: poemaOculto.contenido,
+            binary_code: poemaOculto.binary_code,
+            is_hidden: poemaOculto.is_hidden,
+            metadatos_diseno: typeof poemaOculto.metadatos_diseno === 'string'
+              ? JSON.parse(poemaOculto.metadatos_diseno)
+              : poemaOculto.metadatos_diseno
+          };
+          
+          document.getElementById('binaryInput').value = '';
+          resultDiv.classList.add('hidden');
+          resultDiv.innerHTML = '';
+          
+          selectPoem(poemaOculto.key, true);
+        } else {
+          registrarPulsion('PULSION_FALLO_CODIGO_BINARIO', { intento: codeInput });
+          resultDiv.classList.remove('hidden');
+          resultDiv.innerHTML = `<span class="text-red-500 font-bold">ERROR: CÓDIGO INVÁLIDO</span><p class="text-[11px] text-zinc-500 mt-1">El descifrado falló. Revisa los bits del libro físico.</p>`;
         }
       } catch (err) {
-        console.error('Error cargando talleres:', err.message);
+        console.error("Error al decodificar binario:", err.message);
+        resultDiv.classList.remove('hidden');
+        resultDiv.innerHTML = `<span class="text-red-500">Error de comunicación con el servidor.</span>`;
       }
     }
 
-    async function loadPapers() {
-      if (!supabaseClient) return;
-      try {
-        let { data: papers, error } = await supabaseClient.from('papers').select('*');
-        if (!error) papersData = papers || [];
-      } catch (err) {
-        console.error('Error cargando papers:', err.message);
+    function changeActiveView(newView) {
+      activeView = newView;
+
+      document.getElementById('coversView')?.classList.toggle('hidden', activeView !== 'covers');
+      document.getElementById('gridView')?.classList.toggle('hidden', activeView !== 'grid');
+      document.getElementById('readView')?.classList.toggle('hidden', activeView !== 'read');
+      document.getElementById('authorView')?.classList.toggle('hidden', activeView !== 'author');
+      document.getElementById('terminalView')?.classList.toggle('hidden', activeView !== 'terminal');
+
+      const gridBtn = document.getElementById('gridNavBtn');
+      const termBtn = document.getElementById('terminalNavBtn');
+
+      if (gridBtn) gridBtn.classList.remove('border-amber-500/50', 'bg-zinc-800');
+      if (termBtn) termBtn.classList.remove('border-amber-500/50', 'bg-zinc-800');
+
+      if (activeView === 'grid') {
+        if (gridBtn) gridBtn.classList.add('border-amber-500/50', 'bg-zinc-800');
+      } else if (activeView === 'terminal') {
+        if (termBtn) termBtn.classList.add('border-amber-500/50', 'bg-zinc-800');
+      }
+
+      registrarPulsion('CAMBIO_DE_VISTA', { vista: newView });
+    }
+
+    function entrarAlReino() { cerrarPortada(); changeActiveView('grid'); }
+    function irDirectoATerminal() { cerrarPortada(); changeActiveView('terminal'); }
+    function irAAutor() { cerrarPortada(); changeActiveView('author'); }
+    function irAPortadas() { cerrarPortada(); changeActiveView('covers'); }
+
+    function cerrarPortada() {
+      const overlay = document.getElementById('welcomeOverlay');
+      if (overlay) {
+        overlay.classList.add('opacity-0', 'pointer-events-none', 'scale-95');
+        setTimeout(() => { overlay.style.display = 'none'; }, 700);
       }
     }
 
-    async function loadEnsayos() {
-      if (!supabaseClient) return;
-      try {
-        let { data: ensayos, error } = await supabaseClient.from('ensayos').select('*');
-        if (!error) ensayosData = ensayos || [];
-      } catch (err) {
-        console.error('Error cargando ensayos:', err.message);
+    function reabrirPortadaInicio() {
+      const overlay = document.getElementById('welcomeOverlay');
+      if (overlay) {
+        overlay.style.display = 'flex';
+        setTimeout(() => { overlay.classList.remove('opacity-0', 'pointer-events-none', 'scale-95'); }, 10);
       }
     }
-
-    loadBooks();
-    loadAuthors();
-    loadTalleres();
-    loadPapers();
-    loadEnsayos();
   </script>
 </body>
 </html>
