@@ -775,10 +775,11 @@
       </section>
     </main>
 
-    <footer style="display: flex; align-items: center; justify-content: center; gap: 10px; flex-wrap: wrap;">
-      <a href="https://hitscounter.dev" target="_blank" rel="noopener noreferrer" style="display: inline-flex; align-items: center;">
-        <img src="https://hitscounter.dev/api/hit?url=https%3A%2F%2Ftallertexto.github.io%2Flacartapecora&color=9F430A" alt="Hits Counter" style="vertical-align: middle;">
-      </a>
+    <footer style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; padding: 50px 0; font-size: 0.85rem; color: var(--text-muted); font-weight: 600;">
+      <div style="display: inline-flex; align-items: center; gap: 8px; background: var(--bg); box-shadow: var(--nm-pressed); padding: 8px 18px; border-radius: var(--radius-pill);">
+        <span style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--brand-accent); font-weight: 700;">Visitas:</span>
+        <span id="visitas-counter" style="font-weight: 800; color: var(--text-dark);">Cargando...</span>
+      </div>
       <p>© <span id="year"></span> AATC. Todos los derechos reservados.</p>
     </footer>
   </div>
@@ -1333,11 +1334,22 @@
       }
     }
 
+    async function registrarVisita() {
+      try {
+        const response = await fetch('https://api.countapi.xyz/hit/tallertexto-lacartapecora/visitas');
+        const data = await response.json();
+        document.getElementById('visitas-counter').textContent = data.value.toLocaleString();
+      } catch (e) {
+        document.getElementById('visitas-counter').parentElement.style.display = 'none';
+      }
+    }
+
     loadBooks();
     loadAuthors();
     loadTalleres();
     loadPapers();
     loadEnsayos();
+    registrarVisita();
   </script>
 </body>
 </html>
