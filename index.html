@@ -775,10 +775,10 @@
       </section>
     </main>
 
-   <footer style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; padding: 50px 0; font-size: 0.85rem; color: var(--text-muted); font-weight: 600;">
+    <footer style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; padding: 50px 0; font-size: 0.85rem; color: var(--text-muted); font-weight: 600;">
       <div style="display: inline-flex; align-items: center; gap: 8px; background: var(--bg); box-shadow: var(--nm-pressed); padding: 8px 18px; border-radius: var(--radius-pill);">
-        <span style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--brand-accent); font-weight: 700;">Repositorio</span>
-        <span style="font-weight: 800; color: var(--text-dark);">En Línea</span>
+        <span style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--brand-accent); font-weight: 700;">Visitas:</span>
+        <span id="visitas-counter" style="font-weight: 800; color: var(--text-dark);">Cargando...</span>
       </div>
       <p>© <span id="year"></span> AATC. Todos los derechos reservados.</p>
     </footer>
@@ -1070,7 +1070,7 @@
         card.className = 'obra-card-item';
         card.innerHTML = `
           <div class="cover-wrapper">
-            <img src="${url_portada}" alt="Portada" loading="lazy" onerror="this.onerror=null; this.src='${fallbackSVG}';">
+            <img src="${url_portada}" alt="Portada" loading="lazy" onerror="this.onerror=null"; this.src='${fallbackSVG}'>
           </div>
           <div class="book-info">
             <h3 class="book-title">${titulo}</h3>
@@ -1125,7 +1125,7 @@
         card.className = 'obra-card-item';
         card.innerHTML = `
           <div class="author-avatar-wrapper">
-            <img src="${urlFoto}" alt="Foto" loading="lazy" onerror="this.onerror=null; this.src='${fallbackSVG}';">
+            <img src="${urlFoto}" alt="Foto" loading="lazy" onerror="this.onerror=null"; this.src='${fallbackSVG}'>
           </div>
           <div class="book-info">
             <h3 class="book-title" style="font-size: 1.3rem; cursor: default;">${nombre}</h3>
