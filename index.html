@@ -666,7 +666,7 @@
     <header>
       <div class="header-layout">
         <button class="logo-container" onclick="irAInicio()" title="Volver al Inicio">
-          <img src="Logo_200_02.png" alt="Logo Cartapecora" onerror="this.style.display"='none'>
+          <img src="Logo_200_02.png" alt="Logo Cartapecora" onerror="this.style.display='none'">
         </button>
 
         <div>
@@ -748,31 +748,31 @@
     </main>
 
     <main id="view-talleres" class="page-view">
-  <section class="talleres-section">
-    <h2 class="section-title-center" id="taller-titulo-principal">Talleres de Escritura</h2>
-    
-    <!-- Reseña general fija arriba -->
-    <article class="talleres-card" style="max-width: 900px; margin-bottom: 40px;">
-      <h2 style="font-size: 0.9rem; margin-bottom: 16px; color: var(--brand-accent); text-transform: uppercase; letter-spacing: 0.14em;">Reseña General</h2>
-      <div id="taller-resena-general">
-        Cargando información general desde Supabase...
-      </div>
-    </article>
+      <section class="talleres-section">
+        <h2 class="section-title-center" id="taller-titulo-principal">Talleres de Escritura</h2>
+        
+        <!-- Reseña general fija arriba -->
+        <article class="talleres-card" style="max-width: 900px; margin-bottom: 40px;">
+          <h2 style="font-size: 0.9rem; margin-bottom: 16px; color: var(--brand-accent); text-transform: uppercase; letter-spacing: 0.14em;">Reseña General</h2>
+          <div id="taller-resena-general">
+            Cargando información general desde Supabase...
+          </div>
+        </article>
 
-    <!-- Carrusel (Slide) para los talleres individuales debajo -->
-    <div class="slider-container" style="max-width: 900px; width: 100%;">
-      <h2 class="section-title-center" style="font-size: 0.9rem; margin-bottom: 10px;">Programas Disponibles</h2>
-      <div class="slider-track-wrapper">
-        <div id="talleres-slider-track" class="slider-track"></div>
-      </div>
-      <div class="slider-controls" id="talleres-slider-controls" style="display: none;">
-        <button class="slider-btn" id="talleres-prev-btn" aria-label="Anterior">‹</button>
-        <div class="slider-dots" id="talleres-slider-dots"></div>
-        <button class="slider-btn" id="talleres-next-btn" aria-label="Siguiente">›</button>
-      </div>
-    </div>
-  </section>
-</main>
+        <!-- Carrusel (Slide) para los talleres individuales debajo -->
+        <div class="slider-container" style="max-width: 900px; width: 100%;">
+          <h2 class="section-title-center" style="font-size: 0.9rem; margin-bottom: 10px;">Programas Disponibles</h2>
+          <div class="slider-track-wrapper">
+            <div id="talleres-slider-track" class="slider-track"></div>
+          </div>
+          <div class="slider-controls" id="talleres-slider-controls" style="display: none;">
+            <button class="slider-btn" id="talleres-prev-btn" aria-label="Anterior">‹</button>
+            <div class="slider-dots" id="talleres-slider-dots"></div>
+            <button class="slider-btn" id="talleres-next-btn" aria-label="Siguiente">›</button>
+          </div>
+        </div>
+      </section>
+    </main>
 
     <!-- VISTA PAPERS -->
     <main id="view-papers" class="page-view">
@@ -833,9 +833,10 @@
       supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
     }
 
+    let currentIndex = 0;
     let currentTallerIndex = 0;
-    let totalTalleresSlides = 0;
     let totalSlides = 0;
+    let totalTalleresSlides = 0;
     let librosData = [];
     let autoresData = [];
     let papersData = [];
@@ -1310,8 +1311,128 @@
       }
     }
 
-});
-```[cite: 14, 15]
+    async function loadTalleres() {
+      if (!supabaseClient) return;
+      try {
+        let { data: talleres, error } = await supabaseClient.from('talleres').select('*');
+        if (error) throw error;
+        
+        if (!talleres || talleres.length === 0) return;
+
+        // 1. Encontrar la reseña general
+        const generalTaller = talleres.find(t => (t.titulo || '').toLowerCase().includes('reseña') || t.id === 1) || talleres[0];
+        if (generalTaller && generalTaller.resena) {
+          document.getElementById('taller-resena-general').innerHTML = `
+            <div style="font-size: 0.95rem; text-align: justify; line-height: 1.7; color: var(--text-dark);">
+              ${generalTaller.resena}
+            </div>
+          `;
+        }
+
+        // 2. Filtrar los talleres específicos para el slider
+        const listaTalleres = talleres.filter(t => t.id !== generalTaller.id && !t.titulo.toLowerCase().includes('reseña'));
+        
+        const track = document.getElementById('talleres-slider-track');
+        const controls = document.getElementById('talleres-slider-controls');
+        const dotsContainer = document.getElementById('talleres-slider-dots');
+
+        track.innerHTML = '';
+        dotsContainer.innerHTML = '';
+        totalTalleresSlides = listaTalleres.length;
+
+        if (totalTalleresSlides === 0) {
+          track.innerHTML = '<p style="color: var(--text-muted); font-size: 0.9rem; text-align: center; width: 100%;">No hay talleres específicos registrados.</p>';
+          controls.style.display = 'none';
+          return;
+        }
+
+        listaTalleres.forEach((taller, idx) => {
+          const idTaller = taller.id || `taller-${idx}`;
+          const titulo = taller.titulo || 'Taller sin título';
+          const subtitulo = taller.subtitulo || '';
+          const descripcionCompleta = taller.resena || 'Sin descripción disponible.';
+
+          const slide = document.createElement('div');
+          slide.className = 'slide-item';
+          slide.style.flexDirection = 'column';
+          slide.style.alignItems = 'stretch';
+          slide.style.textAlign = 'left';
+
+          slide.innerHTML = `
+            <div style="background: var(--bg); box-shadow: var(--nm-flat); padding: 32px; border-radius: var(--radius-large); width: 100%;">
+              <h3 onclick="toggleTallerDetalle('${idTaller}')" style="font-family: 'NT Wagner', 'Cormorant Garamond', Georgia, serif; font-size: 1.3rem; font-weight: 800; color: var(--brand-accent); cursor: pointer; display: flex; justify-content: space-between; align-items: center; text-transform: uppercase; letter-spacing: 0.08em;">
+                <span>${titulo}</span>
+                <span id="taller-icon-${idTaller}" style="font-size: 1rem; color: var(--text-muted);">▼</span>
+              </h3>
+              ${subtitulo ? `<p style="font-size: 0.95rem; font-weight: 700; color: var(--text-dark); margin-top: 6px; margin-bottom: 14px;">${subtitulo}</p>` : ''}
+              
+              <div id="taller-detalle-${idTaller}" style="display: none; margin-top: 16px; padding-top: 16px; border-top: 1px solid rgba(0,0,0,0.08);">
+                <div style="font-size: 0.92rem; color: var(--text-dark); text-align: justify; line-height: 1.7; margin-bottom: 20px;">
+                  ${descripcionCompleta}
+                </div>
+                <div style="background: var(--bg); box-shadow: var(--nm-pressed); padding: 20px; border-radius: var(--radius-medium); text-align: center;">
+                  <h4 style="font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.12em; color: var(--brand-accent); margin-bottom: 8px; font-weight: 700;">¿Quieres probar cómo funciona antes de inscribirte?</h4>
+                  <p style="font-size: 0.85rem; margin-bottom: 14px; text-align: center;">
+                    Escríbeme por WhatsApp y te envío hoy mismo un ejercicio práctico de 10 minutos para destrabar la mente.
+                  </p>
+                  <button class="btn" onclick="abrirContacto()">Solicitar Ejercicio Gratuito</button>
+                </div>
+              </div>
+            </div>
+          `;
+          track.appendChild(slide);
+
+          const dot = document.createElement('div');
+          dot.className = `dot ${idx === 0 ? 'active' : ''}`;
+          dot.addEventListener('click', () => goToTallerSlide(idx));
+          dotsContainer.appendChild(dot);
+        });
+
+        controls.style.display = totalTalleresSlides > 1 ? 'flex' : 'none';
+        updateTallerSlider();
+
+      } catch (err) {
+        console.error('Error cargando talleres:', err.message);
+      }
+    }
+
+    function toggleTallerDetalle(id) {
+      const detalle = document.getElementById(`taller-detalle-${id}`);
+      const icono = document.getElementById(`taller-icon-${id}`);
+      if (detalle.style.display === 'none') {
+        detalle.style.display = 'block';
+        icono.textContent = '▲';
+      } else {
+        detalle.style.display = 'none';
+        icono.textContent = '▼';
+      }
+    }
+
+    function goToTallerSlide(index) {
+      if (totalTalleresSlides === 0) return;
+      if (index < 0) currentTallerIndex = totalTalleresSlides - 1;
+      else if (index >= totalTalleresSlides) currentTallerIndex = 0;
+      else currentTallerIndex = index;
+      updateTallerSlider();
+    }
+
+    function updateTallerSlider() {
+      const track = document.getElementById('talleres-slider-track');
+      if (!track) return;
+      track.style.transform = `translateX(-${currentTallerIndex * 100}%)`;
+      const dots = document.querySelectorAll('#talleres-slider-dots .dot');
+      dots.forEach((dot, idx) => {
+        dot.classList.toggle('active', idx === currentTallerIndex);
+      });
+    }
+
+    document.addEventListener('click', (e) => {
+      if (e.target && e.target.id === 'talleres-prev-btn') {
+        goToTallerSlide(currentTallerIndex - 1);
+      } else if (e.target && e.target.id === 'talleres-next-btn') {
+        goToTallerSlide(currentTallerIndex + 1);
+      }
+    });
 
     async function loadPapers() {
       if (!supabaseClient) return;
