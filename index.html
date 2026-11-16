@@ -748,16 +748,31 @@
     </main>
 
     <main id="view-talleres" class="page-view">
-      <section class="talleres-section">
-        <h2 class="section-title-center" id="taller-titulo">Taller de Textos</h2>
-        <article class="talleres-card" style="max-width: 900px;">
-          <h2 id="taller-subtitulo" style="font-size: 0.9rem; margin-bottom: 16px;">Reseña</h2>
-          <div id="taller-resena">
-            Cargando información del taller desde Supabase...
-          </div>
-        </article>
-      </section>
-    </main>
+  <section class="talleres-section">
+    <h2 class="section-title-center" id="taller-titulo-principal">Talleres de Escritura</h2>
+    
+    <!-- Reseña general fija arriba -->
+    <article class="talleres-card" style="max-width: 900px; margin-bottom: 40px;">
+      <h2 style="font-size: 0.9rem; margin-bottom: 16px; color: var(--brand-accent); text-transform: uppercase; letter-spacing: 0.14em;">Reseña General</h2>
+      <div id="taller-resena-general">
+        Cargando información general desde Supabase...
+      </div>
+    </article>
+
+    <!-- Carrusel (Slide) para los talleres individuales debajo -->
+    <div class="slider-container" style="max-width: 900px; width: 100%;">
+      <h2 class="section-title-center" style="font-size: 0.9rem; margin-bottom: 10px;">Programas Disponibles</h2>
+      <div class="slider-track-wrapper">
+        <div id="talleres-slider-track" class="slider-track"></div>
+      </div>
+      <div class="slider-controls" id="talleres-slider-controls" style="display: none;">
+        <button class="slider-btn" id="talleres-prev-btn" aria-label="Anterior">‹</button>
+        <div class="slider-dots" id="talleres-slider-dots"></div>
+        <button class="slider-btn" id="talleres-next-btn" aria-label="Siguiente">›</button>
+      </div>
+    </div>
+  </section>
+</main>
 
     <!-- VISTA PAPERS -->
     <main id="view-papers" class="page-view">
@@ -818,7 +833,8 @@
       supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
     }
 
-    let currentIndex = 0;
+    let currentTallerIndex = 0;
+    let totalTalleresSlides = 0;
     let totalSlides = 0;
     let librosData = [];
     let autoresData = [];
@@ -1294,39 +1310,8 @@
       }
     }
 
-    async function loadTalleres() {
-      if (!supabaseClient) return;
-      try {
-        let { data: talleres, error } = await supabaseClient.from('talleres').select('*');
-        if (error) throw error;
-        
-        if (talleres && talleres.length > 0) {
-          const taller = talleres[0];
-          if (taller.titulo) {
-            document.getElementById('taller-titulo').textContent = taller.titulo;
-          }
-          if (taller.subtitulo) {
-            document.getElementById('taller-subtitulo').textContent = taller.subtitulo;
-          }
-          if (taller.resena) {
-            document.getElementById('taller-resena').innerHTML = `
-              <div style="display: flex; flex-direction: column; gap: 16px; font-size: 0.95rem; text-align: justify; line-height: 1.7; color: var(--text-dark);">
-                ${taller.resena}
-                <div style="background: var(--bg); box-shadow: var(--nm-flat); padding: 24px; border-radius: var(--radius-medium); text-align: center; margin-top: 10px;">
-                  <h3 style="font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.14em; color: var(--brand-accent); margin-bottom: 10px; font-weight: 700;">¿Quieres probar cómo funciona antes de inscribirte?</h3>
-                  <p style="font-size: 0.9rem; margin-bottom: 16px; text-align: center;">
-                    Escríbeme por WhatsApp y te envío hoy mismo un ejercicio práctico de 10 minutos para destrabar la mente (sin costo y sin compromiso).
-                  </p>
-                  <button class="btn" onclick="abrirContacto()">Solicitar Ejercicio Gratuito</button>
-                </div>
-              </div>
-            `;
-          }
-        }
-      } catch (err) {
-        console.error('Error cargando talleres:', err.message);
-      }
-    }
+});
+```[cite: 14, 15]
 
     async function loadPapers() {
       if (!supabaseClient) return;
