@@ -1311,6 +1311,17 @@
       }
     }
 
+    function obtenerUrlTaller(taller) {
+      const fallbackSVG = `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="220" height="220" viewBox="0 0 220 220"><rect width="100%" height="100%" fill="%23b6afbf"/></svg>`;
+      let rawImg = (taller.imagen || taller.url_portada || taller.portada || '').trim();
+      if (rawImg) {
+        if (rawImg.startsWith('http://') || rawImg.startsWith('https://')) return rawImg;
+        const cleanFile = decodeURIComponent(rawImg).replace(/^\//, '');
+        return `${SUPABASE_URL}/storage/v1/object/public/TALLERES/${encodeURIComponent(cleanFile)}`;
+      }
+      return fallbackSVG;
+    }
+
     async function loadTalleres() {
       if (!supabaseClient) return;
       try {
@@ -1319,7 +1330,7 @@
         
         if (!talleres || talleres.length === 0) return;
 
-        // 1. Encontrar la reseña general
+        // 1. Encontrar la reseña general fija de arriba
         const generalTaller = talleres.find(t => (t.titulo || '').toLowerCase().includes('reseña') || t.id === 1) || talleres[0];
         if (generalTaller && generalTaller.resena) {
           document.getElementById('taller-resena-general').innerHTML = `
@@ -1350,32 +1361,49 @@
           const idTaller = taller.id || `taller-${idx}`;
           const titulo = taller.titulo || 'Taller sin título';
           const subtitulo = taller.subtitulo || '';
-          const descripcionCompleta = taller.resena || 'Sin descripción disponible.';
+          const resenaCompleta = taller.resena || 'Sin descripción disponible.';
+          const urlImagen = obtenerUrlTaller(taller);
+
+          // Fragmento inicial de 28 palabras con Seguir leyendo...
+          const palabrasResena = resenaCompleta.trim().split(/\s+/);
+          const limite = 26;
+          const esLarga = palabrasResena.length > limite;
+          const resenaInicial = esLarga ? palabrasResena.slice(0, limite).join(' ') + '...' : resenaCompleta;
+          const resenaCodificada = encodeURIComponent(resenaCompleta);
 
           const slide = document.createElement('div');
           slide.className = 'slide-item';
-          slide.style.flexDirection = 'column';
-          slide.style.alignItems = 'stretch';
-          slide.style.textAlign = 'left';
-
+          // Estructura de dos columnas (Imagen izquierda, Contenido derecha) similar a las obras
           slide.innerHTML = `
-            <div style="background: var(--bg); box-shadow: var(--nm-flat); padding: 32px; border-radius: var(--radius-large); width: 100%;">
-              <h3 onclick="toggleTallerDetalle('${idTaller}')" style="font-family: 'NT Wagner', 'Cormorant Garamond', Georgia, serif; font-size: 1.3rem; font-weight: 800; color: var(--brand-accent); cursor: pointer; display: flex; justify-content: space-between; align-items: center; text-transform: uppercase; letter-spacing: 0.08em;">
+            <div class="cover-wrapper" style="width: 180px; height: 180px; flex-shrink: 0; border-radius: var(--radius-medium); overflow: hidden; box-shadow: var(--nm-pressed); background: var(--bg); display: flex; align-items: center; justify-content: center;">
+              <img src="${urlImagen}" alt="Imagen Taller" loading="lazy" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.onerror=null; this.src='data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22180%22 height=%22180%22><rect width=%22100%25%22 height=%22100%25%22 fill=%22%23b6afbf%22/></svg>'">
+            </div>
+            <div class="book-info" style="flex: 1; text-align: left; align-items: flex-start;">
+              <h3 onclick="toggleTallerDetalle('${idTaller}')" style="font-family: 'NT Wagner', 'Cormorant Garamond', Georgia, serif; font-size: 1.3rem; font-weight: 800; color: var(--brand-accent); cursor: pointer; display: flex; justify-content: space-between; align-items: center; text-transform: uppercase; letter-spacing: 0.08em; width: 100%;">
                 <span>${titulo}</span>
-                <span id="taller-icon-${idTaller}" style="font-size: 1rem; color: var(--text-muted);">▼</span>
+                <span id="taller-icon-${idTaller}" style="font-size: 0.9rem; color: var(--text-muted);">▼</span>
               </h3>
-              ${subtitulo ? `<p style="font-size: 0.95rem; font-weight: 700; color: var(--text-dark); margin-top: 6px; margin-bottom: 14px;">${subtitulo}</p>` : ''}
+              ${subtitulo ? `<p style="font-size: 0.9rem; font-weight: 700; color: var(--text-dark); margin-top: 4px; margin-bottom: 10px;">${subtitulo}</p>` : ''}
               
-              <div id="taller-detalle-${idTaller}" style="display: none; margin-top: 16px; padding-top: 16px; border-top: 1px solid rgba(0,0,0,0.08);">
-                <div style="font-size: 0.92rem; color: var(--text-dark); text-align: justify; line-height: 1.7; margin-bottom: 20px;">
-                  ${descripcionCompleta}
-                </div>
-                <div style="background: var(--bg); box-shadow: var(--nm-pressed); padding: 20px; border-radius: var(--radius-medium); text-align: center;">
-                  <h4 style="font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.12em; color: var(--brand-accent); margin-bottom: 8px; font-weight: 700;">¿Quieres probar cómo funciona antes de inscribirte?</h4>
-                  <p style="font-size: 0.85rem; margin-bottom: 14px; text-align: center;">
+              <p class="book-description" style="text-align: justify; font-size: 0.9rem;">
+                <span id="taller-resena-text-${idTaller}">${resenaInicial}</span>
+                ${esLarga ? `
+                  <button 
+                    id="taller-resena-btn-${idTaller}" 
+                    class="btn-toggle-inline" 
+                    data-expanded="false" 
+                    onclick="toggleTallerTexto('${idTaller}', '${resenaCodificada}', ${limite})"
+                  > (Seguir leyendo...)</button>
+                ` : ''}
+              </p>
+
+              <div id="taller-detalle-${idTaller}" style="display: none; margin-top: 14px; padding-top: 14px; border-top: 1px solid rgba(0,0,0,0.08); width: 100%;">
+                <div style="background: var(--bg); box-shadow: var(--nm-pressed); padding: 18px; border-radius: var(--radius-medium); text-align: center; margin-top: 8px;">
+                  <h4 style="font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.12em; color: var(--brand-accent); margin-bottom: 6px; font-weight: 700;">¿Quieres probar cómo funciona antes de inscribirte?</h4>
+                  <p style="font-size: 0.82rem; margin-bottom: 12px; text-align: center;">
                     Escríbeme por WhatsApp y te envío hoy mismo un ejercicio práctico de 10 minutos para destrabar la mente.
                   </p>
-                  <button class="btn" onclick="abrirContacto()">Solicitar Ejercicio Gratuito</button>
+                  <button class="btn" onclick="abrirContacto()" style="padding: 10px 22px; font-size: 0.78rem;">Solicitar Ejercicio Gratuito</button>
                 </div>
               </div>
             </div>
@@ -1395,44 +1423,6 @@
         console.error('Error cargando talleres:', err.message);
       }
     }
-
-    function toggleTallerDetalle(id) {
-      const detalle = document.getElementById(`taller-detalle-${id}`);
-      const icono = document.getElementById(`taller-icon-${id}`);
-      if (detalle.style.display === 'none') {
-        detalle.style.display = 'block';
-        icono.textContent = '▲';
-      } else {
-        detalle.style.display = 'none';
-        icono.textContent = '▼';
-      }
-    }
-
-    function goToTallerSlide(index) {
-      if (totalTalleresSlides === 0) return;
-      if (index < 0) currentTallerIndex = totalTalleresSlides - 1;
-      else if (index >= totalTalleresSlides) currentTallerIndex = 0;
-      else currentTallerIndex = index;
-      updateTallerSlider();
-    }
-
-    function updateTallerSlider() {
-      const track = document.getElementById('talleres-slider-track');
-      if (!track) return;
-      track.style.transform = `translateX(-${currentTallerIndex * 100}%)`;
-      const dots = document.querySelectorAll('#talleres-slider-dots .dot');
-      dots.forEach((dot, idx) => {
-        dot.classList.toggle('active', idx === currentTallerIndex);
-      });
-    }
-
-    document.addEventListener('click', (e) => {
-      if (e.target && e.target.id === 'talleres-prev-btn') {
-        goToTallerSlide(currentTallerIndex - 1);
-      } else if (e.target && e.target.id === 'talleres-next-btn') {
-        goToTallerSlide(currentTallerIndex + 1);
-      }
-    });
 
     async function loadPapers() {
       if (!supabaseClient) return;
