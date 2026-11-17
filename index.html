@@ -934,6 +934,12 @@
       }
     }
 
+    function solicitarEjercicio(id) {
+      const inputEmail = document.getElementById(`email-input-${id}`);
+      const emailVal = inputEmail ? inputEmail.value.trim() : '';
+      abrirContacto();
+    }
+
     function downloadPDF(url, filename) {
       if (!url || url === '#') return;
       if (url.includes('doi.org') || (!url.includes('supabase.co') && url.startsWith('http'))) {
@@ -988,17 +994,6 @@
         if (rawFoto.startsWith('http://') || rawFoto.startsWith('https://')) return rawFoto;
         const cleanFile = decodeURIComponent(rawFoto).replace(/^\//, '');
         return `${SUPABASE_URL}/storage/v1/object/public/AUTORES/${encodeURIComponent(cleanFile)}`;
-      }
-      return fallbackSVG;
-    }
-
-    function obtenerUrlTaller(taller) {
-      const fallbackSVG = `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="220" height="220" viewBox="0 0 220 220"><rect width="100%" height="100%" fill="%23b6afbf"/></svg>`;
-      let rawImg = (taller.imagen || taller.url_portada || taller.portada || '').trim();
-      if (rawImg) {
-        if (rawImg.startsWith('http://') || rawImg.startsWith('https://')) return rawImg;
-        const cleanFile = decodeURIComponent(rawImg).replace(/^\//, '');
-        return `${SUPABASE_URL}/storage/v1/object/public/TALLERES/${encodeURIComponent(cleanFile)}`;
       }
       return fallbackSVG;
     }
@@ -1348,7 +1343,6 @@
     document.getElementById('prev-btn').addEventListener('click', () => goToSlide(currentIndex - 1));
     document.getElementById('next-btn').addEventListener('click', () => goToSlide(currentIndex + 1));
 
-    // Event listeners para el carrusel de talleres
     document.addEventListener('click', (e) => {
       if (e.target && e.target.id === 'talleres-prev-btn') {
         goToTallerSlide(currentTallerIndex - 1);
@@ -1379,6 +1373,17 @@
       }
     }
 
+    function obtenerUrlTaller(taller) {
+      const fallbackSVG = `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="220" height="220" viewBox="0 0 220 220"><rect width="100%" height="100%" fill="%23b6afbf"/></svg>`;
+      let rawImg = (taller.imagen || taller.url_portada || taller.portada || '').trim();
+      if (rawImg) {
+        if (rawImg.startsWith('http://') || rawImg.startsWith('https://')) return rawImg;
+        const cleanFile = decodeURIComponent(rawImg).replace(/^\//, '');
+        return `${SUPABASE_URL}/storage/v1/object/public/TALLERES/${encodeURIComponent(cleanFile)}`;
+      }
+      return fallbackSVG;
+    }
+
     async function loadTalleres() {
       if (!supabaseClient) return;
       try {
@@ -1387,7 +1392,6 @@
         
         if (!talleres || talleres.length === 0) return;
 
-        // 1. Encontrar la reseña general fija de arriba
         const generalTaller = talleres.find(t => (t.titulo || '').toLowerCase().includes('reseña') || t.id === 1) || talleres[0];
         if (generalTaller && generalTaller.resena) {
           document.getElementById('taller-resena-general').innerHTML = `
@@ -1397,7 +1401,6 @@
           `;
         }
 
-        // 2. Filtrar los talleres específicos para el slider
         const listaTalleres = talleres.filter(t => t.id !== generalTaller.id && !t.titulo.toLowerCase().includes('reseña'));
         
         const track = document.getElementById('talleres-slider-track');
@@ -1421,9 +1424,8 @@
           const resenaCompleta = taller.resena || 'Sin descripción disponible.';
           const urlImagen = obtenerUrlTaller(taller);
 
-          // Fragmento inicial de 26 palabras con Seguir leyendo...
           const palabrasResena = resenaCompleta.trim().split(/\s+/);
-          const limite = 26;
+          const limite = 28;
           const esLarga = palabrasResena.length > limite;
           const resenaInicial = esLarga ? palabrasResena.slice(0, limite).join(' ') + '...' : resenaCompleta;
           const resenaCodificada = encodeURIComponent(resenaCompleta);
@@ -1454,12 +1456,15 @@
               </p>
 
               <div id="taller-detalle-${idTaller}" style="display: none; margin-top: 14px; padding-top: 14px; border-top: 1px solid rgba(0,0,0,0.08); width: 100%;">
-                <div style="background: var(--bg); box-shadow: var(--nm-pressed); padding: 18px; border-radius: var(--radius-medium); text-align: center; margin-top: 8px;">
-                  <h4 style="font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.12em; color: var(--brand-accent); margin-bottom: 6px; font-weight: 700;">¿Quieres probar cómo funciona antes de inscribirte?</h4>
-                  <p style="font-size: 0.82rem; margin-bottom: 12px; text-align: center;">
-                    Escríbeme por WhatsApp y te envío hoy mismo un ejercicio práctico de 10 minutos para destrabar la mente.
+                <div style="background: var(--bg); box-shadow: var(--nm-pressed); padding: 20px; border-radius: var(--radius-medium); text-align: center; margin-top: 8px;">
+                  <h4 style="font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.12em; color: var(--brand-accent); margin-bottom: 8px; font-weight: 700;">¿Quieres probar cómo funciona antes de inscribirte?</h4>
+                  <p style="font-size: 0.85rem; margin-bottom: 14px; text-align: center; line-height: 1.5; color: var(--text-dark);">
+                    Accede de forma instantánea al protocolo de escritura de 10 minutos diseñado para destrabar la mente y activar el rigor expresivo.
                   </p>
-                  <button class="btn" onclick="abrirContacto()" style="padding: 10px 22px; font-size: 0.78rem;">Solicitar Ejercicio Gratuito</button>
+                  <div style="display: flex; flex-direction: column; gap: 10px; max-width: 320px; margin: 0 auto;">
+                    <input type="email" id="email-input-${idTaller}" placeholder="Tu correo electrónico (Opcional)" style="padding: 10px 14px; border-radius: var(--radius-pill); border: none; background: var(--bg); box-shadow: var(--nm-pressed); font-size: 0.85rem; text-align: center; outline: none; color: var(--text-dark);">
+                    <button class="btn" onclick="solicitarEjercicio('${idTaller}')" style="padding: 10px 22px; font-size: 0.78rem; width: 100%;">Descargar Ejercicio Gratuito</button>
+                  </div>
                 </div>
               </div>
             </div>
