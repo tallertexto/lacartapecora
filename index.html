@@ -214,37 +214,74 @@
       line-height: 1.6;
     }
 
-    /* TALLERES */
-    .talleres-section {
+    /* ESTRUCTURA EDITORIAL DE TALLERES */
+    .talleres-editorial-layout {
+      display: grid;
+      grid-template-columns: 340px 1fr;
+      gap: 48px;
+      align-items: start;
       margin: 40px 0 70px;
+      width: 100%;
+    }
+
+    .taller-sidebar-editorial {
+      padding-top: 12px;
+      border-top: 2px solid var(--brand-accent);
+    }
+
+    .taller-sidebar-editorial h2 {
+      font-family: 'NT Wagner', 'Cormorant Garamond', Georgia, serif;
+      font-size: 1.25rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--brand-accent);
+      margin-bottom: 18px;
+      font-weight: 800;
+    }
+
+    .taller-sidebar-editorial p,
+    .taller-sidebar-editorial div {
+      font-size: 0.93rem;
+      color: var(--text-dark);
+      text-align: justify;
+      line-height: 1.75;
+    }
+
+    .taller-slide-vertical {
+      min-width: 100%;
+      box-sizing: border-box;
       display: flex;
       flex-direction: column;
       align-items: center;
+      text-align: center;
+      gap: 28px;
+      padding: 8px 4px;
     }
 
-    .talleres-card {
-      background: var(--bg);
-      box-shadow: var(--nm-flat);
-      padding: 36px;
-      border-radius: var(--radius-large);
+    .taller-poster-wrapper {
       width: 100%;
-      max-width: 900px;
+      max-width: 280px;
+      aspect-ratio: 3 / 4;
+      border-radius: var(--radius-medium);
+      overflow: hidden;
+      box-shadow: var(--nm-flat);
+      background: #1a202c;
     }
 
-    .talleres-card h2 {
-      font-size: 0.85rem;
-      text-transform: uppercase;
-      letter-spacing: 0.18em;
-      color: var(--brand-accent);
-      margin-bottom: 14px;
-      font-weight: 700;
+    .taller-poster-wrapper img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
     }
 
-    .talleres-card p {
-      font-size: 0.95rem;
-      color: var(--text-dark);
-      text-align: justify;
-      line-height: 1.7;
+    .taller-content-vertical {
+      width: 100%;
+      max-width: 540px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 14px;
     }
 
     /* OBRAS, PAPERS Y ENSAYOS */
@@ -637,9 +674,10 @@
     }
 
     @media (max-width: 768px) {
-      .about-section {
+      .about-section,
+      .talleres-editorial-layout {
         grid-template-columns: 1fr;
-        gap: 24px;
+        gap: 32px;
       }
       .slide-item {
         flex-direction: column;
@@ -747,21 +785,20 @@
       </section>
     </main>
 
+    <!-- VISTA TALLERES EDITORIAL -->
     <main id="view-talleres" class="page-view">
-      <section class="talleres-section">
-        <h2 class="section-title-center" id="taller-titulo-principal">Talleres de Escritura</h2>
-        
-        <!-- Reseña general fija arriba -->
-        <article class="talleres-card" style="max-width: 900px; margin-bottom: 40px;">
-          <h2 style="font-size: 0.9rem; margin-bottom: 16px; color: var(--brand-accent); text-transform: uppercase; letter-spacing: 0.14em;">Reseña General</h2>
+      <section class="talleres-editorial-layout">
+        <!-- Columna izquierda: Reseña general sin marco -->
+        <aside class="taller-sidebar-editorial">
+          <h2>Talleres de Escritura</h2>
           <div id="taller-resena-general">
-            Cargando información general desde Supabase...
+            Cargando información general...
           </div>
-        </article>
+        </aside>
 
-        <!-- Carrusel (Slide) para los talleres individuales debajo -->
-        <div class="slider-container" style="max-width: 900px; width: 100%;">
-          <h2 class="section-title-center" style="font-size: 0.9rem; margin-bottom: 10px;">Programas Disponibles</h2>
+        <!-- Columna derecha: Imagen central, descripción espaciada y opciones debajo -->
+        <div class="slider-container" style="width: 100%;">
+          <h2 class="section-title-center" style="font-size: 0.9rem; margin-bottom: 6px;">Programas Disponibles</h2>
           <div class="slider-track-wrapper">
             <div id="talleres-slider-track" class="slider-track"></div>
           </div>
@@ -919,18 +956,6 @@
         textoElemento.textContent = palabras.slice(0, limitePalabras).join(' ') + '...';
         botonElemento.textContent = " (Seguir leyendo...)";
         botonElemento.dataset.expanded = "false";
-      }
-    }
-
-    function toggleTallerDetalle(id) {
-      const detalle = document.getElementById(`taller-detalle-${id}`);
-      const icono = document.getElementById(`taller-icon-${id}`);
-      if (detalle.style.display === 'none') {
-        detalle.style.display = 'block';
-        icono.textContent = '▲';
-      } else {
-        detalle.style.display = 'none';
-        icono.textContent = '▼';
       }
     }
 
@@ -1374,7 +1399,7 @@
     }
 
     function obtenerUrlTaller(taller) {
-      const fallbackSVG = `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="220" height="220" viewBox="0 0 220 220"><rect width="100%" height="100%" fill="%23b6afbf"/></svg>`;
+      const fallbackSVG = `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="280" height="373" viewBox="0 0 280 373"><rect width="100%" height="100%" fill="%231d2432"/></svg>`;
       let rawImg = (taller.imagen || taller.url_portada || taller.portada || '').trim();
       if (rawImg) {
         if (rawImg.startsWith('http://') || rawImg.startsWith('https://')) return rawImg;
@@ -1395,13 +1420,11 @@
         const generalTaller = talleres.find(t => (t.titulo || '').toLowerCase().includes('reseña') || t.id === 1) || talleres[0];
         if (generalTaller && generalTaller.resena) {
           document.getElementById('taller-resena-general').innerHTML = `
-            <div style="font-size: 0.95rem; text-align: justify; line-height: 1.7; color: var(--text-dark);">
-              ${generalTaller.resena}
-            </div>
+            <div>${generalTaller.resena}</div>
           `;
         }
 
-        const listaTalleres = talleres.filter(t => t.id !== generalTaller.id && !t.titulo.toLowerCase().includes('reseña'));
+        const listaTalleres = talleres.filter(t => t.id !== generalTaller.id && !(t.titulo || '').toLowerCase().includes('reseña'));
         
         const track = document.getElementById('talleres-slider-track');
         const controls = document.getElementById('talleres-slider-controls');
@@ -1425,25 +1448,28 @@
           const urlImagen = obtenerUrlTaller(taller);
 
           const palabrasResena = resenaCompleta.trim().split(/\s+/);
-          const limite = 28;
+          const limite = 32;
           const esLarga = palabrasResena.length > limite;
           const resenaInicial = esLarga ? palabrasResena.slice(0, limite).join(' ') + '...' : resenaCompleta;
           const resenaCodificada = encodeURIComponent(resenaCompleta);
 
           const slide = document.createElement('div');
-          slide.className = 'slide-item';
+          slide.className = 'taller-slide-vertical';
           slide.innerHTML = `
-            <div class="cover-wrapper" style="width: 180px; height: 180px; flex-shrink: 0; border-radius: var(--radius-medium); overflow: hidden; box-shadow: var(--nm-pressed); background: var(--bg); display: flex; align-items: center; justify-content: center;">
-              <img src="${urlImagen}" alt="Imagen Taller" loading="lazy" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.onerror=null; this.src='data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22180%22 height=%22180%22><rect width=%22100%25%22 height=%22100%25%22 fill=%22%23b6afbf%22/></svg>'">
+            <!-- Imagen central protagonista -->
+            <div class="taller-poster-wrapper">
+              <img src="${urlImagen}" alt="${titulo}" loading="lazy" onerror="this.onerror=null; this.src='data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22280%22 height=%22373%22><rect width=%22100%25%22 height=%22100%25%22 fill=%22%231d2432%22/></svg>'">
             </div>
-            <div class="book-info" style="flex: 1; text-align: left; align-items: flex-start;">
-              <h3 onclick="toggleTallerDetalle('${idTaller}')" style="font-family: 'NT Wagner', 'Cormorant Garamond', Georgia, serif; font-size: 1.3rem; font-weight: 800; color: var(--brand-accent); cursor: pointer; display: flex; justify-content: space-between; align-items: center; text-transform: uppercase; letter-spacing: 0.08em; width: 100%;">
-                <span>${titulo}</span>
-                <span id="taller-icon-${idTaller}" style="font-size: 0.9rem; color: var(--text-muted);">▼</span>
+
+            <!-- Descripción espaciada y elegante -->
+            <div class="taller-content-vertical">
+              <h3 style="font-family: 'NT Wagner', 'Cormorant Garamond', Georgia, serif; font-size: 1.55rem; font-weight: 800; color: var(--brand-accent); text-transform: uppercase; letter-spacing: 0.08em; line-height: 1.25;">
+                ${titulo}
               </h3>
-              ${subtitulo ? `<p style="font-size: 0.9rem; font-weight: 700; color: var(--text-dark); margin-top: 4px; margin-bottom: 10px;">${subtitulo}</p>` : ''}
-              
-              <p class="book-description" style="text-align: justify; font-size: 0.9rem;">
+
+              ${subtitulo ? `<p style="font-size: 0.95rem; font-weight: 700; color: var(--text-dark); letter-spacing: 0.02em;">${subtitulo}</p>` : ''}
+
+              <p class="book-description" style="text-align: justify; font-size: 0.92rem; line-height: 1.75; margin-top: 6px;">
                 <span id="taller-resena-text-${idTaller}">${resenaInicial}</span>
                 ${esLarga ? `
                   <button 
@@ -1455,15 +1481,16 @@
                 ` : ''}
               </p>
 
-              <div id="taller-detalle-${idTaller}" style="display: none; margin-top: 14px; padding-top: 14px; border-top: 1px solid rgba(0,0,0,0.08); width: 100%;">
-                <div style="background: var(--bg); box-shadow: var(--nm-pressed); padding: 20px; border-radius: var(--radius-medium); text-align: center; margin-top: 8px;">
+              <!-- Opciones debajo (Opción A) -->
+              <div style="width: 100%; margin-top: 20px; padding-top: 22px; border-top: 1px solid rgba(0,0,0,0.08);">
+                <div style="background: var(--bg); box-shadow: var(--nm-pressed); padding: 24px 22px; border-radius: var(--radius-medium); text-align: center;">
                   <h4 style="font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.12em; color: var(--brand-accent); margin-bottom: 8px; font-weight: 700;">¿Quieres probar cómo funciona antes de inscribirte?</h4>
-                  <p style="font-size: 0.85rem; margin-bottom: 14px; text-align: center; line-height: 1.5; color: var(--text-dark);">
+                  <p style="font-size: 0.85rem; margin-bottom: 16px; text-align: center; line-height: 1.55; color: var(--text-dark);">
                     Accede de forma instantánea al protocolo de escritura de 10 minutos diseñado para destrabar la mente y activar el rigor expresivo.
                   </p>
-                  <div style="display: flex; flex-direction: column; gap: 10px; max-width: 320px; margin: 0 auto;">
-                    <input type="email" id="email-input-${idTaller}" placeholder="Tu correo electrónico (Opcional)" style="padding: 10px 14px; border-radius: var(--radius-pill); border: none; background: var(--bg); box-shadow: var(--nm-pressed); font-size: 0.85rem; text-align: center; outline: none; color: var(--text-dark);">
-                    <button class="btn" onclick="solicitarEjercicio('${idTaller}')" style="padding: 10px 22px; font-size: 0.78rem; width: 100%;">Descargar Ejercicio Gratuito</button>
+                  <div style="display: flex; flex-direction: column; gap: 12px; max-width: 340px; margin: 0 auto;">
+                    <input type="email" id="email-input-${idTaller}" placeholder="Tu correo electrónico (Opcional)" style="padding: 11px 16px; border-radius: var(--radius-pill); border: none; background: var(--bg); box-shadow: var(--nm-pressed); font-size: 0.85rem; text-align: center; outline: none; color: var(--text-dark);">
+                    <button class="btn" onclick="solicitarEjercicio('${idTaller}')" style="padding: 11px 22px; font-size: 0.78rem; width: 100%;">Descargar Ejercicio Gratuito</button>
                   </div>
                 </div>
               </div>
