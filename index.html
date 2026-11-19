@@ -5,37 +5,39 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   
   <!-- METADATOS SEO Y SOCIALES -->
-  <title>La Cartapecora — Archivo Literario Virtual y Repositorio Regional</title>
+  <title>La Cartapecora.org — Archivo Literario Virtual y Repositorio Regional</title>
   <meta name="description" content="Plataforma digital de referencia para la preservación, circulación y lectura de libre acceso de obras literarias, poesía, papers y ensayos de autores locales." />
-  <link rel="canonical" href="https://tallertexto.github.io/lacartapecora/" />
+  <link rel="canonical" href="https://www.lacartapecora.org/" />
   
-  <meta property="og:title" content="La Cartapecora — Archivo Literario Virtual" />
+  <meta property="og:title" content="La Cartapecora.org — Archivo Literario Virtual" />
   <meta property="og:description" content="Explora el archivo de poesía, ensayos, papers y publicaciones de autores locales en acceso libre." />
   <meta property="og:type" content="website" />
-  <meta property="og:url" content="https://tallertexto.github.io/lacartapecora/" />
+  <meta property="og:url" content="https://www.lacartapecora.org/" />
 
-  <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700;800&display=swap" rel="stylesheet">
 
   <!-- SDK de Supabase desde CDN -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
   <style>
+    /* 1. Cargar la fuente VARIABLE (no la estática) */
     @font-face {
-      font-family: 'NT Wagner';
-      src: local('NT Wagner'), local('NTWagner-Regular');
+      font-family: 'Fraunces';
+      font-style: normal;
+      font-weight: 100 900;
       font-display: swap;
+      src: url('https://fonts.gstatic.com/s/fraunces/v31/qIfBdwMtrXb7D8mxVJ6CWSe9HqQY0Es.woff2') format('woff2');
+      unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
     }
 
     :root {
-      /* NUEVA PALETA CÁLIDA EDITORIAL */
-      --bg: #F4F0EB;             /* 60% Fondo principal (Mostaza pálido / Marfil cálido) */
-      --text-dark: #2B231D;      /* Texto principal de gran legibilidad y contraste cálido */
+      /* PALETA CÁLIDA EDITORIAL */
+      --bg: #F4F0EB;             /* 60% Fondo principal (Marfil cálido) */
+      --text-dark: #2B231D;      /* Texto principal cálido */
       --text-muted: #7A6E63;     /* Textos secundarios de apoyo */
-      --brand-accent: #8C3810;   /* 10% Acento (Marrón óxido / Ocre sutil para marca) */
+      --brand-accent: #8C3810;   /* 10% Acento (Marrón óxido) */
       
-      /* Sombras neumomórficas calibradas para el fondo cálido (#F4F0EB) */
+      /* Sombras neumomórficas calibradas para #F4F0EB */
       --nm-flat: 12px 12px 24px #d8d3cd, -12px -12px 24px #ffffff;
       --nm-flat-hover: 16px 16px 32px #d8d3cd, -16px -16px 32px #ffffff;
       --nm-pressed: inset 5px 5px 10px #d8d3cd, inset -5px -5px 10px #ffffff;
@@ -46,6 +48,7 @@
       --radius-medium: 18px;
       --radius-pill: 50px;
     }
+
     * {
       box-sizing: border-box;
       margin: 0;
@@ -57,7 +60,7 @@
     }
 
     body {
-      font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      font-family: 'Segoe UI', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
       background-color: var(--bg);
       color: var(--text-dark);
       line-height: 1.6;
@@ -108,21 +111,33 @@
       object-fit: contain;
     }
 
+    /* 2. Título: TODOS los ejes fijos, nada de auto */
     .brand-title {
-      font-family: 'NT Wagner', 'Cormorant Garamond', Georgia, serif;
-      font-size: 2.4rem;
-      letter-spacing: 0.18em;
+      font-family: 'Fraunces', serif;
+      font-size: clamp(1.35rem, 4.2vw, 3.2rem);
+      line-height: 1.15;
+      font-weight: 100;
+      font-optical-sizing: none;
+      font-variation-settings:
+        'opsz' 72,
+        'wght' 100,
+        'SOFT' 100,
+        'WONK' 1;
       text-transform: uppercase;
-      font-weight: 800;
+      letter-spacing: 0.24em;
+      margin-right: -0.24em;
       color: var(--brand-accent);
     }
 
+    /* 3. Subtítulo */
     .brand-subtitle {
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      font-weight: 400;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
       font-size: 0.85rem;
       color: var(--text-muted);
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      font-weight: 600;
+      margin-top: 8px;
     }
 
     /* NAVEGACIÓN SIMÉTRICA */
@@ -231,13 +246,15 @@
     }
 
     .taller-sidebar-editorial h2 {
-      font-family: 'NT Wagner', 'Cormorant Garamond', Georgia, serif;
+      font-family: 'Fraunces', serif;
       font-size: 1.25rem;
       text-transform: uppercase;
       letter-spacing: 0.12em;
       color: var(--brand-accent);
       margin-bottom: 18px;
-      font-weight: 800;
+      font-weight: 600;
+      font-optical-sizing: none;
+      font-variation-settings: 'opsz' 36, 'wght' 600, 'SOFT' 50, 'WONK' 0;
     }
 
     .taller-sidebar-editorial p,
@@ -283,6 +300,18 @@
       flex-direction: column;
       align-items: center;
       gap: 14px;
+    }
+
+    .taller-slide-title {
+      font-family: 'Fraunces', serif;
+      font-size: 1.55rem;
+      font-weight: 600;
+      font-optical-sizing: none;
+      font-variation-settings: 'opsz' 36, 'wght' 600, 'SOFT' 50, 'WONK' 0;
+      color: var(--brand-accent);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      line-height: 1.25;
     }
 
     /* OBRAS, PAPERS Y ENSAYOS */
@@ -424,9 +453,11 @@
     }
 
     .book-title {
-      font-family: 'NT Wagner', 'Cormorant Garamond', Georgia, serif;
+      font-family: 'Fraunces', serif;
       font-size: 1.5rem;
-      font-weight: 800;
+      font-weight: 600;
+      font-optical-sizing: none;
+      font-variation-settings: 'opsz' 36, 'wght' 600, 'SOFT' 50, 'WONK' 0;
       color: var(--text-dark);
       line-height: 1.3;
     }
@@ -611,8 +642,11 @@
     }
 
     .modal-card h2 {
-      font-family: 'NT Wagner', 'Cormorant Garamond', Georgia, serif;
+      font-family: 'Fraunces', serif;
       font-size: 1.8rem;
+      font-weight: 600;
+      font-optical-sizing: none;
+      font-variation-settings: 'opsz' 36, 'wght' 600, 'SOFT' 50, 'WONK' 0;
       color: var(--brand-accent);
       margin-bottom: 20px;
       text-transform: uppercase;
@@ -675,6 +709,10 @@
     }
 
     @media (max-width: 768px) {
+      .brand-title {
+        letter-spacing: 0.16em;
+        margin-right: -0.16em;
+      }
       .about-section,
       .talleres-editorial-layout {
         grid-template-columns: 1fr;
@@ -705,11 +743,11 @@
     <header>
       <div class="header-layout">
         <button class="logo-container" onclick="irAInicio()" title="Volver al Inicio">
-          <img src="Logo_200_02.png" alt="Logo Cartapecora" onerror="this.style.display='none'">
+          <img src="Logo_200_02.png" alt="Logo Cartapecora" onerror="this.style.display"='none'>
         </button>
 
         <div>
-          <h1 class="brand-title">LA CARTAPECORA</h1>
+          <h1 class="brand-title">LA CARTAPECORA.ORG</h1>
           <p class="brand-subtitle">Archivo Literario Digital & Depósito Cultural Regional</p>
         </div>
 
@@ -1464,7 +1502,7 @@
 
             <!-- Descripción espaciada y elegante -->
             <div class="taller-content-vertical">
-              <h3 style="font-family: 'NT Wagner', 'Cormorant Garamond', Georgia, serif; font-size: 1.55rem; font-weight: 800; color: var(--brand-accent); text-transform: uppercase; letter-spacing: 0.08em; line-height: 1.25;">
+              <h3 class="taller-slide-title">
                 ${titulo}
               </h3>
 
