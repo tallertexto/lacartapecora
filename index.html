@@ -230,88 +230,134 @@
       line-height: 1.6;
     }
 
-    /* ESTRUCTURA EDITORIAL DE TALLERES */
-    .talleres-editorial-layout {
+    /* ESTRUCTURA EDITORIAL DE TALLERES (AISLADA A #view-talleres) */
+    #view-talleres .talleres-editorial-layout {
       display: grid;
-      grid-template-columns: 340px 1fr;
-      gap: 48px;
+      grid-template-columns: 240px 1fr;
+      gap: 44px;
       align-items: start;
-      margin: 40px 0 70px;
+      margin: 42px 0 70px;
       width: 100%;
     }
 
-    .taller-sidebar-editorial {
-      padding-top: 12px;
-      border-top: 2px solid var(--brand-accent);
+    #view-talleres .taller-sidebar-editorial {
+      padding-top: 2px;
     }
 
-    .taller-sidebar-editorial h2 {
-      font-family: 'Fraunces', serif;
-      font-size: 1.25rem;
-      text-transform: uppercase;
-      letter-spacing: 0.12em;
-      color: var(--brand-accent);
-      margin-bottom: 18px;
-      font-weight: 600;
-      font-optical-sizing: none;
-      font-variation-settings: 'opsz' 36, 'wght' 600, 'SOFT' 50, 'WONK' 0;
-    }
-
-    .taller-sidebar-editorial p,
-    .taller-sidebar-editorial div {
-      font-size: 0.93rem;
+    #view-talleres .taller-sidebar-editorial p,
+    #view-talleres .taller-sidebar-editorial div {
+      font-size: 0.88rem;
       color: var(--text-dark);
       text-align: justify;
-      line-height: 1.75;
+      line-height: 1.65;
     }
 
-    .taller-slide-vertical {
+    #view-talleres .talleres-showcase-column {
+      width: 100%;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    #view-talleres .taller-slide-vertical {
       min-width: 100%;
       box-sizing: border-box;
       display: flex;
       flex-direction: column;
-      align-items: center;
-      text-align: center;
-      gap: 28px;
-      padding: 8px 4px;
+      align-items: flex-start;
+      text-align: left;
+      gap: 24px;
+      padding: 0;
     }
 
-    .taller-poster-wrapper {
+    #view-talleres .taller-poster-wrapper {
       width: 100%;
-      max-width: 280px;
-      aspect-ratio: 3 / 4;
-      border-radius: var(--radius-medium);
+      aspect-ratio: 16 / 11;
+      border-radius: 0;
       overflow: hidden;
-      box-shadow: var(--nm-flat);
       background: #2B231D;
     }
 
-    .taller-poster-wrapper img {
+    #view-talleres .taller-poster-wrapper img {
       width: 100%;
       height: 100%;
       object-fit: cover;
       display: block;
     }
 
-    .taller-content-vertical {
+    #view-talleres .taller-content-vertical {
       width: 100%;
-      max-width: 540px;
       display: flex;
       flex-direction: column;
-      align-items: center;
-      gap: 14px;
+      align-items: flex-start;
+      gap: 10px;
     }
 
-    .taller-slide-title {
+    #view-talleres .taller-slide-title {
       font-family: 'Fraunces', serif;
-      font-size: 1.55rem;
-      font-weight: 600;
+      font-size: 1.7rem;
+      font-weight: 700;
       font-optical-sizing: none;
-      font-variation-settings: 'opsz' 36, 'wght' 600, 'SOFT' 50, 'WONK' 0;
+      font-variation-settings: 'opsz' 36, 'wght' 700, 'SOFT' 50, 'WONK' 0;
       color: var(--brand-accent);
       text-transform: uppercase;
-      letter-spacing: 0.08em;
-      line-height: 1.25;
+      letter-spacing: 0.05em;
+      line-height: 1.18;
+    }
+
+    #view-talleres .taller-slide-subtitle {
+      font-size: 0.96rem;
+      font-weight: 700;
+      color: var(--text-dark);
+      letter-spacing: 0.01em;
+    }
+
+    #view-talleres .taller-slide-desc {
+      font-size: 0.92rem;
+      color: var(--text-dark);
+      line-height: 1.7;
+      text-align: justify;
+      margin-top: 4px;
+    }
+
+    #view-talleres .taller-trial-box {
+      width: 100%;
+      margin-top: 18px;
+      padding: 22px 24px;
+      border-radius: var(--radius-medium);
+      background: var(--bg);
+      box-shadow: var(--nm-pressed);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    #view-talleres .taller-trial-form {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      align-items: center;
+      margin-top: 4px;
+    }
+
+    #view-talleres .taller-trial-form input {
+      flex: 1 1 240px;
+      padding: 11px 18px;
+      border-radius: var(--radius-pill);
+      border: none;
+      background: var(--bg);
+      box-shadow: var(--nm-pressed);
+      font-size: 0.85rem;
+      outline: none;
+      color: var(--text-dark);
+    }
+
+    #view-talleres .slider-controls {
+      border-top: none;
+      padding-top: 8px;
+      justify-content: center;
+      gap: 36px;
     }
 
     /* OBRAS, PAPERS Y ENSAYOS */
@@ -557,6 +603,7 @@
     .slider-dots {
       display: flex;
       gap: 8px;
+      align-items: center;
     }
 
     .dot {
@@ -714,9 +761,12 @@
         margin-right: -0.16em;
       }
       .about-section,
-      .talleres-editorial-layout {
+      #view-talleres .talleres-editorial-layout {
         grid-template-columns: 1fr;
-        gap: 32px;
+        gap: 28px;
+      }
+      #view-talleres .taller-poster-wrapper {
+        aspect-ratio: 4 / 3;
       }
       .slide-item {
         flex-direction: column;
@@ -827,17 +877,15 @@
     <!-- VISTA TALLERES EDITORIAL -->
     <main id="view-talleres" class="page-view">
       <section class="talleres-editorial-layout">
-        <!-- Columna izquierda: Reseña general sin marco -->
+        <!-- Columna izquierda estrecha: Reseña general directa -->
         <aside class="taller-sidebar-editorial">
-          <h2>Talleres de Escritura</h2>
           <div id="taller-resena-general">
             Cargando información general...
           </div>
         </aside>
 
-        <!-- Columna derecha: Imagen central, descripción espaciada y opciones debajo -->
-        <div class="slider-container" style="width: 100%;">
-          <h2 class="section-title-center" style="font-size: 0.9rem; margin-bottom: 6px;">Programas Disponibles</h2>
+        <!-- Columna derecha amplia: Bloque visual superior + ficha alineada a la izquierda -->
+        <div class="talleres-showcase-column">
           <div class="slider-track-wrapper">
             <div id="talleres-slider-track" class="slider-track"></div>
           </div>
@@ -1438,7 +1486,7 @@
     }
 
     function obtenerUrlTaller(taller) {
-      const fallbackSVG = `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="280" height="373" viewBox="0 0 280 373"><rect width="100%" height="100%" fill="%232B231D"/></svg>`;
+      const fallbackSVG = `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="640" height="440" viewBox="0 0 640 440"><rect width="100%" height="100%" fill="%232B231D"/></svg>`;
       let rawImg = (taller.imagen || taller.url_portada || taller.portada || '').trim();
       if (rawImg) {
         if (rawImg.startsWith('http://') || rawImg.startsWith('https://')) return rawImg;
@@ -1474,7 +1522,7 @@
         totalTalleresSlides = listaTalleres.length;
 
         if (totalTalleresSlides === 0) {
-          track.innerHTML = '<p style="color: var(--text-muted); font-size: 0.9rem; text-align: center; width: 100%;">No hay talleres específicos registrados.</p>';
+          track.innerHTML = '<p style="color: var(--text-muted); font-size: 0.9rem; text-align: left; width: 100%;">No hay talleres específicos registrados.</p>';
           controls.style.display = 'none';
           return;
         }
@@ -1495,20 +1543,20 @@
           const slide = document.createElement('div');
           slide.className = 'taller-slide-vertical';
           slide.innerHTML = `
-            <!-- Imagen central protagonista -->
+            <!-- Bloque visual ancho arriba -->
             <div class="taller-poster-wrapper">
-              <img src="${urlImagen}" alt="${titulo}" loading="lazy" onerror="this.onerror=null; this.src='data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22280%22 height=%22373%22><rect width=%22100%25%22 height=%22100%25%22 fill=%22%232B231D%22/></svg>'">
+              <img src="${urlImagen}" alt="${titulo}" loading="lazy" onerror="this.onerror=null"; this.src='data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22640%22 height=%22440%22><rect width=%22100%25%22 height=%22100%25%22 fill=%22%232B231D%22/></svg>'>
             </div>
 
-            <!-- Descripción espaciada y elegante -->
+            <!-- Ficha alineada a la izquierda debajo -->
             <div class="taller-content-vertical">
               <h3 class="taller-slide-title">
                 ${titulo}
               </h3>
 
-              ${subtitulo ? `<p style="font-size: 0.95rem; font-weight: 700; color: var(--text-dark); letter-spacing: 0.02em;">${subtitulo}</p>` : ''}
+              ${subtitulo ? `<p class="taller-slide-subtitle">${subtitulo}</p>` : ''}
 
-              <p class="book-description" style="text-align: justify; font-size: 0.92rem; line-height: 1.75; margin-top: 6px;">
+              <p class="taller-slide-desc">
                 <span id="taller-resena-text-${idTaller}">${resenaInicial}</span>
                 ${esLarga ? `
                   <button 
@@ -1520,17 +1568,15 @@
                 ` : ''}
               </p>
 
-              <!-- Opciones debajo -->
-              <div style="width: 100%; margin-top: 20px; padding-top: 22px; border-top: 1px solid rgba(0,0,0,0.06);">
-                <div style="background: var(--bg); box-shadow: var(--nm-pressed); padding: 24px 22px; border-radius: var(--radius-medium); text-align: center;">
-                  <h4 style="font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.12em; color: var(--brand-accent); margin-bottom: 8px; font-weight: 700;">¿Quieres probar cómo funciona antes de inscribirte?</h4>
-                  <p style="font-size: 0.85rem; margin-bottom: 16px; text-align: center; line-height: 1.55; color: var(--text-dark);">
-                    Accede de forma instantánea al protocolo de escritura de 10 minutos diseñado para destrabar la mente y activar el rigor expresivo.
-                  </p>
-                  <div style="display: flex; flex-direction: column; gap: 12px; max-width: 340px; margin: 0 auto;">
-                    <input type="email" id="email-input-${idTaller}" placeholder="Tu correo electrónico (Opcional)" style="padding: 11px 16px; border-radius: var(--radius-pill); border: none; background: var(--bg); box-shadow: var(--nm-pressed); font-size: 0.85rem; text-align: center; outline: none; color: var(--text-dark);">
-                    <button class="btn" onclick="solicitarEjercicio('${idTaller}')" style="padding: 11px 22px; font-size: 0.78rem; width: 100%;">Descargar Ejercicio Gratuito</button>
-                  </div>
+              <!-- Bloque de ejercicio gratuito -->
+              <div class="taller-trial-box">
+                <h4 style="font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--brand-accent); font-weight: 700;">¿Quieres probar cómo funciona antes de inscribirte?</h4>
+                <p style="font-size: 0.85rem; line-height: 1.55; color: var(--text-dark);">
+                  Accede de forma instantánea al protocolo de escritura de 10 minutos diseñado para destrabar la mente y activar el rigor expresivo.
+                </p>
+                <div class="taller-trial-form">
+                  <input type="email" id="email-input-${idTaller}" placeholder="Tu correo electrónico (Opcional)">
+                  <button class="btn" onclick="solicitarEjercicio('${idTaller}')" style="padding: 11px 22px; font-size: 0.78rem;">Descargar Ejercicio Gratuito</button>
                 </div>
               </div>
             </div>
