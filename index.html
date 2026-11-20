@@ -230,26 +230,36 @@
       line-height: 1.6;
     }
 
-    /* ESTRUCTURA EDITORIAL DE TALLERES (AISLADA A #view-talleres) */
+    /* ESTRUCTURA EDITORIAL DE TALLERES (HERO CON +60% DE ALTURA + COLUMNA PRINCIPAL IZQ / SIDEBAR DER) */
     #view-talleres .talleres-editorial-layout {
-      display: grid;
-      grid-template-columns: 240px 1fr;
-      gap: 44px;
-      align-items: start;
-      margin: 42px 0 70px;
+      display: flex;
+      flex-direction: column;
+      gap: 36px;
+      margin: 36px 0 70px;
       width: 100%;
     }
 
-    #view-talleres .taller-sidebar-editorial {
-      padding-top: 2px;
+    #view-talleres .taller-hero-banner {
+      width: 100%;
+      aspect-ratio: 35 / 24;
+      background: #2B231D;
+      overflow: hidden;
     }
 
-    #view-talleres .taller-sidebar-editorial p,
-    #view-talleres .taller-sidebar-editorial div {
-      font-size: 0.88rem;
-      color: var(--text-dark);
-      text-align: justify;
-      line-height: 1.65;
+    #view-talleres .taller-hero-banner img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: opacity 0.3s ease;
+    }
+
+    #view-talleres .talleres-columns-grid {
+      display: grid;
+      grid-template-columns: 1fr 260px;
+      gap: 56px;
+      align-items: start;
+      width: 100%;
     }
 
     #view-talleres .talleres-showcase-column {
@@ -257,7 +267,7 @@
       min-width: 0;
       display: flex;
       flex-direction: column;
-      gap: 24px;
+      gap: 28px;
     }
 
     #view-talleres .taller-slide-vertical {
@@ -267,36 +277,13 @@
       flex-direction: column;
       align-items: flex-start;
       text-align: left;
-      gap: 24px;
+      gap: 12px;
       padding: 0;
-    }
-
-    #view-talleres .taller-poster-wrapper {
-      width: 100%;
-      aspect-ratio: 16 / 11;
-      border-radius: 0;
-      overflow: hidden;
-      background: #2B231D;
-    }
-
-    #view-talleres .taller-poster-wrapper img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      display: block;
-    }
-
-    #view-talleres .taller-content-vertical {
-      width: 100%;
-      display: flex;
-      flex-direction: column;
-      align-items: flex-start;
-      gap: 10px;
     }
 
     #view-talleres .taller-slide-title {
       font-family: 'Segoe UI', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
-      font-size: 1.25rem;
+      font-size: 1.35rem;
       font-weight: 800;
       color: var(--brand-accent);
       text-transform: uppercase;
@@ -306,24 +293,24 @@
 
     #view-talleres .taller-slide-subtitle {
       font-family: 'Segoe UI', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
-      font-size: 0.92rem;
+      font-size: 0.96rem;
       font-weight: 700;
       color: var(--text-dark);
-      letter-spacing: 0.04em;
+      letter-spacing: 0.03em;
       line-height: 1.45;
     }
 
     #view-talleres .taller-slide-desc {
-      font-size: 0.92rem;
+      font-size: 0.96rem;
       color: var(--text-dark);
-      line-height: 1.7;
+      line-height: 1.75;
       text-align: justify;
-      margin-top: 4px;
+      margin-top: 6px;
     }
 
     #view-talleres .taller-trial-box {
       width: 100%;
-      margin-top: 18px;
+      margin-top: 22px;
       padding: 22px 24px;
       border-radius: var(--radius-medium);
       background: var(--bg);
@@ -353,11 +340,24 @@
       color: var(--text-dark);
     }
 
+    #view-talleres .taller-sidebar-editorial {
+      padding-top: 14px;
+      border-top: 2px solid var(--brand-accent);
+    }
+
+    #view-talleres .taller-sidebar-editorial p,
+    #view-talleres .taller-sidebar-editorial div {
+      font-size: 0.86rem;
+      color: var(--text-muted);
+      text-align: justify;
+      line-height: 1.68;
+    }
+
     #view-talleres .slider-controls {
       border-top: none;
-      padding-top: 8px;
-      justify-content: center;
-      gap: 36px;
+      padding-top: 4px;
+      justify-content: flex-start;
+      gap: 28px;
     }
 
     /* OBRAS, PAPERS Y ENSAYOS */
@@ -761,11 +761,11 @@
         margin-right: -0.16em;
       }
       .about-section,
-      #view-talleres .talleres-editorial-layout {
+      #view-talleres .talleres-columns-grid {
         grid-template-columns: 1fr;
-        gap: 28px;
+        gap: 32px;
       }
-      #view-talleres .taller-poster-wrapper {
+      #view-talleres .taller-hero-banner {
         aspect-ratio: 4 / 3;
       }
       .slide-item {
@@ -793,7 +793,7 @@
     <header>
       <div class="header-layout">
         <button class="logo-container" onclick="irAInicio()" title="Volver al Inicio">
-          <img src="Logo_200_02.png" alt="Logo Cartapecora" onerror="this.style.display='none'">
+          <img src="Logo_200_02.png" alt="Logo Cartapecora" onerror="this.style.display"='none'>
         </button>
 
         <div>
@@ -877,23 +877,29 @@
     <!-- VISTA TALLERES EDITORIAL -->
     <main id="view-talleres" class="page-view">
       <section class="talleres-editorial-layout">
-        <!-- Columna izquierda estrecha: Reseña general directa -->
-        <aside class="taller-sidebar-editorial">
-          <div id="taller-resena-general">
-            Cargando información general...
-          </div>
-        </aside>
+        <!-- Imagen superior de ancho completo (+60% de altura) -->
+        <div class="taller-hero-banner">
+          <img id="taller-hero-img" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='1032' height='708' viewBox='0 0 1032 708'><rect width='100%' height='100%' fill='%232B231D'/></svg>" alt="Imagen del taller" />
+        </div>
 
-        <!-- Columna derecha amplia: Bloque visual superior + ficha alineada a la izquierda -->
-        <div class="talleres-showcase-column">
-          <div class="slider-track-wrapper">
-            <div id="talleres-slider-track" class="slider-track"></div>
+        <!-- Dos columnas debajo: Columna principal ancha a la izquierda + Reseña general angosta a la derecha -->
+        <div class="talleres-columns-grid">
+          <div class="talleres-showcase-column">
+            <div class="slider-track-wrapper">
+              <div id="talleres-slider-track" class="slider-track"></div>
+            </div>
+            <div class="slider-controls" id="talleres-slider-controls" style="display: none;">
+              <button class="slider-btn" id="talleres-prev-btn" aria-label="Anterior">‹</button>
+              <div class="slider-dots" id="talleres-slider-dots"></div>
+              <button class="slider-btn" id="talleres-next-btn" aria-label="Siguiente">›</button>
+            </div>
           </div>
-          <div class="slider-controls" id="talleres-slider-controls" style="display: none;">
-            <button class="slider-btn" id="talleres-prev-btn" aria-label="Anterior">‹</button>
-            <div class="slider-dots" id="talleres-slider-dots"></div>
-            <button class="slider-btn" id="talleres-next-btn" aria-label="Siguiente">›</button>
-          </div>
+
+          <aside class="taller-sidebar-editorial">
+            <div id="taller-resena-general">
+              Cargando información general...
+            </div>
+          </aside>
         </div>
       </section>
     </main>
@@ -963,6 +969,7 @@
     let totalTalleresSlides = 0;
     let librosData = [];
     let autoresData = [];
+    let talleresData = [];
     let papersData = [];
     let ensayosData = [];
 
@@ -1234,7 +1241,7 @@
         card.className = 'obra-card-item';
         card.innerHTML = `
           <div class="cover-wrapper">
-            <img src="${url_portada}" alt="Portada" loading="lazy" onerror="this.onerror=null"; this.src"='${fallbackSVG}'>
+            <img src="${url_portada}" alt="Portada" loading="lazy" onerror="this.onerror=null"; this.src='${fallbackSVG}'>
           </div>
           <div class="book-info">
             <h3 class="book-title">${titulo}</h3>
@@ -1446,6 +1453,14 @@
       const track = document.getElementById('talleres-slider-track');
       if (!track) return;
       track.style.transform = `translateX(-${currentTallerIndex * 100}%)`;
+
+      const heroImg = document.getElementById('taller-hero-img');
+      const tallerActual = talleresData[currentTallerIndex];
+      if (heroImg && tallerActual) {
+        heroImg.src = obtenerUrlFotoTaller(tallerActual);
+        heroImg.alt = tallerActual.titulo || 'Imagen del taller';
+      }
+
       const dots = document.querySelectorAll('#talleres-slider-dots .dot');
       dots.forEach((dot, idx) => {
         dot.classList.toggle('active', idx === currentTallerIndex);
@@ -1486,7 +1501,7 @@
     }
 
     function obtenerUrlFotoTaller(taller) {
-      const fallbackSVG = `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="640" height="440" viewBox="0 0 640 440"><rect width="100%" height="100%" fill="%232B231D"/></svg>`;
+      const fallbackSVG = `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="1032" height="708" viewBox="0 0 1032 708"><rect width="100%" height="100%" fill="%232B231D"/></svg>`;
       let rawFoto = (taller.foto_url || taller.imagen || taller.url_portada || taller.portada || '').trim();
       if (rawFoto) {
         if (rawFoto.startsWith('http://') || rawFoto.startsWith('https://')) return rawFoto;
@@ -1512,6 +1527,7 @@
         }
 
         const listaTalleres = talleres.filter(t => t !== generalTaller && t.id !== generalTaller.id && !(t.titulo || '').toLowerCase().includes('reseña'));
+        talleresData = listaTalleres;
         
         const track = document.getElementById('talleres-slider-track');
         const controls = document.getElementById('talleres-slider-controls');
@@ -1532,7 +1548,6 @@
           const titulo = taller.titulo || 'Taller sin título';
           const subtitulo = taller.subtitulo || '';
           const resenaCompleta = taller.resena || 'Sin descripción disponible.';
-          const urlImagen = obtenerUrlFotoTaller(taller);
 
           const palabrasResena = resenaCompleta.trim().split(/\s+/);
           const limite = 32;
@@ -1543,41 +1558,33 @@
           const slide = document.createElement('div');
           slide.className = 'taller-slide-vertical';
           slide.innerHTML = `
-            <!-- Bloque visual ancho arriba -->
-            <div class="taller-poster-wrapper">
-              <img src="${urlImagen}" alt="${titulo}" loading="lazy" onerror="this.onerror=null"; this.src='data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22640%22 height=%22440%22><rect width=%22100%25%22 height=%22100%25%22 fill=%22%232B231D%22/></svg>'>
-            </div>
+            <h3 class="taller-slide-title">
+              ${titulo}
+            </h3>
 
-            <!-- Ficha alineada a la izquierda debajo -->
-            <div class="taller-content-vertical">
-              <h3 class="taller-slide-title">
-                ${titulo}
-              </h3>
+            ${subtitulo ? `<p class="taller-slide-subtitle">${subtitulo}</p>` : ''}
 
-              ${subtitulo ? `<p class="taller-slide-subtitle">${subtitulo}</p>` : ''}
+            <p class="taller-slide-desc">
+              <span id="taller-resena-text-${idTaller}">${resenaInicial}</span>
+              ${esLarga ? `
+                <button 
+                  id="taller-resena-btn-${idTaller}" 
+                  class="btn-toggle-inline" 
+                  data-expanded="false" 
+                  onclick="toggleTallerTexto('${idTaller}', '${resenaCodificada}', ${limite})"
+                > (Seguir leyendo...)</button>
+              ` : ''}
+            </p>
 
-              <p class="taller-slide-desc">
-                <span id="taller-resena-text-${idTaller}">${resenaInicial}</span>
-                ${esLarga ? `
-                  <button 
-                    id="taller-resena-btn-${idTaller}" 
-                    class="btn-toggle-inline" 
-                    data-expanded="false" 
-                    onclick="toggleTallerTexto('${idTaller}', '${resenaCodificada}', ${limite})"
-                  > (Seguir leyendo...)</button>
-                ` : ''}
+            <!-- Bloque de ejercicio gratuito -->
+            <div class="taller-trial-box">
+              <h4 style="font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--brand-accent); font-weight: 700;">¿Quieres probar cómo funciona antes de inscribirte?</h4>
+              <p style="font-size: 0.85rem; line-height: 1.55; color: var(--text-dark);">
+                Accede de forma instantánea al protocolo de escritura de 10 minutos diseñado para destrabar la mente y activar el rigor expresivo.
               </p>
-
-              <!-- Bloque de ejercicio gratuito -->
-              <div class="taller-trial-box">
-                <h4 style="font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--brand-accent); font-weight: 700;">¿Quieres probar cómo funciona antes de inscribirte?</h4>
-                <p style="font-size: 0.85rem; line-height: 1.55; color: var(--text-dark);">
-                  Accede de forma instantánea al protocolo de escritura de 10 minutos diseñado para destrabar la mente y activar el rigor expresivo.
-                </p>
-                <div class="taller-trial-form">
-                  <input type="email" id="email-input-${idTaller}" placeholder="Tu correo electrónico (Opcional)">
-                  <button class="btn" onclick="solicitarEjercicio('${idTaller}')" style="padding: 11px 22px; font-size: 0.78rem;">Descargar Ejercicio Gratuito</button>
-                </div>
+              <div class="taller-trial-form">
+                <input type="email" id="email-input-${idTaller}" placeholder="Tu correo electrónico (Opcional)">
+                <button class="btn" onclick="solicitarEjercicio('${idTaller}')" style="padding: 11px 22px; font-size: 0.78rem;">Descargar Ejercicio Gratuito</button>
               </div>
             </div>
           `;
