@@ -295,22 +295,22 @@
     }
 
     #view-talleres .taller-slide-title {
-      font-family: 'Fraunces', serif;
-      font-size: 1.7rem;
-      font-weight: 700;
-      font-optical-sizing: none;
-      font-variation-settings: 'opsz' 36, 'wght' 700, 'SOFT' 50, 'WONK' 0;
+      font-family: 'Segoe UI', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+      font-size: 1.25rem;
+      font-weight: 800;
       color: var(--brand-accent);
       text-transform: uppercase;
-      letter-spacing: 0.05em;
-      line-height: 1.18;
+      letter-spacing: 0.08em;
+      line-height: 1.3;
     }
 
     #view-talleres .taller-slide-subtitle {
-      font-size: 0.96rem;
+      font-family: 'Segoe UI', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+      font-size: 0.92rem;
       font-weight: 700;
       color: var(--text-dark);
-      letter-spacing: 0.01em;
+      letter-spacing: 0.04em;
+      line-height: 1.45;
     }
 
     #view-talleres .taller-slide-desc {
@@ -793,7 +793,7 @@
     <header>
       <div class="header-layout">
         <button class="logo-container" onclick="irAInicio()" title="Volver al Inicio">
-          <img src="Logo_200_02.png" alt="Logo Cartapecora" onerror="this.style.display"='none'>
+          <img src="Logo_200_02.png" alt="Logo Cartapecora" onerror="this.style.display='none'">
         </button>
 
         <div>
@@ -1234,7 +1234,7 @@
         card.className = 'obra-card-item';
         card.innerHTML = `
           <div class="cover-wrapper">
-            <img src="${url_portada}" alt="Portada" loading="lazy" onerror="this.onerror=null"; this.src='${fallbackSVG}'>
+            <img src="${url_portada}" alt="Portada" loading="lazy" onerror="this.onerror=null"; this.src"='${fallbackSVG}'>
           </div>
           <div class="book-info">
             <h3 class="book-title">${titulo}</h3>
@@ -1485,12 +1485,12 @@
       }
     }
 
-    function obtenerUrlTaller(taller) {
+    function obtenerUrlFotoTaller(taller) {
       const fallbackSVG = `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="640" height="440" viewBox="0 0 640 440"><rect width="100%" height="100%" fill="%232B231D"/></svg>`;
-      let rawImg = (taller.imagen || taller.url_portada || taller.portada || '').trim();
-      if (rawImg) {
-        if (rawImg.startsWith('http://') || rawImg.startsWith('https://')) return rawImg;
-        const cleanFile = decodeURIComponent(rawImg).replace(/^\//, '');
+      let rawFoto = (taller.foto_url || taller.imagen || taller.url_portada || taller.portada || '').trim();
+      if (rawFoto) {
+        if (rawFoto.startsWith('http://') || rawFoto.startsWith('https://')) return rawFoto;
+        const cleanFile = decodeURIComponent(rawFoto).replace(/^\//, '');
         return `${SUPABASE_URL}/storage/v1/object/public/TALLERES/${encodeURIComponent(cleanFile)}`;
       }
       return fallbackSVG;
@@ -1511,7 +1511,7 @@
           `;
         }
 
-        const listaTalleres = talleres.filter(t => t.id !== generalTaller.id && !(t.titulo || '').toLowerCase().includes('reseña'));
+        const listaTalleres = talleres.filter(t => t !== generalTaller && t.id !== generalTaller.id && !(t.titulo || '').toLowerCase().includes('reseña'));
         
         const track = document.getElementById('talleres-slider-track');
         const controls = document.getElementById('talleres-slider-controls');
@@ -1532,7 +1532,7 @@
           const titulo = taller.titulo || 'Taller sin título';
           const subtitulo = taller.subtitulo || '';
           const resenaCompleta = taller.resena || 'Sin descripción disponible.';
-          const urlImagen = obtenerUrlTaller(taller);
+          const urlImagen = obtenerUrlFotoTaller(taller);
 
           const palabrasResena = resenaCompleta.trim().split(/\s+/);
           const limite = 32;
