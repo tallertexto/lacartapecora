@@ -5,37 +5,39 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   
   <!-- METADATOS SEO Y SOCIALES -->
-  <title>La Cartapecora.org — Archivo Literario Virtual y Repositorio Regional</title>
-  <meta name="description" content="Plataforma digital de referencia para la preservación, circulación y lectura de libre acceso de obras literarias, poesía, papers y ensayos de autores locales." />
+  <title>La Cartapecora.org — Archivo Literario Virtual y Estudio Editorial</title>
+  <meta name="description" content="Plataforma digital de referencia para la preservación, circulación y edición de obras literarias, poesía y publicaciones académicas." />
   <link rel="canonical" href="https://www.lacartapecora.org/" />
   
-  <meta property="og:title" content="La Cartapecora.org — Archivo Literario Virtual" />
-  <meta property="og:description" content="Explora el archivo de poesía, ensayos, papers y publicaciones de autores locales en acceso libre." />
+  <meta property="og:title" content="La Cartapecora.org — Archivo Literario Virtual & Estudio Editorial" />
+  <meta property="og:description" content="Explora el archivo de poesía, papers y proyectos editoriales bajo nuestro sello." />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://www.lacartapecora.org/" />
 
+  <!-- Tipografía secundaria editorial: Plus Jakarta Sans (Pairing con Fraunces) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 
   <!-- SDK de Supabase desde CDN -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
   <style>
-    /* 1. Cargar la fuente VARIABLE (no la estática) */
+    /* Fuente Variable Local Fraunces */
     @font-face {
       font-family: 'Fraunces';
       font-style: normal;
       font-weight: 100 900;
       font-display: swap;
-      src: url('https://fonts.gstatic.com/s/fraunces/v31/qIfBdwMtrXb7D8mxVJ6CWSe9HqQY0Es.woff2') format('woff2');
-      unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+      src: url('Fraunces-Variable.ttf') format('truetype');
     }
 
     :root {
       /* PALETA CÁLIDA EDITORIAL */
-      --bg: #F4F0EB;             /* 60% Fondo principal (Marfil cálido) */
+      --bg: #F4F0EB;             /* Fondo principal marfil cálido */
       --text-dark: #2B231D;      /* Texto principal cálido */
       --text-muted: #7A6E63;     /* Textos secundarios de apoyo */
-      --brand-accent: #8C3810;   /* 10% Acento (Marrón óxido) */
+      --brand-accent: #8C3810;   /* Acento marrón óxido */
       
       /* Sombras neumomórficas calibradas para #F4F0EB */
       --nm-flat: 12px 12px 24px #d8d3cd, -12px -12px 24px #ffffff;
@@ -60,17 +62,17 @@
     }
 
     body {
-      font-family: 'Segoe UI', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+      font-family: 'Plus Jakarta Sans', 'Segoe UI', system-ui, -apple-system, sans-serif;
       background-color: var(--bg);
       color: var(--text-dark);
-      line-height: 1.6;
+      line-height: 1.65;
       -webkit-font-smoothing: antialiased;
     }
 
     .container {
-      max-width: 1080px;
+      max-width: 1140px;
       margin: 0 auto;
-      padding: 0 24px;
+      padding: 0 28px;
     }
 
     /* HEADER & BRANDING */
@@ -111,31 +113,29 @@
       object-fit: contain;
     }
 
-    /* 2. Título: TODOS los ejes fijos, nada de auto */
     .brand-title {
-      font-family: 'Fraunces', serif;
-      font-size: clamp(1.35rem, 4.2vw, 3.2rem);
+      font-family: 'Fraunces', Georgia, serif;
+      font-size: clamp(1.45rem, 4.3vw, 3.2rem);
       line-height: 1.15;
-      font-weight: 100;
+      font-weight: 280;
       font-optical-sizing: none;
       font-variation-settings:
         'opsz' 72,
-        'wght' 100,
+        'wght' 280,
         'SOFT' 100,
         'WONK' 1;
       text-transform: uppercase;
-      letter-spacing: 0.24em;
-      margin-right: -0.24em;
+      letter-spacing: 0.14em;
+      margin-right: -0.14em;
       color: var(--brand-accent);
     }
 
-    /* 3. Subtítulo */
     .brand-subtitle {
-      font-family: 'Segoe UI', system-ui, sans-serif;
-      font-weight: 400;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-weight: 500;
       text-transform: uppercase;
-      letter-spacing: 0.08em;
-      font-size: 0.85rem;
+      letter-spacing: 0.1em;
+      font-size: 0.82rem;
       color: var(--text-muted);
       margin-top: 8px;
     }
@@ -157,12 +157,13 @@
 
     .nav-link {
       text-decoration: none;
-      font-size: 0.8rem;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 0.84rem;
       font-weight: 700;
       text-transform: uppercase;
-      letter-spacing: 0.08em;
+      letter-spacing: 0.05em;
       color: var(--text-dark);
-      padding: 12px 18px;
+      padding: 12px 20px;
       min-width: 130px;
       text-align: center;
       border-radius: var(--radius-pill);
@@ -193,7 +194,7 @@
       display: block;
     }
 
-    /* VISIÓN Y MISIÓN MÁS COMPACTAS */
+    /* VISIÓN Y MISIÓN */
     .about-section {
       margin: 40px 0 50px;
       display: grid;
@@ -204,7 +205,7 @@
     .about-card {
       background: var(--bg);
       box-shadow: var(--nm-flat);
-      padding: 30px 32px;
+      padding: 32px 34px;
       border-radius: var(--radius-large);
       transition: transform 0.3s ease, box-shadow 0.3s ease;
     }
@@ -215,22 +216,415 @@
     }
 
     .about-card h2 {
-      font-size: 0.8rem;
+      font-size: 0.82rem;
       text-transform: uppercase;
-      letter-spacing: 0.18em;
+      letter-spacing: 0.14em;
       color: var(--brand-accent);
       margin-bottom: 10px;
       font-weight: 700;
     }
 
     .about-card p {
-      font-size: 0.9rem;
+      font-size: 0.92rem;
       color: var(--text-dark);
-      text-align: justify;
-      line-height: 1.6;
+      text-align: left;
+      line-height: 1.65;
     }
 
-    /* ESTRUCTURA EDITORIAL DE TALLERES (HERO CON +60% DE ALTURA + COLUMNA PRINCIPAL IZQ / SIDEBAR DER) */
+    /* =====================================================================
+       ESTUDIO EDITORIAL: BENTO + SLIDE AUTOMÁTICO + SECCIONES AMPLIAS
+       ===================================================================== */
+    .studio-wrapper {
+      margin: 48px 0 90px;
+      display: flex;
+      flex-direction: column;
+      gap: 72px;
+      width: 100%;
+    }
+
+    /* 1. Cabecera Bento Grid */
+    .studio-bento-grid {
+      display: grid;
+      grid-template-columns: 1.55fr 1fr;
+      gap: 32px;
+      width: 100%;
+    }
+
+    .studio-auto-slider {
+      position: relative;
+      background: var(--bg);
+      box-shadow: var(--nm-flat);
+      border-radius: var(--radius-large);
+      overflow: hidden;
+      min-height: 460px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .studio-slides-track {
+      display: flex;
+      height: 100%;
+      transition: transform 0.55s cubic-bezier(0.25, 1, 0.5, 1);
+    }
+
+    .studio-slide {
+      min-width: 100%;
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      align-items: center;
+      gap: 28px;
+      padding: 48px 42px 64px;
+    }
+
+    .studio-slide-copy {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      text-align: left;
+      gap: 16px;
+    }
+
+    .studio-kicker {
+      font-size: 0.76rem;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      color: var(--brand-accent);
+      font-weight: 700;
+    }
+
+    .studio-slide-title {
+      font-family: 'Fraunces', Georgia, serif;
+      font-size: clamp(1.55rem, 2.5vw, 2.1rem);
+      font-weight: 600;
+      font-optical-sizing: none;
+      font-variation-settings: 'opsz' 48, 'wght' 600, 'SOFT' 60, 'WONK' 0;
+      color: var(--text-dark);
+      line-height: 1.2;
+    }
+
+    .studio-slide-desc {
+      font-size: 0.94rem;
+      color: var(--text-muted);
+      line-height: 1.65;
+    }
+
+    .studio-slide-visual {
+      width: 100%;
+      height: 310px;
+      border-radius: var(--radius-medium);
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .studio-slide-visual img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: var(--radius-medium);
+      display: block;
+    }
+
+    .studio-slider-dots {
+      position: absolute;
+      bottom: 24px;
+      left: 42px;
+      display: flex;
+      gap: 8px;
+      z-index: 5;
+    }
+
+    .studio-bento-side {
+      display: flex;
+      flex-direction: column;
+      gap: 32px;
+    }
+
+    .studio-side-card {
+      flex: 1;
+      background: var(--bg);
+      box-shadow: var(--nm-flat);
+      border-radius: var(--radius-large);
+      padding: 34px 36px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      align-items: flex-start;
+      text-align: left;
+      gap: 14px;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .studio-side-card:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--nm-flat-hover);
+    }
+
+    .studio-side-card h3 {
+      font-family: 'Fraunces', Georgia, serif;
+      font-size: 1.32rem;
+      font-weight: 600;
+      font-optical-sizing: none;
+      font-variation-settings: 'opsz' 36, 'wght' 600, 'SOFT' 50, 'WONK' 0;
+      color: var(--text-dark);
+      line-height: 1.25;
+    }
+
+    .studio-side-card p {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      line-height: 1.65;
+    }
+
+    /* 2. Pilares de respaldo amplios */
+    .studio-pillars-row {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 28px;
+      width: 100%;
+    }
+
+    .studio-pillar-box {
+      background: var(--bg);
+      box-shadow: var(--nm-flat);
+      border-radius: var(--radius-medium);
+      padding: 32px 26px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      text-align: left;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .studio-pillar-box:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--nm-flat-hover);
+    }
+
+    .pillar-num {
+      font-family: 'Fraunces', Georgia, serif;
+      font-size: 1.5rem;
+      color: var(--brand-accent);
+      font-weight: 400;
+      line-height: 1;
+    }
+
+    .studio-pillar-box h4 {
+      font-size: 0.98rem;
+      font-weight: 700;
+      color: var(--text-dark);
+    }
+
+    .studio-pillar-box p {
+      font-size: 0.88rem;
+      color: var(--text-muted);
+      line-height: 1.65;
+    }
+
+    /* 3. Cinta continua de servicios (Ticker) */
+    .studio-marquee {
+      width: 100%;
+      overflow: hidden;
+      padding: 20px 0;
+      border-top: 1px solid rgba(43, 35, 29, 0.12);
+      border-bottom: 1px solid rgba(43, 35, 29, 0.12);
+      white-space: nowrap;
+    }
+
+    .studio-marquee-track {
+      display: inline-flex;
+      gap: 40px;
+      animation: marqueeScroll 28s linear infinite;
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: var(--text-dark);
+      letter-spacing: 0.04em;
+    }
+
+    .studio-marquee-track span.sep {
+      color: var(--brand-accent);
+    }
+
+    @keyframes marqueeScroll {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+
+    /* 4. Franja contrastante de autoridad con bloques alternados */
+    .studio-dark-band {
+      background-color: #2B231D;
+      color: #F4F0EB;
+      border-radius: var(--radius-large);
+      padding: 72px 56px;
+      display: flex;
+      flex-direction: column;
+      gap: 48px;
+      box-shadow: var(--nm-flat);
+    }
+
+    .studio-dark-header {
+      max-width: 680px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      text-align: left;
+    }
+
+    .studio-dark-header h2 {
+      font-family: 'Fraunces', Georgia, serif;
+      font-size: clamp(1.65rem, 3vw, 2.3rem);
+      font-weight: 600;
+      font-optical-sizing: none;
+      font-variation-settings: 'opsz' 48, 'wght' 600, 'SOFT' 50, 'WONK' 0;
+      color: #F4F0EB;
+      line-height: 1.25;
+    }
+
+    .studio-dark-header p {
+      font-size: 0.96rem;
+      color: #D2C8BE;
+      line-height: 1.7;
+    }
+
+    .studio-alt-blocks {
+      display: flex;
+      flex-direction: column;
+      gap: 40px;
+    }
+
+    .studio-alt-card {
+      background: #F4F0EB;
+      color: var(--text-dark);
+      border-radius: var(--radius-large);
+      overflow: hidden;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      min-height: 360px;
+    }
+
+    .studio-alt-card.reverse .studio-alt-media {
+      order: 2;
+    }
+
+    .studio-alt-media {
+      width: 100%;
+      height: 100%;
+      min-height: 320px;
+      background: #3B3028;
+    }
+
+    .studio-alt-media img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .studio-alt-body {
+      padding: 48px 52px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: flex-start;
+      gap: 16px;
+      text-align: left;
+    }
+
+    .studio-alt-body h3 {
+      font-family: 'Fraunces', Georgia, serif;
+      font-size: 1.5rem;
+      font-weight: 600;
+      font-optical-sizing: none;
+      font-variation-settings: 'opsz' 36, 'wght' 600, 'SOFT' 50, 'WONK' 0;
+      color: var(--text-dark);
+      line-height: 1.3;
+    }
+
+    .studio-alt-body p {
+      font-size: 0.94rem;
+      color: var(--text-muted);
+      line-height: 1.75;
+    }
+
+    /* 5. Vitrina de obras editadas bajo el sello */
+    .studio-showcase-header {
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      padding-top: 12px;
+    }
+
+    .studio-showcase-header h2 {
+      font-family: 'Fraunces', Georgia, serif;
+      font-size: 1.9rem;
+      font-weight: 600;
+      font-optical-sizing: none;
+      font-variation-settings: 'opsz' 36, 'wght' 600, 'SOFT' 50, 'WONK' 0;
+      color: var(--text-dark);
+    }
+
+    .studio-showcase-header p {
+      font-size: 0.95rem;
+      color: var(--text-muted);
+      max-width: 600px;
+    }
+
+    .edicion-showcase-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(460px, 1fr));
+      gap: 36px;
+      width: 100%;
+    }
+
+    .edicion-case-card {
+      background: var(--bg);
+      box-shadow: var(--nm-flat);
+      border-radius: var(--radius-large);
+      padding: 38px;
+      display: flex;
+      flex-direction: row;
+      align-items: flex-start;
+      gap: 30px;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .edicion-case-card:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--nm-flat-hover);
+    }
+
+    .edicion-cover {
+      width: 165px;
+      height: 235px;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .edicion-cover img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      display: block;
+    }
+
+    .edicion-details {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      text-align: left;
+      gap: 12px;
+    }
+
+    /* =====================================================================
+       ESTRUCTURA EDITORIAL DE TALLERES
+       ===================================================================== */
     #view-talleres .talleres-editorial-layout {
       display: flex;
       flex-direction: column;
@@ -243,6 +637,8 @@
       width: 100%;
       aspect-ratio: 35 / 24;
       background: #2B231D;
+      border-radius: var(--radius-large);
+      box-shadow: var(--nm-flat);
       overflow: hidden;
     }
 
@@ -256,7 +652,7 @@
 
     #view-talleres .talleres-columns-grid {
       display: grid;
-      grid-template-columns: 1fr 260px;
+      grid-template-columns: 1fr 280px;
       gap: 56px;
       align-items: start;
       width: 100%;
@@ -282,36 +678,37 @@
     }
 
     #view-talleres .taller-slide-title {
-      font-family: 'Segoe UI', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
-      font-size: 1.35rem;
-      font-weight: 800;
+      font-family: 'Fraunces', Georgia, serif;
+      font-size: 1.55rem;
+      font-weight: 600;
+      font-optical-sizing: none;
+      font-variation-settings: 'opsz' 36, 'wght' 600, 'SOFT' 50, 'WONK' 0;
       color: var(--brand-accent);
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
+      letter-spacing: 0.01em;
       line-height: 1.3;
     }
 
     #view-talleres .taller-slide-subtitle {
-      font-family: 'Segoe UI', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+      font-family: 'Plus Jakarta Sans', sans-serif;
       font-size: 0.96rem;
-      font-weight: 700;
+      font-weight: 600;
       color: var(--text-dark);
-      letter-spacing: 0.03em;
+      letter-spacing: 0.01em;
       line-height: 1.45;
     }
 
     #view-talleres .taller-slide-desc {
-      font-size: 0.96rem;
+      font-size: 0.95rem;
       color: var(--text-dark);
       line-height: 1.75;
-      text-align: justify;
+      text-align: left;
       margin-top: 6px;
     }
 
     #view-talleres .taller-trial-box {
       width: 100%;
       margin-top: 22px;
-      padding: 22px 24px;
+      padding: 24px 26px;
       border-radius: var(--radius-medium);
       background: var(--bg);
       box-shadow: var(--nm-pressed);
@@ -325,17 +722,18 @@
       flex-wrap: wrap;
       gap: 12px;
       align-items: center;
-      margin-top: 4px;
+      margin-top: 6px;
     }
 
     #view-talleres .taller-trial-form input {
       flex: 1 1 240px;
-      padding: 11px 18px;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      padding: 12px 18px;
       border-radius: var(--radius-pill);
       border: none;
       background: var(--bg);
       box-shadow: var(--nm-pressed);
-      font-size: 0.85rem;
+      font-size: 0.86rem;
       outline: none;
       color: var(--text-dark);
     }
@@ -347,10 +745,10 @@
 
     #view-talleres .taller-sidebar-editorial p,
     #view-talleres .taller-sidebar-editorial div {
-      font-size: 0.86rem;
+      font-size: 0.88rem;
       color: var(--text-muted);
-      text-align: justify;
-      line-height: 1.68;
+      text-align: left;
+      line-height: 1.7;
     }
 
     #view-talleres .slider-controls {
@@ -360,7 +758,7 @@
       gap: 28px;
     }
 
-    /* OBRAS, PAPERS Y ENSAYOS */
+    /* OBRAS Y PAPERS */
     .obras-section {
       width: 100%;
       margin: 0 auto 70px auto;
@@ -371,11 +769,11 @@
     }
 
     .section-title-center {
-      font-size: 1.1rem;
+      font-size: 1.05rem;
       text-transform: uppercase;
       letter-spacing: 0.14em;
       color: var(--text-dark);
-      font-weight: 800;
+      font-weight: 700;
       text-align: center;
       margin-bottom: 20px;
     }
@@ -410,7 +808,7 @@
       display: flex;
       flex-direction: row;
       align-items: flex-start;
-      gap: 24px;
+      gap: 28px;
     }
 
     .obras-grid {
@@ -476,10 +874,10 @@
     }
 
     .author-bio {
-      font-size: 0.9rem;
+      font-size: 0.92rem;
       color: var(--text-dark);
-      line-height: 1.6;
-      text-align: justify;
+      line-height: 1.65;
+      text-align: left;
       margin-top: 6px;
     }
 
@@ -499,7 +897,7 @@
     }
 
     .book-title {
-      font-family: 'Fraunces', serif;
+      font-family: 'Fraunces', Georgia, serif;
       font-size: 1.5rem;
       font-weight: 600;
       font-optical-sizing: none;
@@ -509,15 +907,15 @@
     }
 
     .book-author {
-      font-size: 0.9rem;
+      font-size: 0.92rem;
       color: var(--text-muted);
       font-weight: 600;
     }
 
     .book-meta-extra {
-      font-size: 0.85rem;
+      font-size: 0.84rem;
       color: var(--text-muted);
-      font-weight: 600;
+      font-weight: 500;
     }
 
     .book-tags {
@@ -527,29 +925,29 @@
     }
 
     .tag {
-      font-size: 0.7rem;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
+      font-size: 0.76rem;
+      text-transform: capitalize;
+      letter-spacing: 0.03em;
       background: var(--bg);
       box-shadow: var(--nm-pressed);
       color: var(--text-dark);
-      padding: 4px 12px;
+      padding: 5px 14px;
       border-radius: 20px;
-      font-weight: 700;
+      font-weight: 600;
     }
 
     .book-description {
-      font-size: 0.9rem;
+      font-size: 0.92rem;
       color: var(--text-dark);
-      line-height: 1.6;
-      text-align: justify;
+      line-height: 1.65;
+      text-align: left;
     }
 
     .btn-toggle-inline {
       background: none;
       border: none;
       color: var(--brand-accent);
-      font-weight: 700;
+      font-weight: 600;
       cursor: pointer;
       padding: 0;
       margin-left: 4px;
@@ -586,7 +984,7 @@
       box-shadow: var(--nm-pill);
       border: none;
       color: var(--text-dark);
-      font-weight: 800;
+      font-weight: 700;
       cursor: pointer;
       display: flex;
       align-items: center;
@@ -628,16 +1026,16 @@
       align-items: center;
       justify-content: center;
       gap: 8px;
-      padding: 12px 28px;
+      padding: 12px 26px;
       border-radius: var(--radius-pill);
       background: var(--bg);
       box-shadow: var(--nm-pill);
       color: var(--text-dark);
       text-decoration: none;
-      font-size: 0.82rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 0.86rem;
+      font-weight: 600;
+      letter-spacing: 0.02em;
       transition: all 0.2s ease;
       cursor: pointer;
       border: none;
@@ -689,15 +1087,14 @@
     }
 
     .modal-card h2 {
-      font-family: 'Fraunces', serif;
+      font-family: 'Fraunces', Georgia, serif;
       font-size: 1.8rem;
       font-weight: 600;
       font-optical-sizing: none;
       font-variation-settings: 'opsz' 36, 'wght' 600, 'SOFT' 50, 'WONK' 0;
       color: var(--brand-accent);
       margin-bottom: 20px;
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
+      letter-spacing: 0.04em;
     }
 
     .modal-info {
@@ -713,7 +1110,7 @@
       box-shadow: var(--nm-pressed);
       padding: 14px 20px;
       border-radius: var(--radius-medium);
-      font-size: 0.9rem;
+      font-size: 0.92rem;
       color: var(--text-dark);
     }
 
@@ -752,13 +1149,25 @@
       text-align: center;
       font-size: 0.85rem;
       color: var(--text-muted);
-      font-weight: 600;
+      font-weight: 500;
+    }
+
+    @media (max-width: 900px) {
+      .studio-bento-grid {
+        grid-template-columns: 1fr;
+      }
+      .studio-pillars-row {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .edicion-showcase-grid {
+        grid-template-columns: 1fr;
+      }
     }
 
     @media (max-width: 768px) {
       .brand-title {
-        letter-spacing: 0.16em;
-        margin-right: -0.16em;
+        letter-spacing: 0.1em;
+        margin-right: -0.1em;
       }
       .about-section,
       #view-talleres .talleres-columns-grid {
@@ -768,12 +1177,30 @@
       #view-talleres .taller-hero-banner {
         aspect-ratio: 4 / 3;
       }
-      .slide-item {
+      .studio-slide,
+      .studio-alt-card {
+        grid-template-columns: 1fr;
+      }
+      .studio-alt-card.reverse .studio-alt-media {
+        order: 0;
+      }
+      .studio-dark-band {
+        padding: 40px 24px;
+      }
+      .studio-alt-body {
+        padding: 32px 24px;
+      }
+      .studio-pillars-row {
+        grid-template-columns: 1fr;
+      }
+      .slide-item,
+      .edicion-case-card {
         flex-direction: column;
         align-items: center;
         text-align: center;
       }
-      .book-info {
+      .book-info,
+      .edicion-details {
         align-items: center;
         text-align: center;
       }
@@ -793,7 +1220,7 @@
     <header>
       <div class="header-layout">
         <button class="logo-container" onclick="irAInicio()" title="Volver al Inicio">
-          <img src="Logo_200_02.png" alt="Logo Cartapecora" onerror="this.style.display"='none'>
+          <img src="Logo_200_02.png" alt="Logo Cartapecora" onerror="this.style.display='none'">
         </button>
 
         <div>
@@ -807,7 +1234,7 @@
             <li><button class="nav-link" id="btn-autores" onclick="irASeccion('autores')">Autores</button></li>
             <li><button class="nav-link" id="btn-talleres" onclick="irASeccion('talleres')">Talleres</button></li>
             <li><button class="nav-link" id="btn-papers" onclick="irASeccion('papers')">Papers</button></li>
-            <li><button class="nav-link" id="btn-ensayos" onclick="irASeccion('ensayos')">Ensayos</button></li>
+            <li><button class="nav-link" id="btn-edicion" onclick="irASeccion('edicion')">Edición</button></li>
             <li><button class="nav-link" id="btn-contacto" onclick="abrirContacto()">Contacto</button></li>
           </ul>
         </nav>
@@ -849,8 +1276,8 @@
     <main id="view-obras" class="page-view">
       <section class="obras-section">
         <article class="about-card" style="width: 100%; max-width: 820px; margin-bottom: 20px; text-align: center; padding: 28px 32px;">
-          <h2 style="font-size: 1rem; margin-bottom: 8px;">¿Quieres participar y compartir tu obra?</h2>
-          <p style="text-align: center; margin-bottom: 16px; font-size: 0.9rem;">
+          <h2 style="font-size: 1rem; margin-bottom: 8px; text-transform: none; letter-spacing: 0.02em;">¿Quieres participar y compartir tu obra?</h2>
+          <p style="text-align: center; margin-bottom: 16px; font-size: 0.92rem;">
             Si deseas compartir tu obra (publicada, agotada en edición física o libro editado/publicado digitalmente), envía al correo de contacto los siguientes requisitos:
           </p>
           <ul style="list-style: none; display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-bottom: 18px; font-size: 0.85rem; font-weight: 600; color: var(--text-dark);">
@@ -859,7 +1286,7 @@
             <li style="background: var(--bg); box-shadow: var(--nm-pressed); padding: 6px 14px; border-radius: var(--radius-pill);">📸 Foto del autor</li>
             <li style="background: var(--bg); box-shadow: var(--nm-pressed); padding: 6px 14px; border-radius: var(--radius-pill);">📝 Reseña del libro (200 palabras máx.)</li>
           </ul>
-          <button class="btn" style="padding: 10px 22px; font-size: 0.78rem;" onclick="abrirContacto()">Enviar Requisitos vía Email</button>
+          <button class="btn" onclick="abrirContacto()">Enviar requisitos vía email</button>
         </article>
 
         <h2 class="section-title-center">Catálogo General de Obras</h2>
@@ -877,12 +1304,10 @@
     <!-- VISTA TALLERES EDITORIAL -->
     <main id="view-talleres" class="page-view">
       <section class="talleres-editorial-layout">
-        <!-- Imagen superior de ancho completo (+60% de altura) -->
         <div class="taller-hero-banner">
           <img id="taller-hero-img" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='1032' height='708' viewBox='0 0 1032 708'><rect width='100%' height='100%' fill='%232B231D'/></svg>" alt="Imagen del taller" />
         </div>
 
-        <!-- Dos columnas debajo: Columna principal ancha a la izquierda + Reseña general angosta a la derecha -->
         <div class="talleres-columns-grid">
           <div class="talleres-showcase-column">
             <div class="slider-track-wrapper">
@@ -907,23 +1332,114 @@
     <!-- VISTA PAPERS -->
     <main id="view-papers" class="page-view">
       <section class="obras-section">
-        <h2 class="section-title-center">Publicación académica</h2>
+        <h2 class="section-title-center">Publicación Académica</h2>
         <div id="papers-grid-container" class="obras-grid"></div>
       </section>
     </main>
 
-    <!-- VISTA ENSAYOS -->
-    <main id="view-ensayos" class="page-view">
-      <section class="obras-section">
-        <h2 class="section-title-center">Ensayos Críticos</h2>
-        <div id="ensayos-grid-container" class="obras-grid"></div>
+    <!-- VISTA ESTUDIO EDITORIAL (BENTO + SLIDE AUTOMÁTICO + SECCIONES AMPLIAS) -->
+    <main id="view-edicion" class="page-view">
+      <section class="studio-wrapper">
+
+        <!-- 1. BENTO SUPERIOR: SLIDE AUTOMÁTICO PROTAGONISTA + 2 BLOQUES LATERALES -->
+        <div class="studio-bento-grid">
+          <div class="studio-auto-slider" id="studio-auto-slider">
+            <div class="studio-slides-track" id="studio-slides-track"></div>
+            <div class="studio-slider-dots" id="studio-slider-dots"></div>
+          </div>
+
+          <div class="studio-bento-side">
+            <article class="studio-side-card">
+              <span class="studio-kicker">Edición Impresa & Digital</span>
+              <h3>Del borrador al libro con sello propio</h3>
+              <p>
+                Acompañamos la proyección completa de tu obra: estructura narrativa o académica, maquetación interior y cubierta lista para imprenta o lectura digital.
+              </p>
+              <button class="btn" style="padding: 10px 20px; font-size: 0.8rem;" onclick="abrirContacto()">Solicitar propuesta</button>
+            </article>
+
+            <article class="studio-side-card">
+              <span class="studio-kicker">Cuidado Lingüístico</span>
+              <h3>Corrección de estilo y asesoría directa</h3>
+              <p>
+                Depuración gramatical y ortotipográfica bajo normativa académica vigente, respetando el ritmo y la voz personal de cada autor.
+              </p>
+              <button class="btn" style="padding: 10px 20px; font-size: 0.8rem;" onclick="abrirContacto()">Agendar consulta</button>
+            </article>
+          </div>
+        </div>
+
+        <!-- 2. CUATRO PILARES DE RESPALDO -->
+        <div class="studio-pillars-row">
+          <div class="studio-pillar-box">
+            <span class="pillar-num">01</span>
+            <h4>Mentoría de Obra</h4>
+            <p>Acompañamiento personalizado para dar orden, unidad y cierre a manuscritos literarios o ensayos.</p>
+          </div>
+          <div class="studio-pillar-box">
+            <span class="pillar-num">02</span>
+            <h4>Corrección Rigurosa</h4>
+            <p>Cuidado sintáctico y estilístico minucioso antes de pasar a composición tipográfica.</p>
+          </div>
+          <div class="studio-pillar-box">
+            <span class="pillar-num">03</span>
+            <h4>Diseño & Maquetación</h4>
+            <p>Arquitectura de página limpia, elección tipográfica editorial y diseño de portada.</p>
+          </div>
+          <div class="studio-pillar-box">
+            <span class="pillar-num">04</span>
+            <h4>Registro y Circulación</h4>
+            <p>Orientación en ISBN, Depósito Legal e integración en nuestro repositorio digital regional.</p>
+          </div>
+        </div>
+
+        <!-- 3. CINTA CONTINUA DE SERVICIOS -->
+        <div class="studio-marquee" aria-hidden="true">
+          <div class="studio-marquee-track">
+            <span>Mentoría editorial</span><span class="sep">✦</span>
+            <span>Corrección de estilo</span><span class="sep">✦</span>
+            <span>Diseño y maquetación</span><span class="sep">✦</span>
+            <span>Edición impresa en papel</span><span class="sep">✦</span>
+            <span>Edición digital (EPUB / PDF)</span><span class="sep">✦</span>
+            <span>Gestión de ISBN y Depósito Legal</span><span class="sep">✦</span>
+            <span>Mentoría editorial</span><span class="sep">✦</span>
+            <span>Corrección de estilo</span><span class="sep">✦</span>
+            <span>Diseño y maquetación</span><span class="sep">✦</span>
+            <span>Edición impresa en papel</span><span class="sep">✦</span>
+            <span>Edición digital (EPUB / PDF)</span><span class="sep">✦</span>
+            <span>Gestión de ISBN y Depósito Legal</span><span class="sep">✦</span>
+          </div>
+        </div>
+
+        <!-- 4. FRANJA CONTRASTANTE DE AUTORIDAD CON BLOQUES ALTERNADOS -->
+        <div class="studio-dark-band">
+          <div class="studio-dark-header">
+            <span class="studio-kicker" style="color: #E29B6B;">Estudio Editorial Cartapecora</span>
+            <h2>Publica con criterio editorial, circula con respaldo</h2>
+            <p>
+              Detrás de cada manuscrito hay años de búsqueda y oficio. Trabajamos cada libro de manera artesanal y técnica para que su presentación esté a la altura de su escritura.
+            </p>
+          </div>
+
+          <div class="studio-alt-blocks" id="studio-alt-blocks"></div>
+        </div>
+
+        <!-- 5. VITRINA DE OBRAS EDITADAS BAJO EL SELLO -->
+        <div class="studio-showcase-header">
+          <span class="studio-kicker">Portafolio Realizado</span>
+          <h2>Obras editadas bajo nuestro sello</h2>
+          <p>Libros que nacieron de procesos de mentoría, corrección y diseño editorial en nuestro taller.</p>
+        </div>
+
+        <div id="edicion-grid-container" class="edicion-showcase-grid"></div>
+
       </section>
     </main>
 
-    <footer style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; padding: 50px 0; font-size: 0.85rem; color: var(--text-muted); font-weight: 600;">
+    <footer style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; padding: 50px 0; font-size: 0.85rem; color: var(--text-muted); font-weight: 500;">
       <div style="display: inline-flex; align-items: center; gap: 8px; background: var(--bg); box-shadow: var(--nm-pressed); padding: 8px 18px; border-radius: var(--radius-pill);">
-        <span style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--brand-accent); font-weight: 700;">Visitas:</span>
-        <span id="visitas-counter" style="font-weight: 800; color: var(--text-dark);">Cargando...</span>
+        <span style="font-size: 0.78rem; color: var(--brand-accent); font-weight: 600;">Visitas:</span>
+        <span id="visitas-counter" style="font-weight: 700; color: var(--text-dark);">Cargando...</span>
       </div>
       <p>© <span id="year"></span> AATC. Todos los derechos reservados.</p>
     </footer>
@@ -965,13 +1481,15 @@
 
     let currentIndex = 0;
     let currentTallerIndex = 0;
+    let studioSlideIdx = 0;
+    let studioAutoTimer = null;
     let totalSlides = 0;
     let totalTalleresSlides = 0;
     let librosData = [];
     let autoresData = [];
     let talleresData = [];
     let papersData = [];
-    let ensayosData = [];
+    let edicionData = [];
 
     function irAInicio() {
       document.querySelectorAll('.page-view').forEach(view => view.classList.remove('active-view'));
@@ -999,10 +1517,10 @@
         document.getElementById('view-papers').classList.add('active-view');
         document.getElementById('btn-papers').classList.add('active');
         renderGridPapers(papersData);
-      } else if (seccion === 'ensayos') {
-        document.getElementById('view-ensayos').classList.add('active-view');
-        document.getElementById('btn-ensayos').classList.add('active');
-        renderGridEnsayos(ensayosData);
+      } else if (seccion === 'edicion') {
+        document.getElementById('view-edicion').classList.add('active-view');
+        document.getElementById('btn-edicion').classList.add('active');
+        renderGridEdicion(edicionData);
       }
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
@@ -1117,6 +1635,16 @@
       return fallbackSVG;
     }
 
+    function obtenerUrlArchivoEdicion(nombreArchivo, svgFallback) {
+      let raw = (nombreArchivo || '').trim();
+      if (raw) {
+        if (raw.startsWith('http://') || raw.startsWith('https://')) return raw;
+        const cleanFile = decodeURIComponent(raw).replace(/^\//, '');
+        return `${SUPABASE_URL}/storage/v1/object/public/EDICION/${encodeURIComponent(cleanFile)}`;
+      }
+      return svgFallback;
+    }
+
     function renderSlider(libros) {
       const track = document.getElementById('catalog-track');
       const controls = document.getElementById('slider-controls');
@@ -1157,7 +1685,7 @@
         const url_portada = obtenerUrlPortada(libro);
         const url_pdf = (libro.url_pdf || libro.pdf_url || libro.archivo || '#').trim();
         const esDOI = url_pdf.includes('doi.org');
-        const textoBoton = esDOI ? 'Ver en Repositorio DOI' : 'Descargar PDF';
+        const textoBoton = esDOI ? 'Ver en repositorio DOI' : 'Descargar PDF';
         const etiquetaTipo = esDOI ? 'DOI' : 'PDF';
 
         const slide = document.createElement('div');
@@ -1171,7 +1699,7 @@
             <p class="book-author">${autor} ${ano ? '• ' + ano : ''}</p>
             ${metaExtraHTML}
             <div class="book-tags">
-              ${genero ? `<span class="tag">${genero}</span>` : ''}
+              ${genero ? `<span class="tag">${genero.toLowerCase()}</span>` : ''}
               <span class="tag">${etiquetaTipo}</span>
             </div>
             <p class="book-description">
@@ -1234,7 +1762,7 @@
         const url_portada = obtenerUrlPortada(libro);
         const url_pdf = (libro.url_pdf || libro.pdf_url || libro.archivo || '#').trim();
         const esDOI = url_pdf.includes('doi.org');
-        const textoBoton = esDOI ? 'Ver Repositorio' : 'Descargar PDF';
+        const textoBoton = esDOI ? 'Ver repositorio' : 'Descargar PDF';
         const etiquetaTipo = esDOI ? 'DOI' : 'PDF';
 
         const card = document.createElement('div');
@@ -1248,7 +1776,7 @@
             <p class="book-author">${autor} ${ano ? '• ' + ano : ''}</p>
             ${metaExtraHTML}
             <div class="book-tags">
-              ${genero ? `<span class="tag">${genero}</span>` : ''}
+              ${genero ? `<span class="tag">${genero.toLowerCase()}</span>` : ''}
               <span class="tag">${etiquetaTipo}</span>
             </div>
             <p class="book-description">
@@ -1347,7 +1875,7 @@
             <h3 class="book-title">${titulo}</h3>
             <p class="book-author">${autor}</p>
             <div class="book-tags">
-              <span class="tag">PAPER</span>
+              <span class="tag">Paper</span>
               <span class="tag">PDF</span>
             </div>
             <p class="book-description" style="margin-top: 8px;">
@@ -1370,52 +1898,181 @@
       });
     }
 
-    function renderGridEnsayos(ensayos) {
-      const gridContainer = document.getElementById('ensayos-grid-container');
-      gridContainer.innerHTML = '';
-      if (!ensayos || ensayos.length === 0) {
-        gridContainer.innerHTML = '<p style="color: var(--text-muted); text-align: center; grid-column: 1/-1;">No hay ensayos disponibles.</p>';
-        return;
+    function renderStudioContenido(filas) {
+      const slidesTrack = document.getElementById('studio-slides-track');
+      const dotsWrap = document.getElementById('studio-slider-dots');
+      const altBlocksWrap = document.getElementById('studio-alt-blocks');
+
+      const fallbackSlideSVG = `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="320" height="310" viewBox="0 0 320 310"><rect width="100%" height="100%" rx="18" fill="%23d8d3cd"/></svg>`;
+      const fallbackBlockSVG = `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="500" height="360" viewBox="0 0 500 360"><rect width="100%" height="100%" fill="%233B3028"/></svg>`;
+
+      let slides = (filas || []).filter(f => (f.tipo || '').toLowerCase() === 'slide');
+      let bloques = (filas || []).filter(f => (f.tipo || '').toLowerCase() === 'bloque');
+
+      if (slides.length === 0) {
+        slides = [
+          {
+            etiqueta: 'Proyecto Editorial Integral',
+            titulo: 'Proyectamos tu idea hasta convertirla en libro',
+            descripcion: 'Desde la arquitectura inicial del manuscrito hasta su edición final en papel o formato digital con identidad visual propia.',
+            boton_texto: 'Iniciar mi libro',
+            imagen: ''
+          },
+          {
+            etiqueta: 'Edición Impresa & Digital',
+            titulo: 'Diseño interior limpio y cubiertas con carácter',
+            descripcion: 'Maquetación pensada para una lectura cómoda, respetando proporciones tipográficas y estándares de publicación.',
+            boton_texto: 'Solicitar cotización',
+            imagen: ''
+          }
+        ];
       }
 
-      ensayos.forEach((ensayo, idx) => {
-        const idEnsayo = ensayo.id || `ensayo-${idx}`;
-        const titulo = ensayo.titulo || ensayo.title || 'Sin Título';
-        const autor = ensayo.autor || ensayo.author || 'Autor Desconocido';
-        const resumenCompleto = ensayo.resumen || ensayo.abstract || ensayo.descripcion || 'Sin resumen disponible.';
+      if (bloques.length === 0) {
+        bloques = [
+          {
+            etiqueta: 'Acompañamiento Personalizado',
+            titulo: 'Lo más importante es la voz de tu libro',
+            descripcion: 'No aplicamos plantillas en serie. Revisamos contigo la estructura, el estilo y el sentido de cada capítulo para que el resultado final responda fielmente a tu intención como autor.',
+            boton_texto: 'Conversemos sobre tu obra',
+            imagen: ''
+          },
+          {
+            etiqueta: 'Edición en Papel y Digital',
+            titulo: 'De la mesa de corrección a manos de los lectores',
+            descripcion: 'Preparamos archivos maestros tanto para tirajes impresos como para circulación virtual, integrando además la obra en el archivo regional de La Cartapecora.',
+            boton_texto: 'Consultar modalidades',
+            imagen: ''
+          }
+        ];
+      }
 
-        const palabrasResumen = resumenCompleto.trim().split(/\s+/);
-        const esLargo = palabrasResumen.length > 30;
-        const resumenInicial = esLargo ? palabrasResumen.slice(0, 30).join(' ') + '...' : resumenCompleto;
-        const resumenCodificado = encodeURIComponent(resumenCompleto);
+      slidesTrack.innerHTML = '';
+      dotsWrap.innerHTML = '';
+      slides.forEach((s, i) => {
+        const imgUrl = obtenerUrlArchivoEdicion(s.imagen, fallbackSlideSVG);
+        const slideEl = document.createElement('div');
+        slideEl.className = 'studio-slide';
+        slideEl.innerHTML = `
+          <div class="studio-slide-copy">
+            ${s.etiqueta ? `<span class="studio-kicker">${s.etiqueta}</span>` : ''}
+            <h2 class="studio-slide-title">${s.titulo || ''}</h2>
+            <p class="studio-slide-desc">${s.descripcion || ''}</p>
+            <button class="btn" style="margin-top: 6px;" onclick="abrirContacto()">${s.boton_texto || 'Consultar'}</button>
+          </div>
+          <div class="studio-slide-visual">
+            <img src="${imgUrl}" alt="${s.titulo || 'Estudio Editorial'}" loading="lazy" onerror="this.onerror=null"; this.src='${fallbackSlideSVG}'>
+          </div>
+        `;
+        slidesTrack.appendChild(slideEl);
 
-        const url_pdf = obtenerUrlPDF(ensayo);
+        const dot = document.createElement('div');
+        dot.className = `dot ${i === 0 ? 'active' : ''}`;
+        dot.addEventListener('click', () => moverStudioSlide(i, slides.length));
+        dotsWrap.appendChild(dot);
+      });
 
-        const card = document.createElement('div');
-        card.className = 'obra-card-item';
-        card.style.alignItems = 'flex-start';
-        card.style.textAlign = 'left';
+      iniciarAutoSlideStudio(slides.length);
+
+      altBlocksWrap.innerHTML = '';
+      bloques.forEach((b, i) => {
+        const imgUrl = obtenerUrlArchivoEdicion(b.imagen, fallbackBlockSVG);
+        const card = document.createElement('article');
+        card.className = `studio-alt-card ${i % 2 === 1 ? 'reverse' : ''}`;
         card.innerHTML = `
-          <div class="book-info" style="align-items: flex-start; text-align: left; width: 100%;">
-            <h3 class="book-title">${titulo}</h3>
-            <p class="book-author">${autor}</p>
+          <div class="studio-alt-media">
+            <img src="${imgUrl}" alt="${b.titulo || ''}" loading="lazy" onerror="this.onerror=null"; this.src='${fallbackBlockSVG}'>
+          </div>
+          <div class="studio-alt-body">
+            ${b.etiqueta ? `<span class="studio-kicker">${b.etiqueta}</span>` : ''}
+            <h3>${b.titulo || ''}</h3>
+            <p>${b.descripcion || ''}</p>
+            <button class="btn" style="margin-top: 8px;" onclick="abrirContacto()">${b.boton_texto || 'Contáctanos'}</button>
+          </div>
+        `;
+        altBlocksWrap.appendChild(card);
+      });
+    }
+
+    function moverStudioSlide(nuevoIdx, total) {
+      if (total <= 0) return;
+      studioSlideIdx = (nuevoIdx + total) % total;
+      const track = document.getElementById('studio-slides-track');
+      if (track) track.style.transform = `translateX(-${studioSlideIdx * 100}%)`;
+      document.querySelectorAll('#studio-slider-dots .dot').forEach((d, idx) => {
+        d.classList.toggle('active', idx === studioSlideIdx);
+      });
+    }
+
+    function iniciarAutoSlideStudio(total) {
+      if (studioAutoTimer) clearInterval(studioAutoTimer);
+      if (total <= 1) return;
+      studioAutoTimer = setInterval(() => {
+        moverStudioSlide(studioSlideIdx + 1, total);
+      }, 5000);
+
+      const sliderBox = document.getElementById('studio-auto-slider');
+      if (sliderBox) {
+        sliderBox.onmouseenter = () => clearInterval(studioAutoTimer);
+        sliderBox.onmouseleave = () => {
+          clearInterval(studioAutoTimer);
+          studioAutoTimer = setInterval(() => moverStudioSlide(studioSlideIdx + 1, total), 5000);
+        };
+      }
+    }
+
+    function renderGridEdicion(proyectos) {
+      const gridContainer = document.getElementById('edicion-grid-container');
+      gridContainer.innerHTML = '';
+      if (!proyectos || proyectos.length === 0) {
+        gridContainer.innerHTML = '<p style="color: var(--text-muted); text-align: center; grid-column: 1/-1;">Próximamente publicaremos el catálogo de obras editadas bajo nuestro sello.</p>';
+        return;
+      }
+      const fallbackSVG = `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="165" height="235" viewBox="0 0 165 235"><rect width="100%" height="100%" fill="%23d8d3cd"/></svg>`;
+
+      proyectos.forEach((item, idx) => {
+        const idItem = item.id || `edicion-${idx}`;
+        const titulo = item.titulo || 'Sin Título';
+        const autor = item.autor || '';
+        const ano = item.ano || '';
+        const alcance = item.alcance || 'Edición integral';
+        const formato = item.formato || '';
+        const resenaCompleta = item.resena || '';
+
+        const palabras = resenaCompleta.trim().split(/\s+/);
+        const esLarga = palabras.length > 28;
+        const resenaInicial = esLarga ? palabras.slice(0, 28).join(' ') + '...' : resenaCompleta;
+        const resenaCodificada = encodeURIComponent(resenaCompleta);
+        const urlPortada = obtenerUrlArchivoEdicion(item.imagen || item.url_portada || item.portada, fallbackSVG);
+
+        const card = document.createElement('article');
+        card.className = 'edicion-case-card';
+        card.innerHTML = `
+          <div class="edicion-cover">
+            <img src="${urlPortada}" alt="Portada ${titulo}" loading="lazy" onerror="this.onerror=null"; this.src='${fallbackSVG}'>
+          </div>
+          <div class="edicion-details">
+            <h3 class="book-title" style="font-size: 1.35rem;">${titulo}</h3>
+            ${autor || ano ? `<p class="book-author">${autor}${autor && ano ? ' • ' : ''}${ano}</p>` : ''}
             <div class="book-tags">
-              <span class="tag">ENSAYO</span>
-              <span class="tag">PDF</span>
+              <span class="tag">${alcance}</span>
+              ${formato ? `<span class="tag">${formato}</span>` : ''}
             </div>
-            <p class="book-description" style="margin-top: 8px;">
-              <span id="ensayo-resumen-text-${idEnsayo}">${resumenInicial}</span>
-              ${esLargo ? `
-                <button 
-                  id="ensayo-resumen-btn-${idEnsayo}" 
-                  class="btn-toggle-inline" 
-                  data-expanded="false" 
-                  onclick="toggleTextoInSitu('${idEnsayo}', 'ensayo-resumen', '${resumenCodificado}', 30)"
-                > (Seguir leyendo...)</button>
-              ` : ''}
-            </p>
-            <div class="book-actions">
-              ${url_pdf !== '#' ? `<button class="btn" onclick="downloadPDF('${url_pdf}', '${titulo.replace(/[^a-z0-9]/gi, '_').toLowerCase()}.pdf')">Descargar PDF</button>` : ''}
+            ${resenaCompleta ? `
+              <p class="book-description" style="margin-top: 4px;">
+                <span id="edicion-resena-text-${idItem}">${resenaInicial}</span>
+                ${esLarga ? `
+                  <button 
+                    id="edicion-resena-btn-${idItem}" 
+                    class="btn-toggle-inline" 
+                    data-expanded="false" 
+                    onclick="toggleTextoInSitu('${idItem}', 'edicion-resena', '${resenaCodificada}', 28)"
+                  > (Seguir leyendo...)</button>
+                ` : ''}
+              </p>
+            ` : ''}
+            <div class="book-actions" style="margin-top: 14px;">
+              <button class="btn" onclick="abrirContacto()">Cotizar proyecto similar</button>
             </div>
           </div>
         `;
@@ -1576,15 +2233,14 @@
               ` : ''}
             </p>
 
-            <!-- Bloque de ejercicio gratuito -->
             <div class="taller-trial-box">
-              <h4 style="font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--brand-accent); font-weight: 700;">¿Quieres probar cómo funciona antes de inscribirte?</h4>
-              <p style="font-size: 0.85rem; line-height: 1.55; color: var(--text-dark);">
+              <h4 style="font-size: 0.92rem; color: var(--brand-accent); font-weight: 700;">¿Quieres probar cómo funciona antes de inscribirte?</h4>
+              <p style="font-size: 0.88rem; line-height: 1.55; color: var(--text-dark);">
                 Accede de forma instantánea al protocolo de escritura de 10 minutos diseñado para destrabar la mente y activar el rigor expresivo.
               </p>
               <div class="taller-trial-form">
-                <input type="email" id="email-input-${idTaller}" placeholder="Tu correo electrónico (Opcional)">
-                <button class="btn" onclick="solicitarEjercicio('${idTaller}')" style="padding: 11px 22px; font-size: 0.78rem;">Descargar Ejercicio Gratuito</button>
+                <input type="email" id="email-input-${idTaller}" placeholder="Tu correo electrónico (opcional)">
+                <button class="btn" onclick="solicitarEjercicio('${idTaller}')">Descargar ejercicio gratuito</button>
               </div>
             </div>
           `;
@@ -1614,13 +2270,19 @@
       }
     }
 
-    async function loadEnsayos() {
+    async function loadEdicion() {
       if (!supabaseClient) return;
       try {
-        let { data: ensayos, error } = await supabaseClient.from('ensayos').select('*');
-        if (!error) ensayosData = ensayos || [];
+        const [resProyectos, resContenido] = await Promise.all([
+          supabaseClient.from('edicion').select('*'),
+          supabaseClient.from('edicion_contenido').select('*').order('orden', { ascending: true })
+        ]);
+        edicionData = (!resProyectos.error && resProyectos.data) ? resProyectos.data : [];
+        const contenido = (!resContenido.error && resContenido.data) ? resContenido.data : [];
+        renderStudioContenido(contenido);
       } catch (err) {
-        console.error('Error cargando ensayos:', err.message);
+        console.error('Error cargando Estudio Editorial:', err.message);
+        renderStudioContenido([]);
       }
     }
 
@@ -1638,7 +2300,7 @@
     loadAuthors();
     loadTalleres();
     loadPapers();
-    loadEnsayos();
+    loadEdicion();
     registrarVisita();
   </script>
 </body>
