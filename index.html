@@ -1452,8 +1452,12 @@
       <h2>Contacto</h2>
       <div class="modal-info">
         <div class="modal-item">
-          <strong>Correo Electrónico</strong>
-          contacto@lacartapecora.org
+          <strong>Correo Electrónico (clic para copiar)</strong>
+          <span style="cursor: pointer; text-decoration: underline;" onclick="navigator.clipboard.writeText('contacto@lacartapecora.org'); this.textContent='¡Correo copiado al portapapeles!'; setTimeout(() => this.textContent='contacto@lacartapecora.org', 2500);">contacto@lacartapecora.org</span>
+        </div>
+        <div class="modal-item">
+          <strong>Consultas Rápidas y Talleres</strong>
+          <a href="https://wa.me/51989935096?text=Hola,%20escribo%20desde%20La%20Cartapecora.org" target="_blank" rel="noopener" style="color: var(--brand-accent); font-weight: 600; text-decoration: none;">Escribir por WhatsApp →</a>
         </div>
         <div class="modal-item">
           <strong>Ubicación</strong>
