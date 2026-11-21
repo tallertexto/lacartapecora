@@ -2306,6 +2306,47 @@
     loadPapers();
     loadEdicion();
     registrarVisita();
+    loadBooks();
+    loadAuthors();
+    loadTalleres();
+    loadPapers();
+    loadEdicion();
+    registrarVisita();
+
+    // 1. Cerrar modal de contacto con la tecla Escape
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') cerrarContacto();
+    });
+
+    // 2. Sincronizar secciones con la URL (#obras, #talleres, etc.) y el botón Atrás
+    const irASeccionOriginal = irASeccion;
+    irASeccion = function(seccion) {
+      irASeccionOriginal(seccion);
+      if (window.location.hash !== `#${seccion}`) {
+        history.pushState(null, '', `#${seccion}`);
+      }
+    };
+
+    const irAInicioOriginal = irAInicio;
+    irAInicio = function() {
+      irAInicioOriginal();
+      if (window.location.hash) {
+        history.pushState(null, '', window.location.pathname);
+      }
+    };
+
+    function cargarSeccionDesdeURL() {
+      const hash = window.location.hash.replace('#', '');
+      const seccionesValidas = ['obras', 'autores', 'talleres', 'papers', 'edicion'];
+      if (seccionesValidas.includes(hash)) {
+        irASeccionOriginal(hash);
+      } else {
+        irAInicioOriginal();
+      }
+    }
+
+    window.addEventListener('popstate', cargarSeccionDesdeURL);
+    window.addEventListener('DOMContentLoaded', cargarSeccionDesdeURL);
   </script>
 </body>
 </html>
