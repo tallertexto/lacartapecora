@@ -1584,7 +1584,7 @@
       }
 
       const archivo = String(id) === '2' ? 'protocolo_adultos_10min.pdf' : 'protocolo_jovenes_10min.pdf';
-      const urlEjercicio = `${SUPABASE_URL}/storage/v1/object/public/PDFS/${archivo}`;
+      const urlEjercicio = `${SUPABASE_URL}/storage/v1/object/public/TALLERES/${archivo}`;
       downloadPDF(urlEjercicio, archivo);
     }
 
