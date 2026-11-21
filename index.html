@@ -1575,10 +1575,17 @@
       }
     }
 
-    function solicitarEjercicio(id) {
+    async function solicitarEjercicio(id) {
       const inputEmail = document.getElementById(`email-input-${id}`);
       const emailVal = inputEmail ? inputEmail.value.trim() : '';
-      abrirContacto();
+
+      if (emailVal && supabaseClient) {
+        await supabaseClient.from('leads_talleres').insert([{ email: emailVal, taller_id: id }]);
+      }
+
+      const archivo = String(id) === '2' ? 'protocolo_adultos_10min.pdf' : 'protocolo_jovenes_10min.pdf';
+      const urlEjercicio = `${SUPABASE_URL}/storage/v1/object/public/PDFS/${archivo}`;
+      downloadPDF(urlEjercicio, archivo);
     }
 
     function downloadPDF(url, filename) {
