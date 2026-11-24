@@ -1293,7 +1293,7 @@
     <header>
       <div class="header-layout">
         <button class="logo-container" onclick="irAInicio()" title="Volver al Inicio">
-          <img src="Logo_200_02.png" alt="Logo Cartapecora" onerror="this.style.display='none'">
+          <img src="Logo_200_02.png" alt="Logo Cartapecora" onerror="this.style.display"='none'>
         </button>
 
         <div>
@@ -1359,7 +1359,10 @@
             <li style="background: var(--bg); box-shadow: var(--nm-pressed); padding: 6px 14px; border-radius: var(--radius-pill);">📸 Foto del autor</li>
             <li style="background: var(--bg); box-shadow: var(--nm-pressed); padding: 6px 14px; border-radius: var(--radius-pill);">📝 Reseña del libro (200 palabras máx.)</li>
           </ul>
-          <button class="btn" onclick="abrirContacto()">Enviar requisitos vía email</button>
+          <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 12px;">
+            <button class="btn" onclick="abrirContacto()">Enviar requisitos vía email</button>
+            <a href="https://patreon.com/AugustoAnibalToledo?utm_medium=unknown&utm_source=join_link&utm_campaign=creatorshare_creator&utm_content=copyLink" target="_blank" rel="noopener noreferrer" class="btn" style="color: var(--brand-accent);">☕ Un café para La Cartapecora</a>
+          </div>
         </article>
 
         <h2 class="section-title-center">Catálogo General de Obras</h2>
@@ -1496,7 +1499,10 @@
       </section>
     </main>
 
-    <footer style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; padding: 50px 0; font-size: 0.85rem; color: var(--text-muted); font-weight: 500;">
+    <footer style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 16px; padding: 50px 0; font-size: 0.85rem; color: var(--text-muted); font-weight: 500;">
+      <a href="https://patreon.com/AugustoAnibalToledo?utm_medium=unknown&utm_source=join_link&utm_campaign=creatorshare_creator&utm_content=copyLink" target="_blank" rel="noopener noreferrer" class="btn" style="color: var(--brand-accent); font-size: 0.84rem; padding: 11px 24px;">
+        ☕ Un café para La Cartapecora
+      </a>
       <div style="display: inline-flex; align-items: center; gap: 8px; background: var(--bg); box-shadow: var(--nm-pressed); padding: 8px 18px; border-radius: var(--radius-pill);">
         <span style="font-size: 0.78rem; color: var(--brand-accent); font-weight: 600;">Visitas:</span>
         <span id="visitas-counter" style="font-weight: 700; color: var(--text-dark);">Cargando...</span>
@@ -1518,6 +1524,10 @@
         <div class="modal-item">
           <strong>Consultas Rápidas y Talleres</strong>
           <a href="https://wa.me/51989935096?text=Hola,%20escribo%20desde%20La%20Cartapecora.org" target="_blank" rel="noopener" style="color: var(--brand-accent); font-weight: 600; text-decoration: none;">Escribir por WhatsApp →</a>
+        </div>
+        <div class="modal-item">
+          <strong>Apoya el archivo abierto</strong>
+          <a href="https://patreon.com/AugustoAnibalToledo?utm_medium=unknown&utm_source=join_link&utm_campaign=creatorshare_creator&utm_content=copyLink" target="_blank" rel="noopener noreferrer" style="color: var(--brand-accent); font-weight: 600; text-decoration: none;">☕ Un café para La Cartapecora (Patreon) →</a>
         </div>
         <div class="modal-item">
           <strong>Ubicación</strong>
@@ -1548,6 +1558,7 @@
     let studioSlideIdx = 0;
     let studioAutoTimer = null;
     let talleresAutoTimer = null;
+    let catalogAutoTimer = null;
     let totalSlides = 0;
     let totalTalleresSlides = 0;
     let librosData = [];
@@ -1611,11 +1622,13 @@
         textoElemento.textContent = textoCompleto;
         botonElemento.textContent = " (Mostrar menos)";
         botonElemento.dataset.expanded = "true";
+        if (prefix === 'slider-resena' && catalogAutoTimer) clearInterval(catalogAutoTimer);
       } else {
         const palabras = textoCompleto.trim().split(/\s+/);
         textoElemento.textContent = palabras.slice(0, limitePalabras).join(' ') + '...';
         botonElemento.textContent = " (Seguir leyendo...)";
         botonElemento.dataset.expanded = "false";
+        if (prefix === 'slider-resena') iniciarAutoSlideCatalog();
       }
     }
 
@@ -1680,7 +1693,7 @@
     }
 
     function obtenerUrlFotoAutor(autor) {
-      const fallbackSVG = `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="150" height="150" viewBox="0 0 150 150"><rect width="100%" height="100%" fill="%23d8d3cd"/></svg>`;
+      const fallbackSVG = `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/200/svg" width="150" height="150" viewBox="0 0 150 150"><rect width="100%" height="100%" fill="%23d8d3cd"/></svg>`;
       let rawFoto = (autor.foto_url || autor.imagen || autor.foto || '').trim();
       if (rawFoto) {
         if (rawFoto.startsWith('http://') || rawFoto.startsWith('https://')) return rawFoto;
@@ -1715,7 +1728,7 @@
         return;
       }
 
-      const fallbackSVG = `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="220" height="330" viewBox="0 0 220 330"><rect width="100%" height="100%" fill="%23d8d3cd"/></svg>`;
+      const fallbackSVG = `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/200/svg" width="220" height="330" viewBox="0 0 220 330"><rect width="100%" height="100%" fill="%23d8d3cd"/></svg>`;
 
       libros.forEach((libro, idx) => {
         const idLibro = libro.id || `slide-${idx}`;
@@ -1747,7 +1760,7 @@
         slide.className = 'slide-item';
         slide.innerHTML = `
           <div class="cover-wrapper">
-            <img src="${url_portada}" alt="Portada" loading="lazy" onerror="this.onerror"=null; this.src='${fallbackSVG}'>
+            <img src="${url_portada}" alt="Portada" loading="lazy" onerror="this.onerror=null"; this.src='${fallbackSVG}'>
           </div>
           <div class="book-info">
             <h3 class="book-title">${titulo}</h3>
@@ -1783,6 +1796,7 @@
 
       controls.style.display = totalSlides > 1 ? 'flex' : 'none';
       updateSlider();
+      iniciarAutoSlideCatalog();
     }
 
     function renderGridObras(libros) {
@@ -1792,7 +1806,7 @@
         gridContainer.innerHTML = '<p style="color: var(--text-muted); text-align: center; grid-column: 1/-1;">No hay obras disponibles.</p>';
         return;
       }
-      const fallbackSVG = `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="220" height="330" viewBox="0 0 220 330"><rect width="100%" height="100%" fill="%23d8d3cd"/></svg>`;
+      const fallbackSVG = `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/200/svg" width="220" height="330" viewBox="0 0 220 330"><rect width="100%" height="100%" fill="%23d8d3cd"/></svg>`;
 
       libros.forEach((libro, idx) => {
         const idLibro = libro.id || `grid-${idx}`;
@@ -1861,7 +1875,7 @@
         gridContainer.innerHTML = '<p style="color: var(--text-muted); text-align: center; grid-column: 1/-1;">No hay autores.</p>';
         return;
       }
-      const fallbackSVG = `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="150" height="150" viewBox="0 0 150 150"><rect width="100%" height="100%" fill="%23d8d3cd"/></svg>`;
+      const fallbackSVG = `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/200/svg" width="150" height="150" viewBox="0 0 150 150"><rect width="100%" height="100%" fill="%23d8d3cd"/></svg>`;
 
       autores.forEach((autorItem, idx) => {
         const idAutor = autorItem.id || `autor-${idx}`;
@@ -2016,7 +2030,7 @@
             <button class="btn" style="margin-top: 6px;" onclick="abrirContacto()">${s.boton_texto || 'Consultar'}</button>
           </div>
           <div class="studio-slide-visual">
-            <img src="${imgUrl}" alt="${s.titulo || 'Estudio Editorial'}" loading="lazy" onerror="this.onerror"=null; this.src='${fallbackSlideSVG}'>
+            <img src="${imgUrl}" alt="${s.titulo || 'Estudio Editorial'}" loading="lazy" onerror="this.onerror=null"; this.src='${fallbackSlideSVG}'>
           </div>
         `;
         slidesTrack.appendChild(slideEl);
@@ -2083,7 +2097,7 @@
         gridContainer.innerHTML = '<p style="color: var(--text-muted); text-align: center; grid-column: 1/-1;">Próximamente publicaremos el catálogo de obras editadas bajo nuestro sello.</p>';
         return;
       }
-      const fallbackSVG = `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="165" height="235" viewBox="0 0 165 235"><rect width="100%" height="100%" fill="%23d8d3cd"/></svg>`;
+      const fallbackSVG = `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/200/svg" width="165" height="235" viewBox="0 0 165 235"><rect width="100%" height="100%" fill="%23d8d3cd"/></svg>`;
 
       proyectos.forEach((item, idx) => {
         const idItem = item.id || `edicion-${idx}`;
@@ -2151,6 +2165,24 @@
       dots.forEach((dot, idx) => {
         dot.classList.toggle('active', idx === currentIndex);
       });
+    }
+
+    function iniciarAutoSlideCatalog() {
+      if (catalogAutoTimer) clearInterval(catalogAutoTimer);
+      if (totalSlides <= 1) return;
+
+      catalogAutoTimer = setInterval(() => {
+        goToSlide(currentIndex + 1);
+      }, 5000);
+
+      const container = document.querySelector('#catalogo .slider-container');
+      if (container) {
+        container.onmouseenter = () => clearInterval(catalogAutoTimer);
+        container.onmouseleave = () => {
+          clearInterval(catalogAutoTimer);
+          catalogAutoTimer = setInterval(() => goToSlide(currentIndex + 1), 5000);
+        };
+      }
     }
 
     document.getElementById('prev-btn').addEventListener('click', () => goToSlide(currentIndex - 1));
@@ -2280,7 +2312,7 @@
           };
 
           slide.innerHTML = `
-            <img src="${imgUrl}" alt="${taller.titulo || 'Taller'}" loading="lazy" onerror="this.onerror"=null; this.src='${fallbackSVG}'>
+            <img src="${imgUrl}" alt="${taller.titulo || 'Taller'}" loading="lazy" onerror="this.onerror=null; this.src='${fallbackSVG}'">
             <div class="taller-hero-caption">
               <span class="taller-hero-badge">Taller Virtual • ${idx + 1} de ${totalTalleresSlides}</span>
               <h2>${taller.titulo || 'Taller sin título'}</h2>
