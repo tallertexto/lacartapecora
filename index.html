@@ -14,7 +14,7 @@
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://www.lacartapecora.org/" />
 
-  <!-- Tipografía secundaria editorial: Plus Jakarta Sans (Pairing con Fraunces) -->
+  <!-- Tipografía secundaria editorial: Plus Jakarta Sans -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -23,7 +23,6 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
   <style>
-    /* Fuente Variable Local Fraunces */
     @font-face {
       font-family: 'Fraunces';
       font-style: normal;
@@ -33,13 +32,11 @@
     }
 
     :root {
-      /* PALETA CÁLIDA EDITORIAL */
-      --bg: #F4F0EB;             /* Fondo principal marfil cálido */
-      --text-dark: #2B231D;      /* Texto principal cálido */
-      --text-muted: #7A6E63;     /* Textos secundarios de apoyo */
-      --brand-accent: #8C3810;   /* Acento marrón óxido */
+      --bg: #F4F0EB;
+      --text-dark: #2B231D;
+      --text-muted: #7A6E63;
+      --brand-accent: #8C3810;
       
-      /* Sombras neumomórficas calibradas para #F4F0EB */
       --nm-flat: 12px 12px 24px #d8d3cd, -12px -12px 24px #ffffff;
       --nm-flat-hover: 16px 16px 32px #d8d3cd, -16px -16px 32px #ffffff;
       --nm-pressed: inset 5px 5px 10px #d8d3cd, inset -5px -5px 10px #ffffff;
@@ -91,13 +88,10 @@
     .logo-container {
       width: 110px;
       height: 110px;
-      border-radius: 0;
       background: transparent;
-      box-shadow: none;
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 0;
       transition: transform 0.3s ease;
       cursor: pointer;
       border: none;
@@ -140,7 +134,7 @@
       margin-top: 8px;
     }
 
-    /* NAVEGACIÓN SIMÉTRICA */
+    /* NAVEGACIÓN */
     .main-nav {
       margin-top: 16px;
       width: 100%;
@@ -232,7 +226,7 @@
     }
 
     /* =====================================================================
-       ESTUDIO EDITORIAL: BENTO + SLIDE AUTOMÁTICO + SECCIONES AMPLIAS
+       ESTUDIO EDITORIAL
        ===================================================================== */
     .studio-wrapper {
       margin: 48px 0 90px;
@@ -242,7 +236,6 @@
       width: 100%;
     }
 
-    /* 1. Cabecera Bento Grid */
     .studio-bento-grid {
       display: grid;
       grid-template-columns: 1.55fr 1fr;
@@ -378,7 +371,6 @@
       line-height: 1.65;
     }
 
-    /* 2. Pilares de respaldo amplios */
     .studio-pillars-row {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
@@ -423,7 +415,6 @@
       line-height: 1.65;
     }
 
-    /* 3. Cinta continua de servicios (Ticker) */
     .studio-marquee {
       width: 100%;
       overflow: hidden;
@@ -452,7 +443,6 @@
       100% { transform: translateX(-50%); }
     }
 
-    /* 4. Franja contrastante de autoridad con bloques alternados */
     .studio-dark-band {
       background-color: #2B231D;
       color: #F4F0EB;
@@ -548,7 +538,6 @@
       line-height: 1.75;
     }
 
-    /* 5. Vitrina de obras editadas bajo el sello */
     .studio-showcase-header {
       text-align: center;
       display: flex;
@@ -623,77 +612,159 @@
     }
 
     /* =====================================================================
-       ESTRUCTURA EDITORIAL DE TALLERES
+       TALLERES: CARRUSEL AUTOMÁTICO AMPLIO + PROGRAMA COMPLETO AL CLIC
        ===================================================================== */
     #view-talleres .talleres-editorial-layout {
       display: flex;
       flex-direction: column;
-      gap: 36px;
-      margin: 36px 0 70px;
+      gap: 44px;
+      margin: 36px 0 80px;
       width: 100%;
     }
 
-    #view-talleres .taller-hero-banner {
+    #view-talleres .taller-auto-showcase {
+      position: relative;
       width: 100%;
-      aspect-ratio: 35 / 24;
       background: #2B231D;
       border-radius: var(--radius-large);
       box-shadow: var(--nm-flat);
       overflow: hidden;
     }
 
-    #view-talleres .taller-hero-banner img {
+    #view-talleres .taller-slides-track {
+      display: flex;
+      transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+      width: 100%;
+    }
+
+    #view-talleres .taller-hero-slide {
+      min-width: 100%;
+      position: relative;
+      aspect-ratio: 16 / 9;
+      max-height: 540px;
+      cursor: pointer;
+      overflow: hidden;
+    }
+
+    #view-talleres .taller-hero-slide img {
       width: 100%;
       height: 100%;
       object-fit: cover;
       display: block;
-      transition: opacity 0.3s ease;
+      transition: transform 0.55s ease;
+    }
+
+    #view-talleres .taller-hero-slide:hover img {
+      transform: scale(1.02);
+    }
+
+    #view-talleres .taller-hero-caption {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(28, 22, 18, 0.9) 0%, rgba(28, 22, 18, 0.3) 55%, transparent 100%);
+      padding: 40px 48px 66px;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      align-items: flex-start;
+      text-align: left;
+      gap: 10px;
+    }
+
+    #view-talleres .taller-hero-badge {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      color: #E29B6B;
+      font-weight: 700;
+    }
+
+    #view-talleres .taller-hero-caption h2 {
+      font-family: 'Fraunces', Georgia, serif;
+      font-size: clamp(1.5rem, 2.8vw, 2.25rem);
+      font-weight: 600;
+      font-optical-sizing: none;
+      font-variation-settings: 'opsz' 48, 'wght' 600, 'SOFT' 50, 'WONK' 0;
+      color: #F4F0EB;
+      line-height: 1.2;
+      max-width: 780px;
+    }
+
+    #view-talleres .taller-hero-caption p {
+      font-size: 0.95rem;
+      color: #E2D9D0;
+      max-width: 680px;
+      line-height: 1.55;
+    }
+
+    #view-talleres .taller-hero-cta {
+      margin-top: 6px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #F4F0EB;
+      border-bottom: 1px solid #E29B6B;
+      padding-bottom: 3px;
+    }
+
+    #view-talleres .taller-carousel-dots {
+      position: absolute;
+      bottom: 24px;
+      left: 48px;
+      display: flex;
+      gap: 10px;
+      z-index: 5;
+    }
+
+    #view-talleres .taller-carousel-dots .dot {
+      background: rgba(244, 240, 235, 0.35);
+      box-shadow: none;
+    }
+
+    #view-talleres .taller-carousel-dots .dot.active {
+      background: #E29B6B;
+      width: 26px;
     }
 
     #view-talleres .talleres-columns-grid {
       display: grid;
-      grid-template-columns: 1fr 280px;
+      grid-template-columns: 1fr 290px;
       gap: 56px;
       align-items: start;
       width: 100%;
     }
 
-    #view-talleres .talleres-showcase-column {
-      width: 100%;
-      min-width: 0;
-      display: flex;
-      flex-direction: column;
-      gap: 28px;
-    }
-
-    #view-talleres .taller-slide-vertical {
-      min-width: 100%;
-      box-sizing: border-box;
+    #view-talleres .taller-detail-panel {
+      background: var(--bg);
+      box-shadow: var(--nm-flat);
+      border-radius: var(--radius-large);
+      padding: 40px 44px;
       display: flex;
       flex-direction: column;
       align-items: flex-start;
       text-align: left;
-      gap: 12px;
-      padding: 0;
+      gap: 16px;
     }
 
     #view-talleres .taller-slide-title {
       font-family: 'Fraunces', Georgia, serif;
-      font-size: 1.55rem;
+      font-size: 1.65rem;
       font-weight: 600;
       font-optical-sizing: none;
       font-variation-settings: 'opsz' 36, 'wght' 600, 'SOFT' 50, 'WONK' 0;
       color: var(--brand-accent);
-      letter-spacing: 0.01em;
       line-height: 1.3;
     }
 
     #view-talleres .taller-slide-subtitle {
       font-family: 'Plus Jakarta Sans', sans-serif;
-      font-size: 0.96rem;
+      font-size: 1rem;
       font-weight: 600;
       color: var(--text-dark);
-      letter-spacing: 0.01em;
       line-height: 1.45;
     }
 
@@ -702,12 +773,13 @@
       color: var(--text-dark);
       line-height: 1.75;
       text-align: left;
+      white-space: pre-line;
       margin-top: 6px;
     }
 
     #view-talleres .taller-trial-box {
       width: 100%;
-      margin-top: 22px;
+      margin-top: 20px;
       padding: 24px 26px;
       border-radius: var(--radius-medium);
       background: var(--bg);
@@ -749,13 +821,6 @@
       color: var(--text-muted);
       text-align: left;
       line-height: 1.7;
-    }
-
-    #view-talleres .slider-controls {
-      border-top: none;
-      padding-top: 4px;
-      justify-content: flex-start;
-      gap: 28px;
     }
 
     /* OBRAS Y PAPERS */
@@ -836,9 +901,6 @@
       max-width: 220px;
       height: 300px;
       background: transparent;
-      box-shadow: none;
-      border: none;
-      padding: 0;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -1174,8 +1236,19 @@
         grid-template-columns: 1fr;
         gap: 32px;
       }
-      #view-talleres .taller-hero-banner {
+      #view-talleres .taller-hero-slide {
         aspect-ratio: 4 / 3;
+        max-height: none;
+      }
+      #view-talleres .taller-hero-caption {
+        padding: 24px 24px 52px;
+      }
+      #view-talleres .taller-carousel-dots {
+        left: 24px;
+        bottom: 18px;
+      }
+      #view-talleres .taller-detail-panel {
+        padding: 28px 24px;
       }
       .studio-slide,
       .studio-alt-card {
@@ -1304,21 +1377,13 @@
     <!-- VISTA TALLERES EDITORIAL -->
     <main id="view-talleres" class="page-view">
       <section class="talleres-editorial-layout">
-        <div class="taller-hero-banner">
-          <img id="taller-hero-img" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='1032' height='708' viewBox='0 0 1032 708'><rect width='100%' height='100%' fill='%232B231D'/></svg>" alt="Imagen del taller" />
+        <div class="taller-auto-showcase" id="taller-auto-showcase">
+          <div id="talleres-slider-track" class="taller-slides-track"></div>
+          <div class="taller-carousel-dots" id="talleres-slider-dots"></div>
         </div>
 
-        <div class="talleres-columns-grid">
-          <div class="talleres-showcase-column">
-            <div class="slider-track-wrapper">
-              <div id="talleres-slider-track" class="slider-track"></div>
-            </div>
-            <div class="slider-controls" id="talleres-slider-controls" style="display: none;">
-              <button class="slider-btn" id="talleres-prev-btn" aria-label="Anterior">‹</button>
-              <div class="slider-dots" id="talleres-slider-dots"></div>
-              <button class="slider-btn" id="talleres-next-btn" aria-label="Siguiente">›</button>
-            </div>
-          </div>
+        <div class="talleres-columns-grid" id="taller-detalle-anchor">
+          <div id="taller-detail-panel" class="taller-detail-panel"></div>
 
           <aside class="taller-sidebar-editorial">
             <div id="taller-resena-general">
@@ -1337,11 +1402,10 @@
       </section>
     </main>
 
-    <!-- VISTA ESTUDIO EDITORIAL (BENTO + SLIDE AUTOMÁTICO + SECCIONES AMPLIAS) -->
+    <!-- VISTA ESTUDIO EDITORIAL -->
     <main id="view-edicion" class="page-view">
       <section class="studio-wrapper">
 
-        <!-- 1. BENTO SUPERIOR: SLIDE AUTOMÁTICO PROTAGONISTA + 2 BLOQUES LATERALES -->
         <div class="studio-bento-grid">
           <div class="studio-auto-slider" id="studio-auto-slider">
             <div class="studio-slides-track" id="studio-slides-track"></div>
@@ -1369,7 +1433,6 @@
           </div>
         </div>
 
-        <!-- 2. CUATRO PILARES DE RESPALDO -->
         <div class="studio-pillars-row">
           <div class="studio-pillar-box">
             <span class="pillar-num">01</span>
@@ -1393,7 +1456,6 @@
           </div>
         </div>
 
-        <!-- 3. CINTA CONTINUA DE SERVICIOS -->
         <div class="studio-marquee" aria-hidden="true">
           <div class="studio-marquee-track">
             <span>Mentoría editorial</span><span class="sep">✦</span>
@@ -1411,7 +1473,6 @@
           </div>
         </div>
 
-        <!-- 4. FRANJA CONTRASTANTE DE AUTORIDAD CON BLOQUES ALTERNADOS -->
         <div class="studio-dark-band">
           <div class="studio-dark-header">
             <span class="studio-kicker" style="color: #E29B6B;">Estudio Editorial Cartapecora</span>
@@ -1424,7 +1485,6 @@
           <div class="studio-alt-blocks" id="studio-alt-blocks"></div>
         </div>
 
-        <!-- 5. VITRINA DE OBRAS EDITADAS BAJO EL SELLO -->
         <div class="studio-showcase-header">
           <span class="studio-kicker">Portafolio Realizado</span>
           <h2>Obras editadas bajo nuestro sello</h2>
@@ -1487,6 +1547,7 @@
     let currentTallerIndex = 0;
     let studioSlideIdx = 0;
     let studioAutoTimer = null;
+    let talleresAutoTimer = null;
     let totalSlides = 0;
     let totalTalleresSlides = 0;
     let librosData = [];
@@ -1558,23 +1619,6 @@
       }
     }
 
-    function toggleTallerTexto(id, textoCodificado, limitePalabras) {
-      const textoElemento = document.getElementById(`taller-resena-text-${id}`);
-      const botonElemento = document.getElementById(`taller-resena-btn-${id}`);
-      const textoCompleto = decodeURIComponent(textoCodificado);
-
-      if (botonElemento.dataset.expanded === "false") {
-        textoElemento.textContent = textoCompleto;
-        botonElemento.textContent = " (Mostrar menos)";
-        botonElemento.dataset.expanded = "true";
-      } else {
-        const palabras = textoCompleto.trim().split(/\s+/);
-        textoElemento.textContent = palabras.slice(0, limitePalabras).join(' ') + '...';
-        botonElemento.textContent = " (Seguir leyendo...)";
-        botonElemento.dataset.expanded = "false";
-      }
-    }
-
     async function solicitarEjercicio(id) {
       const inputEmail = document.getElementById(`email-input-${id}`);
       const emailVal = inputEmail ? inputEmail.value.trim() : '';
@@ -1609,7 +1653,7 @@
           a.remove();
           window.URL.revokeObjectURL(blobUrl);
         })
-        .catch(err => {
+        .catch(() => {
           window.open(url, '_blank');
         });
     }
@@ -1625,7 +1669,7 @@
     }
 
     function obtenerUrlPortada(libro) {
-      const fallbackSVG = `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="220" height="330" viewBox="0 0 220 330"><rect width="100%" height="100%" fill="%23d8d3cd"/></svg>`;
+      const fallbackSVG = `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/200/svg" width="220" height="330" viewBox="0 0 220 330"><rect width="100%" height="100%" fill="%23d8d3cd"/></svg>`;
       let rawPortada = (libro.url_portada || libro.cover_url || libro.imagen || libro.portada || '').trim();
       if (rawPortada) {
         if (rawPortada.startsWith('http://') || rawPortada.startsWith('https://')) return rawPortada;
@@ -1703,7 +1747,7 @@
         slide.className = 'slide-item';
         slide.innerHTML = `
           <div class="cover-wrapper">
-            <img src="${url_portada}" alt="Portada" loading="lazy" onerror="this.onerror=null"; this.src='${fallbackSVG}'>
+            <img src="${url_portada}" alt="Portada" loading="lazy" onerror="this.onerror"=null; this.src='${fallbackSVG}'>
           </div>
           <div class="book-info">
             <h3 class="book-title">${titulo}</h3>
@@ -1972,7 +2016,7 @@
             <button class="btn" style="margin-top: 6px;" onclick="abrirContacto()">${s.boton_texto || 'Consultar'}</button>
           </div>
           <div class="studio-slide-visual">
-            <img src="${imgUrl}" alt="${s.titulo || 'Estudio Editorial'}" loading="lazy" onerror="this.onerror=null"; this.src='${fallbackSlideSVG}'>
+            <img src="${imgUrl}" alt="${s.titulo || 'Estudio Editorial'}" loading="lazy" onerror="this.onerror"=null; this.src='${fallbackSlideSVG}'>
           </div>
         `;
         slidesTrack.appendChild(slideEl);
@@ -2109,67 +2153,14 @@
       });
     }
 
-    function goToTallerSlide(index) {
-      if (totalTalleresSlides === 0) return;
-      if (index < 0) currentTallerIndex = totalTalleresSlides - 1;
-      else if (index >= totalTalleresSlides) currentTallerIndex = 0;
-      else currentTallerIndex = index;
-      updateTallerSlider();
-    }
-
-    function updateTallerSlider() {
-      const track = document.getElementById('talleres-slider-track');
-      if (!track) return;
-      track.style.transform = `translateX(-${currentTallerIndex * 100}%)`;
-
-      const heroImg = document.getElementById('taller-hero-img');
-      const tallerActual = talleresData[currentTallerIndex];
-      if (heroImg && tallerActual) {
-        heroImg.src = obtenerUrlFotoTaller(tallerActual);
-        heroImg.alt = tallerActual.titulo || 'Imagen del taller';
-      }
-
-      const dots = document.querySelectorAll('#talleres-slider-dots .dot');
-      dots.forEach((dot, idx) => {
-        dot.classList.toggle('active', idx === currentTallerIndex);
-      });
-    }
-
     document.getElementById('prev-btn').addEventListener('click', () => goToSlide(currentIndex - 1));
     document.getElementById('next-btn').addEventListener('click', () => goToSlide(currentIndex + 1));
 
-    document.addEventListener('click', (e) => {
-      if (e.target && e.target.id === 'talleres-prev-btn') {
-        goToTallerSlide(currentTallerIndex - 1);
-      } else if (e.target && e.target.id === 'talleres-next-btn') {
-        goToTallerSlide(currentTallerIndex + 1);
-      }
-    });
-
-    async function loadBooks() {
-      if (!supabaseClient) return;
-      try {
-        let { data: libros, error } = await supabaseClient.from('libros').select('*');
-        if (error) throw error;
-        librosData = libros || [];
-        renderSlider(librosData);
-      } catch (err) {
-        console.error('Error cargando libros:', err.message);
-      }
-    }
-
-    async function loadAuthors() {
-      if (!supabaseClient) return;
-      try {
-        let { data: autores, error } = await supabaseClient.from('autores').select('*');
-        if (!error) autoresData = autores || [];
-      } catch (err) {
-        console.error('Error cargando autores:', err.message);
-      }
-    }
-
+    /* =====================================================================
+       LÓGICA DE TALLERES (AUTO-SLIDER + FICHA COMPLETA AL CLIC)
+       ===================================================================== */
     function obtenerUrlFotoTaller(taller) {
-      const fallbackSVG = `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="1032" height="708" viewBox="0 0 1032 708"><rect width="100%" height="100%" fill="%232B231D"/></svg>`;
+      const fallbackSVG = `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="1140" height="540" viewBox="0 0 1140 540"><rect width="100%" height="100%" fill="%232B231D"/></svg>`;
       let rawFoto = (taller.foto_url || taller.imagen || taller.url_portada || taller.portada || '').trim();
       if (rawFoto) {
         if (rawFoto.startsWith('http://') || rawFoto.startsWith('https://')) return rawFoto;
@@ -2179,97 +2170,170 @@
       return fallbackSVG;
     }
 
+    function seleccionarTaller(index, hacerScroll = false) {
+      if (totalTalleresSlides === 0) return;
+      currentTallerIndex = (index + totalTalleresSlides) % totalTalleresSlides;
+
+      const track = document.getElementById('talleres-slider-track');
+      if (track) track.style.transform = `translateX(-${currentTallerIndex * 100}%)`;
+
+      document.querySelectorAll('#talleres-slider-dots .dot').forEach((dot, idx) => {
+        dot.classList.toggle('active', idx === currentTallerIndex);
+      });
+
+      renderDetalleTaller(talleresData[currentTallerIndex]);
+
+      if (hacerScroll) {
+        const destino = document.getElementById('taller-detalle-anchor');
+        if (destino) destino.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }
+
+    function iniciarAutoSlideTalleres() {
+      if (talleresAutoTimer) clearInterval(talleresAutoTimer);
+      if (totalTalleresSlides <= 1) return;
+
+      talleresAutoTimer = setInterval(() => {
+        seleccionarTaller(currentTallerIndex + 1, false);
+      }, 5500);
+
+      const showcase = document.getElementById('taller-auto-showcase');
+      if (showcase) {
+        showcase.onmouseenter = () => clearInterval(talleresAutoTimer);
+        showcase.onmouseleave = () => {
+          clearInterval(talleresAutoTimer);
+          talleresAutoTimer = setInterval(() => seleccionarTaller(currentTallerIndex + 1, false), 5500);
+        };
+      }
+    }
+
+    function renderDetalleTaller(taller) {
+      const panel = document.getElementById('taller-detail-panel');
+      if (!panel || !taller) return;
+
+      const idTaller = taller.id || '';
+      const titulo = taller.titulo || 'Taller sin título';
+      const subtitulo = taller.subtitulo || '';
+      const resenaCompleta = taller.resena || 'Sin descripción disponible.';
+      const tieneProtocolo = ['2', '4'].includes(String(idTaller));
+
+      panel.innerHTML = `
+        <span class="studio-kicker">Programa seleccionado</span>
+        <h3 class="taller-slide-title">${titulo}</h3>
+        ${subtitulo ? `<p class="taller-slide-subtitle">${subtitulo}</p>` : ''}
+        <p class="taller-slide-desc">${resenaCompleta}</p>
+
+        <div style="margin-top: 12px; display: flex; flex-wrap: wrap; gap: 12px;">
+          <button class="btn" onclick="abrirContacto()">Inscribirme o consultar</button>
+        </div>
+
+        ${tieneProtocolo ? `
+        <div class="taller-trial-box">
+          <h4 style="font-size: 0.92rem; color: var(--brand-accent); font-weight: 700;">¿Quieres probar cómo funciona antes de inscribirte?</h4>
+          <p style="font-size: 0.88rem; line-height: 1.55; color: var(--text-dark);">
+            Accede de forma instantánea al protocolo de escritura de 10 minutos diseñado para destrabar la mente y activar el rigor expresivo.
+          </p>
+          <div class="taller-trial-form">
+            <input type="email" id="email-input-${idTaller}" placeholder="Tu correo electrónico (opcional)">
+            <button class="btn" onclick="solicitarEjercicio('${idTaller}')">Descargar ejercicio gratuito</button>
+          </div>
+        </div>
+        ` : ''}
+      `;
+    }
+
     async function loadTalleres() {
       if (!supabaseClient) return;
       try {
         let { data: talleres, error } = await supabaseClient.from('talleres').select('*');
         if (error) throw error;
-        
         if (!talleres || talleres.length === 0) return;
 
         const generalTaller = talleres.find(t => (t.titulo || '').toLowerCase().includes('reseña') || t.id === 1) || talleres[0];
         if (generalTaller && generalTaller.resena) {
-          document.getElementById('taller-resena-general').innerHTML = `
-            <div>${generalTaller.resena}</div>
-          `;
+          document.getElementById('taller-resena-general').innerHTML = `<div>${generalTaller.resena}</div>`;
         }
 
         const listaTalleres = talleres.filter(t => t !== generalTaller && t.id !== generalTaller.id && !(t.titulo || '').toLowerCase().includes('reseña'));
         talleresData = listaTalleres;
-        
-        const track = document.getElementById('talleres-slider-track');
-        const controls = document.getElementById('talleres-slider-controls');
-        const dotsContainer = document.getElementById('talleres-slider-dots');
-
-        track.innerHTML = '';
-        dotsContainer.innerHTML = '';
         totalTalleresSlides = listaTalleres.length;
 
+        const track = document.getElementById('talleres-slider-track');
+        const dotsContainer = document.getElementById('talleres-slider-dots');
+        track.innerHTML = '';
+        dotsContainer.innerHTML = '';
+
         if (totalTalleresSlides === 0) {
-          track.innerHTML = '<p style="color: var(--text-muted); font-size: 0.9rem; text-align: left; width: 100%;">No hay talleres específicos registrados.</p>';
-          controls.style.display = 'none';
+          document.getElementById('taller-detail-panel').innerHTML = '<p style="color: var(--text-muted);">No hay talleres específicos registrados.</p>';
           return;
         }
 
+        const fallbackSVG = `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="1140" height="540" viewBox="0 0 1140 540"><rect width="100%" height="100%" fill="%232B231D"/></svg>`;
+
         listaTalleres.forEach((taller, idx) => {
-          const idTaller = taller.id || `taller-${idx}`;
-          const titulo = taller.titulo || 'Taller sin título';
-          const subtitulo = taller.subtitulo || '';
-          const resenaCompleta = taller.resena || 'Sin descripción disponible.';
-
-          const palabrasResena = resenaCompleta.trim().split(/\s+/);
-          const limite = 32;
-          const esLarga = palabrasResena.length > limite;
-          const resenaInicial = esLarga ? palabrasResena.slice(0, limite).join(' ') + '...' : resenaCompleta;
-          const resenaCodificada = encodeURIComponent(resenaCompleta);
-
+          const imgUrl = obtenerUrlFotoTaller(taller);
           const slide = document.createElement('div');
-          slide.className = 'taller-slide-vertical';
+          slide.className = 'taller-hero-slide';
+          slide.onclick = () => {
+            clearInterval(talleresAutoTimer);
+            seleccionarTaller(idx, true);
+          };
+
           slide.innerHTML = `
-            <h3 class="taller-slide-title">
-              ${titulo}
-            </h3>
-
-            ${subtitulo ? `<p class="taller-slide-subtitle">${subtitulo}</p>` : ''}
-
-            <p class="taller-slide-desc">
-              <span id="taller-resena-text-${idTaller}">${resenaInicial}</span>
-              ${esLarga ? `
-                <button 
-                  id="taller-resena-btn-${idTaller}" 
-                  class="btn-toggle-inline" 
-                  data-expanded="false" 
-                  onclick="toggleTallerTexto('${idTaller}', '${resenaCodificada}', ${limite})"
-                > (Seguir leyendo...)</button>
-              ` : ''}
-            </p>
-
-            ${['2', '4'].includes(String(idTaller)) ? `
-            <div class="taller-trial-box">
-              <h4 style="font-size: 0.92rem; color: var(--brand-accent); font-weight: 700;">¿Quieres probar cómo funciona antes de inscribirte?</h4>
-              <p style="font-size: 0.88rem; line-height: 1.55; color: var(--text-dark);">
-                Accede de forma instantánea al protocolo de escritura de 10 minutos diseñado para destrabar la mente y activar el rigor expresivo.
-              </p>
-              <div class="taller-trial-form">
-                <input type="email" id="email-input-${idTaller}" placeholder="Tu correo electrónico (opcional)">
-                <button class="btn" onclick="solicitarEjercicio('${idTaller}')">Descargar ejercicio gratuito</button>
-              </div>
+            <img src="${imgUrl}" alt="${taller.titulo || 'Taller'}" loading="lazy" onerror="this.onerror"=null; this.src='${fallbackSVG}'>
+            <div class="taller-hero-caption">
+              <span class="taller-hero-badge">Taller Virtual • ${idx + 1} de ${totalTalleresSlides}</span>
+              <h2>${taller.titulo || 'Taller sin título'}</h2>
+              ${taller.subtitulo ? `<p>${taller.subtitulo}</p>` : ''}
+              <span class="taller-hero-cta">Presiona para ver el programa completo ↓</span>
             </div>
-            ` : ''}
           `;
           track.appendChild(slide);
 
           const dot = document.createElement('div');
           dot.className = `dot ${idx === 0 ? 'active' : ''}`;
-          dot.addEventListener('click', () => goToTallerSlide(idx));
+          dot.addEventListener('click', (e) => {
+            e.stopPropagation();
+            clearInterval(talleresAutoTimer);
+            seleccionarTaller(idx, true);
+          });
           dotsContainer.appendChild(dot);
         });
 
-        controls.style.display = totalTalleresSlides > 1 ? 'flex' : 'none';
-        updateTallerSlider();
-
+        seleccionarTaller(0, false);
+        iniciarAutoSlideTalleres();
       } catch (err) {
         console.error('Error cargando talleres:', err.message);
+      }
+    }
+
+    async function loadBooks() {
+      if (!supabaseClient) return;
+      try {
+        let { data: libros, error } = await supabaseClient.from('libros').select('*');
+        if (error) throw error;
+        librosData = libros || [];
+        renderSlider(librosData);
+        if (document.getElementById('view-obras').classList.contains('active-view')) {
+          renderGridObras(librosData);
+        }
+      } catch (err) {
+        console.error('Error cargando libros:', err.message);
+      }
+    }
+
+    async function loadAuthors() {
+      if (!supabaseClient) return;
+      try {
+        let { data: autores, error } = await supabaseClient.from('autores').select('*');
+        if (!error) {
+          autoresData = autores || [];
+          if (document.getElementById('view-autores').classList.contains('active-view')) {
+            renderGridAutores(autoresData);
+          }
+        }
+      } catch (err) {
+        console.error('Error cargando autores:', err.message);
       }
     }
 
@@ -2277,7 +2341,12 @@
       if (!supabaseClient) return;
       try {
         let { data: papers, error } = await supabaseClient.from('papers').select('*');
-        if (!error) papersData = papers || [];
+        if (!error) {
+          papersData = papers || [];
+          if (document.getElementById('view-papers').classList.contains('active-view')) {
+            renderGridPapers(papersData);
+          }
+        }
       } catch (err) {
         console.error('Error cargando papers:', err.message);
       }
@@ -2293,9 +2362,11 @@
         edicionData = (!resProyectos.error && resProyectos.data) ? resProyectos.data : [];
         const contenido = (!resContenido.error && resContenido.data) ? resContenido.data : [];
         renderStudioContenido(contenido);
+        renderGridEdicion(edicionData);
       } catch (err) {
         console.error('Error cargando Estudio Editorial:', err.message);
         renderStudioContenido([]);
+        renderGridEdicion([]);
       }
     }
 
@@ -2315,19 +2386,11 @@
     loadPapers();
     loadEdicion();
     registrarVisita();
-    loadBooks();
-    loadAuthors();
-    loadTalleres();
-    loadPapers();
-    loadEdicion();
-    registrarVisita();
 
-    // 1. Cerrar modal de contacto con la tecla Escape
     document.addEventListener('keydown', (e) => {
       if (e.key === 'Escape') cerrarContacto();
     });
 
-    // 2. Sincronizar secciones con la URL (#obras, #talleres, etc.) y el botón Atrás
     const irASeccionOriginal = irASeccion;
     irASeccion = function(seccion) {
       irASeccionOriginal(seccion);
