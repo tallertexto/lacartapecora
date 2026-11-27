@@ -10,7 +10,7 @@
   <link rel="canonical" href="https://www.lacartapecora.org/" />
   
   <meta property="og:title" content="La Cartapecora.org — Archivo Literario Virtual & Estudio Editorial" />
-  <meta property="og:description" content="Explora el archivo de poesía, papers y proyectos editoriales bajo nuestro sello." />
+  <meta property="og:description" content="Explora el archivo de poesía y proyectos editoriales bajo nuestro sello." />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://www.lacartapecora.org/" />
 
@@ -21,6 +21,9 @@
 
   <!-- SDK de Supabase desde CDN -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <!-- PDF.js (Mozilla) para renderizado editorial de PDF en navegador y móvil -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 
   <style>
     @font-face {
@@ -152,7 +155,7 @@
     .nav-link {
       text-decoration: none;
       font-family: 'Plus Jakarta Sans', sans-serif;
-      font-size: 0.84rem;
+      font-size: 0.82rem;
       font-weight: 700;
       text-transform: uppercase;
       letter-spacing: 0.05em;
@@ -223,6 +226,242 @@
       color: var(--text-dark);
       text-align: left;
       line-height: 1.65;
+    }
+
+    /* =====================================================================
+       SALA DE LECTURA: CARRUSEL HORIZONTAL DE PORTADAS ARRIBA + LECTOR ABAJO
+       ===================================================================== */
+    .sala-wrapper {
+      margin: 40px 0 80px;
+      display: flex;
+      flex-direction: column;
+      gap: 32px;
+      width: 100%;
+    }
+
+    .sala-header {
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .sala-header h2 {
+      font-family: 'Fraunces', Georgia, serif;
+      font-size: clamp(1.5rem, 2.6vw, 2rem);
+      font-weight: 600;
+      font-optical-sizing: none;
+      font-variation-settings: 'opsz' 36, 'wght' 600, 'SOFT' 50, 'WONK' 0;
+      color: var(--text-dark);
+    }
+
+    .sala-header p {
+      font-size: 0.92rem;
+      color: var(--text-muted);
+      max-width: 620px;
+    }
+
+    /* Cinta horizontal de portadas */
+    .sala-covers-strip {
+      width: 100%;
+      background: var(--bg);
+      box-shadow: var(--nm-flat);
+      border-radius: var(--radius-large);
+      padding: 24px 28px;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: 22px;
+      overflow-x: auto;
+      overflow-y: hidden;
+      scroll-behavior: smooth;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(140, 56, 16, 0.35) transparent;
+    }
+
+    .sala-covers-strip::-webkit-scrollbar {
+      height: 7px;
+    }
+
+    .sala-covers-strip::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    .sala-covers-strip::-webkit-scrollbar-thumb {
+      background-color: rgba(140, 56, 16, 0.3);
+      border-radius: 10px;
+    }
+
+    .sala-cover-item {
+      flex: 0 0 auto;
+      width: 112px;
+      height: 162px;
+      padding: 0;
+      border: 3px solid transparent;
+      border-radius: 10px;
+      background: transparent;
+      box-shadow: 0 6px 16px rgba(43, 35, 29, 0.14);
+      cursor: pointer;
+      overflow: hidden;
+      transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease, opacity 0.25s ease;
+      opacity: 0.78;
+    }
+
+    .sala-cover-item:hover {
+      transform: translateY(-4px);
+      opacity: 1;
+      box-shadow: 0 10px 22px rgba(43, 35, 29, 0.2);
+    }
+
+    .sala-cover-item.active {
+      border-color: var(--brand-accent);
+      transform: translateY(-4px) scale(1.03);
+      opacity: 1;
+      box-shadow: 0 12px 24px rgba(140, 56, 16, 0.25);
+    }
+
+    .sala-cover-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    /* Visor inferior a ancho completo */
+    .sala-reader-card {
+      width: 100%;
+      background: var(--bg);
+      box-shadow: var(--nm-flat);
+      border-radius: var(--radius-large);
+      padding: 28px 32px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      min-width: 0;
+    }
+
+    .sala-toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid rgba(43, 35, 29, 0.08);
+    }
+
+    .sala-current-info {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      min-width: 0;
+      flex: 1 1 260px;
+    }
+
+    .sala-current-info h3 {
+      font-family: 'Fraunces', Georgia, serif;
+      font-size: 1.3rem;
+      font-weight: 600;
+      font-optical-sizing: none;
+      font-variation-settings: 'opsz' 36, 'wght' 600, 'SOFT' 50, 'WONK' 0;
+      color: var(--text-dark);
+      line-height: 1.25;
+    }
+
+    .sala-current-info span {
+      font-size: 0.84rem;
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+
+    .sala-controls {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .sala-ctrl-btn {
+      padding: 9px 15px;
+      border-radius: var(--radius-pill);
+      background: var(--bg);
+      box-shadow: var(--nm-pill);
+      border: none;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--text-dark);
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .sala-ctrl-btn:hover:not(:disabled) {
+      box-shadow: var(--nm-pill-hover);
+      color: var(--brand-accent);
+    }
+
+    .sala-ctrl-btn:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+    }
+
+    .sala-page-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--bg);
+      box-shadow: var(--nm-pressed);
+      padding: 6px 14px;
+      border-radius: var(--radius-pill);
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--text-dark);
+    }
+
+    .sala-page-pill input {
+      width: 44px;
+      border: none;
+      background: transparent;
+      text-align: center;
+      font-family: inherit;
+      font-size: 0.84rem;
+      font-weight: 700;
+      color: var(--brand-accent);
+      outline: none;
+    }
+
+    .sala-canvas-stage {
+      width: 100%;
+      min-height: 580px;
+      max-height: 82vh;
+      overflow: auto;
+      background: #EAE4DC;
+      box-shadow: var(--nm-pressed);
+      border-radius: var(--radius-medium);
+      padding: 28px 16px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      position: relative;
+    }
+
+    #pdf-render-canvas {
+      display: block;
+      max-width: 100%;
+      height: auto;
+      background: #ffffff;
+      box-shadow: 0 10px 28px rgba(43, 35, 29, 0.16);
+      border-radius: 4px;
+    }
+
+    .sala-status-msg {
+      margin: auto;
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 0.92rem;
+      padding: 32px 20px;
     }
 
     /* =====================================================================
@@ -823,7 +1062,7 @@
       line-height: 1.7;
     }
 
-    /* OBRAS Y PAPERS */
+    /* OBRAS Y AUTORES */
     .obras-section {
       width: 100%;
       margin: 0 auto 70px auto;
@@ -1026,6 +1265,13 @@
     .book-actions {
       margin-top: 12px;
       width: 100%;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .obra-card-item .book-actions {
+      justify-content: center;
     }
 
     .slider-controls {
@@ -1088,14 +1334,14 @@
       align-items: center;
       justify-content: center;
       gap: 8px;
-      padding: 12px 26px;
+      padding: 12px 24px;
       border-radius: var(--radius-pill);
       background: var(--bg);
       box-shadow: var(--nm-pill);
       color: var(--text-dark);
       text-decoration: none;
       font-family: 'Plus Jakarta Sans', sans-serif;
-      font-size: 0.86rem;
+      font-size: 0.85rem;
       font-weight: 600;
       letter-spacing: 0.02em;
       transition: all 0.2s ease;
@@ -1107,6 +1353,10 @@
       box-shadow: var(--nm-pill-hover);
       color: var(--brand-accent);
       transform: translateY(1px);
+    }
+
+    .btn-accent {
+      color: var(--brand-accent);
     }
 
     .modal-overlay {
@@ -1214,7 +1464,7 @@
       font-weight: 500;
     }
 
-    @media (max-width: 900px) {
+    @media (max-width: 960px) {
       .studio-bento-grid {
         grid-template-columns: 1fr;
       }
@@ -1249,6 +1499,21 @@
       }
       #view-talleres .taller-detail-panel {
         padding: 28px 24px;
+      }
+      .sala-covers-strip {
+        padding: 18px 16px;
+        gap: 14px;
+      }
+      .sala-cover-item {
+        width: 88px;
+        height: 128px;
+      }
+      .sala-reader-card {
+        padding: 20px 16px;
+      }
+      .sala-canvas-stage {
+        padding: 14px 8px;
+        min-height: 400px;
       }
       .studio-slide,
       .studio-alt-card {
@@ -1293,7 +1558,7 @@
     <header>
       <div class="header-layout">
         <button class="logo-container" onclick="irAInicio()" title="Volver al Inicio">
-          <img src="Logo_200_02.png" alt="Logo Cartapecora" onerror="this.style.display"='none'>
+          <img src="Logo_200_02.png" alt="Logo Cartapecora" onerror="this.style.display='none'">
         </button>
 
         <div>
@@ -1304,9 +1569,9 @@
         <nav class="main-nav">
           <ul class="nav-list">
             <li><button class="nav-link" id="btn-obras" onclick="irASeccion('obras')">Obras</button></li>
+            <li><button class="nav-link" id="btn-sala" onclick="irASeccion('sala')">Sala de lectura</button></li>
             <li><button class="nav-link" id="btn-autores" onclick="irASeccion('autores')">Autores</button></li>
             <li><button class="nav-link" id="btn-talleres" onclick="irASeccion('talleres')">Talleres</button></li>
-            <li><button class="nav-link" id="btn-papers" onclick="irASeccion('papers')">Papers</button></li>
             <li><button class="nav-link" id="btn-edicion" onclick="irASeccion('edicion')">Edición</button></li>
             <li><button class="nav-link" id="btn-contacto" onclick="abrirContacto()">Contacto</button></li>
           </ul>
@@ -1370,6 +1635,45 @@
       </section>
     </main>
 
+    <!-- VISTA SALA DE LECTURA (PORTADAS HORIZONTALES ARRIBA + LECTOR ABAJO) -->
+    <main id="view-sala" class="page-view">
+      <section class="sala-wrapper">
+        <div class="sala-header">
+          <h2>Sala de Lectura</h2>
+          <p>Selecciona una portada para leer la obra página por página sin salir de la plataforma.</p>
+        </div>
+
+        <div id="sala-book-list" class="sala-covers-strip" aria-label="Carrusel de portadas"></div>
+
+        <div class="sala-reader-card">
+          <div class="sala-toolbar">
+            <div class="sala-current-info">
+              <h3 id="sala-doc-title">Cargando biblioteca...</h3>
+              <span id="sala-doc-author"></span>
+            </div>
+
+            <div class="sala-controls">
+              <button class="sala-ctrl-btn" id="pdf-prev-page" onclick="cambiarPaginaPDF(-1)" disabled>‹ Anterior</button>
+              <div class="sala-page-pill">
+                <span>Pág.</span>
+                <input type="number" id="pdf-page-input" min="1" value="1" onchange="irAPaginaPDF(this.value)" />
+                <span>de <strong id="pdf-total-pages">0</strong></span>
+              </div>
+              <button class="sala-ctrl-btn" id="pdf-next-page" onclick="cambiarPaginaPDF(1)" disabled>Siguiente ›</button>
+              <button class="sala-ctrl-btn" onclick="ajustarZoomPDF(-0.2)" title="Reducir tamaño">−</button>
+              <button class="sala-ctrl-btn" onclick="ajustarZoomPDF(0.2)" title="Ampliar tamaño">+</button>
+              <button class="sala-ctrl-btn" id="sala-download-btn" style="color: var(--brand-accent);" onclick="descargarDesdeSala()">Descargar</button>
+            </div>
+          </div>
+
+          <div class="sala-canvas-stage" id="sala-canvas-stage">
+            <p class="sala-status-msg" id="sala-status-msg">Preparando sala de lectura...</p>
+            <canvas id="pdf-render-canvas" style="display: none;"></canvas>
+          </div>
+        </div>
+      </section>
+    </main>
+
     <main id="view-autores" class="page-view">
       <section class="obras-section">
         <h2 class="section-title-center">Autores Registrados</h2>
@@ -1394,14 +1698,6 @@
             </div>
           </aside>
         </div>
-      </section>
-    </main>
-
-    <!-- VISTA PAPERS -->
-    <main id="view-papers" class="page-view">
-      <section class="obras-section">
-        <h2 class="section-title-center">Publicación Académica</h2>
-        <div id="papers-grid-container" class="obras-grid"></div>
       </section>
     </main>
 
@@ -1545,6 +1841,10 @@
   <script>
     document.getElementById('year').textContent = new Date().getFullYear();
 
+    if (typeof pdfjsLib !== 'undefined') {
+      pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+    }
+
     const SUPABASE_URL = 'https://xuiomosfnutsxrqjvszy.supabase.co';
     const SUPABASE_ANON_KEY = 'sb_publishable_GOx8Ejp0p50ZZJGL0CqO9w_nllW8cbk';
     
@@ -1564,8 +1864,17 @@
     let librosData = [];
     let autoresData = [];
     let talleresData = [];
-    let papersData = [];
     let edicionData = [];
+
+    /* Variables de estado para la Sala de Lectura */
+    let salaLibrosLegibles = [];
+    let salaLibroActual = null;
+    let pdfDocInstance = null;
+    let pdfCurrentPage = 1;
+    let pdfTotalPages = 0;
+    let pdfUserScale = 1.0;
+    let pdfIsRendering = false;
+    let pdfPagePending = null;
 
     function irAInicio() {
       document.querySelectorAll('.page-view').forEach(view => view.classList.remove('active-view'));
@@ -1582,6 +1891,10 @@
         document.getElementById('view-obras').classList.add('active-view');
         document.getElementById('btn-obras').classList.add('active');
         renderGridObras(librosData);
+      } else if (seccion === 'sala') {
+        document.getElementById('view-sala').classList.add('active-view');
+        document.getElementById('btn-sala').classList.add('active');
+        inicializarSalaDeLectura();
       } else if (seccion === 'autores') {
         document.getElementById('view-autores').classList.add('active-view');
         document.getElementById('btn-autores').classList.add('active');
@@ -1589,10 +1902,6 @@
       } else if (seccion === 'talleres') {
         document.getElementById('view-talleres').classList.add('active-view');
         document.getElementById('btn-talleres').classList.add('active');
-      } else if (seccion === 'papers') {
-        document.getElementById('view-papers').classList.add('active-view');
-        document.getElementById('btn-papers').classList.add('active');
-        renderGridPapers(papersData);
       } else if (seccion === 'edicion') {
         document.getElementById('view-edicion').classList.add('active-view');
         document.getElementById('btn-edicion').classList.add('active');
@@ -1681,6 +1990,13 @@
       return '#';
     }
 
+    function esPDFLegibleEnSala(libro) {
+      const url = obtenerUrlPDF(libro);
+      if (!url || url === '#') return false;
+      if (url.includes('doi.org')) return false;
+      return url.includes('supabase.co') || url.toLowerCase().endsWith('.pdf');
+    }
+
     function obtenerUrlPortada(libro) {
       const fallbackSVG = `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/200/svg" width="220" height="330" viewBox="0 0 220 330"><rect width="100%" height="100%" fill="%23d8d3cd"/></svg>`;
       let rawPortada = (libro.url_portada || libro.cover_url || libro.imagen || libro.portada || '').trim();
@@ -1693,7 +2009,7 @@
     }
 
     function obtenerUrlFotoAutor(autor) {
-      const fallbackSVG = `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/200/svg" width="150" height="150" viewBox="0 0 150 150"><rect width="100%" height="100%" fill="%23d8d3cd"/></svg>`;
+      const fallbackSVG = `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="150" height="150" viewBox="0 0 150 150"><rect width="100%" height="100%" fill="%23d8d3cd"/></svg>`;
       let rawFoto = (autor.foto_url || autor.imagen || autor.foto || '').trim();
       if (rawFoto) {
         if (rawFoto.startsWith('http://') || rawFoto.startsWith('https://')) return rawFoto;
@@ -1713,6 +2029,207 @@
       return svgFallback;
     }
 
+    /* =====================================================================
+       LÓGICA DE SALA DE LECTURA (PORTADAS HORIZONTALES + PDF.js)
+       ===================================================================== */
+    function abrirEnSala(libroId) {
+      irASeccion('sala');
+      const idx = salaLibrosLegibles.findIndex(item => String(item.id) === String(libroId));
+      if (idx >= 0) {
+        cargarLibroEnSala(idx);
+      }
+    }
+
+    function inicializarSalaDeLectura() {
+      salaLibrosLegibles = (librosData || []).filter(esPDFLegibleEnSala);
+      const listEl = document.getElementById('sala-book-list');
+      if (!listEl) return;
+
+      listEl.innerHTML = '';
+
+      if (salaLibrosLegibles.length === 0) {
+        listEl.innerHTML = '<p style="font-size: 0.85rem; color: var(--text-muted); padding: 8px;">Cargando portadas...</p>';
+        return;
+      }
+
+      const fallbackSVG = `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/200/svg" width="112" height="162" viewBox="0 0 112 162"><rect width="100%" height="100%" fill="%23d8d3cd"/></svg>`;
+
+      salaLibrosLegibles.forEach((libro, idx) => {
+        const titulo = libro.titulo || libro.title || 'Sin Título';
+        const portada = obtenerUrlPortada(libro);
+
+        const btn = document.createElement('button');
+        btn.className = 'sala-cover-item';
+        btn.title = titulo;
+        btn.setAttribute('aria-label', titulo);
+        btn.dataset.salaIdx = idx;
+        btn.onclick = () => cargarLibroEnSala(idx);
+
+        const img = document.createElement('img');
+        img.src = portada;
+        img.alt = titulo;
+        img.loading = 'lazy';
+        img.onerror = function() {
+          this.onerror = null;
+          this.src = fallbackSVG;
+        };
+
+        btn.appendChild(img);
+        listEl.appendChild(btn);
+      });
+
+      if (!salaLibroActual && salaLibrosLegibles.length > 0) {
+        cargarLibroEnSala(0);
+      } else if (salaLibroActual) {
+        const activoIdx = salaLibrosLegibles.findIndex(item => String(item.id) === String(salaLibroActual.id));
+        marcarPortadaActivaSala(activoIdx >= 0 ? activoIdx : 0);
+      }
+    }
+
+    function marcarPortadaActivaSala(idx) {
+      const botones = document.querySelectorAll('.sala-cover-item');
+      botones.forEach((btn, i) => {
+        const esActivo = i === idx;
+        btn.classList.toggle('active', esActivo);
+        if (esActivo) {
+          btn.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+        }
+      });
+    }
+
+    async function cargarLibroEnSala(idx) {
+      const libro = salaLibrosLegibles[idx];
+      if (!libro) return;
+
+      salaLibroActual = libro;
+      marcarPortadaActivaSala(idx);
+
+      const titulo = libro.titulo || libro.title || 'Sin Título';
+      const autor = libro.autor || libro.author || '';
+      const ano = libro.ano || libro.year || '';
+      document.getElementById('sala-doc-title').textContent = titulo;
+      document.getElementById('sala-doc-author').textContent = `${autor}${ano ? ' • ' + ano : ''}`;
+
+      const canvas = document.getElementById('pdf-render-canvas');
+      const statusMsg = document.getElementById('sala-status-msg');
+      canvas.style.display = 'none';
+      statusMsg.style.display = 'block';
+      statusMsg.textContent = 'Abriendo ejemplar en sala...';
+
+      pdfCurrentPage = 1;
+      pdfUserScale = 1.0;
+      document.getElementById('pdf-page-input').value = 1;
+      document.getElementById('pdf-total-pages').textContent = '…';
+      document.getElementById('pdf-prev-page').disabled = true;
+      document.getElementById('pdf-next-page').disabled = true;
+
+      const urlPdf = obtenerUrlPDF(libro);
+
+      if (typeof pdfjsLib === 'undefined') {
+        statusMsg.textContent = 'No se pudo iniciar el lector integrado. Puedes descargar el archivo directamente.';
+        return;
+      }
+
+      try {
+        const loadingTask = pdfjsLib.getDocument(urlPdf);
+        pdfDocInstance = await loadingTask.promise;
+        pdfTotalPages = pdfDocInstance.numPages;
+
+        document.getElementById('pdf-total-pages').textContent = pdfTotalPages;
+        document.getElementById('pdf-page-input').max = pdfTotalPages;
+
+        statusMsg.style.display = 'none';
+        canvas.style.display = 'block';
+        renderizarPaginaPDF(1);
+      } catch (err) {
+        console.error('Error al abrir PDF en sala:', err);
+        statusMsg.textContent = 'Este documento no pudo previsualizarse en línea. Utiliza el botón Descargar.';
+      }
+    }
+
+    async function renderizarPaginaPDF(numPagina) {
+      if (!pdfDocInstance) return;
+      if (pdfIsRendering) {
+        pdfPagePending = numPagina;
+        return;
+      }
+      pdfIsRendering = true;
+
+      try {
+        const page = await pdfDocInstance.getPage(numPagina);
+        const stage = document.getElementById('sala-canvas-stage');
+        const canvas = document.getElementById('pdf-render-canvas');
+        const ctx = canvas.getContext('2d');
+
+        const baseViewport = page.getViewport({ scale: 1 });
+        const availableWidth = Math.max(280, stage.clientWidth - 40);
+        const fitScale = Math.min(1.45, availableWidth / baseViewport.width);
+        const finalScale = fitScale * pdfUserScale;
+        const outputScale = window.devicePixelRatio || 1;
+
+        const viewport = page.getViewport({ scale: finalScale });
+        canvas.width = Math.floor(viewport.width * outputScale);
+        canvas.height = Math.floor(viewport.height * outputScale);
+        canvas.style.width = `${Math.floor(viewport.width)}px`;
+        canvas.style.height = `${Math.floor(viewport.height)}px`;
+
+        const renderContext = {
+          canvasContext: ctx,
+          transform: outputScale !== 1 ? [outputScale, 0, 0, outputScale, 0, 0] : null,
+          viewport: viewport
+        };
+
+        await page.render(renderContext).promise;
+        stage.scrollTop = 0;
+
+        pdfCurrentPage = numPagina;
+        document.getElementById('pdf-page-input').value = pdfCurrentPage;
+        document.getElementById('pdf-prev-page').disabled = pdfCurrentPage <= 1;
+        document.getElementById('pdf-next-page').disabled = pdfCurrentPage >= pdfTotalPages;
+      } finally {
+        pdfIsRendering = false;
+        if (pdfPagePending !== null) {
+          const next = pdfPagePending;
+          pdfPagePending = null;
+          renderizarPaginaPDF(next);
+        }
+      }
+    }
+
+    function cambiarPaginaPDF(delta) {
+      if (!pdfDocInstance) return;
+      const destino = pdfCurrentPage + delta;
+      if (destino >= 1 && destino <= pdfTotalPages) {
+        renderizarPaginaPDF(destino);
+      }
+    }
+
+    function irAPaginaPDF(valor) {
+      if (!pdfDocInstance) return;
+      const num = parseInt(valor, 10);
+      if (!isNaN(num) && num >= 1 && num <= pdfTotalPages) {
+        renderizarPaginaPDF(num);
+      } else {
+        document.getElementById('pdf-page-input').value = pdfCurrentPage;
+      }
+    }
+
+    function ajustarZoomPDF(delta) {
+      if (!pdfDocInstance) return;
+      pdfUserScale = Math.min(1.8, Math.max(0.7, +(pdfUserScale + delta).toFixed(2)));
+      renderizarPaginaPDF(pdfCurrentPage);
+    }
+
+    function descargarDesdeSala() {
+      if (!salaLibroActual) return;
+      const url = obtenerUrlPDF(salaLibroActual);
+      const titulo = (salaLibroActual.titulo || 'obra-cartapecora').replace(/[^a-z0-9]/gi, '_').toLowerCase();
+      downloadPDF(url, `${titulo}.pdf`);
+    }
+
+    /* =====================================================================
+       RENDERIZADO DE SLIDER DESTACADOS Y GRILLAS
+       ===================================================================== */
     function renderSlider(libros) {
       const track = document.getElementById('catalog-track');
       const controls = document.getElementById('slider-controls');
@@ -1751,7 +2268,8 @@
         const metaExtraHTML = metaExtraText.length > 0 ? `<p class="book-meta-extra">${metaExtraText.join('  |  ')}</p>` : '';
 
         const url_portada = obtenerUrlPortada(libro);
-        const url_pdf = (libro.url_pdf || libro.pdf_url || libro.archivo || '#').trim();
+        const url_pdf = obtenerUrlPDF(libro);
+        const legibleEnSala = esPDFLegibleEnSala(libro);
         const esDOI = url_pdf.includes('doi.org');
         const textoBoton = esDOI ? 'Ver en repositorio DOI' : 'Descargar PDF';
         const etiquetaTipo = esDOI ? 'DOI' : 'PDF';
@@ -1782,6 +2300,7 @@
               ` : ''}
             </p>
             <div class="book-actions">
+              ${legibleEnSala ? `<button class="btn btn-accent" onclick="abrirEnSala('${idLibro}')">Leer en sala</button>` : ''}
               ${url_pdf !== '#' ? `<button class="btn" onclick="downloadPDF('${url_pdf}', '${titulo.replace(/[^a-z0-9]/gi, '_').toLowerCase()}.pdf')">${textoBoton}</button>` : ''}
             </div>
           </div>
@@ -1829,7 +2348,8 @@
         const metaExtraHTML = metaExtraText.length > 0 ? `<p class="book-meta-extra">${metaExtraText.join('  |  ')}</p>` : '';
 
         const url_portada = obtenerUrlPortada(libro);
-        const url_pdf = (libro.url_pdf || libro.pdf_url || libro.archivo || '#').trim();
+        const url_pdf = obtenerUrlPDF(libro);
+        const legibleEnSala = esPDFLegibleEnSala(libro);
         const esDOI = url_pdf.includes('doi.org');
         const textoBoton = esDOI ? 'Ver repositorio' : 'Descargar PDF';
         const etiquetaTipo = esDOI ? 'DOI' : 'PDF';
@@ -1860,6 +2380,7 @@
               ` : ''}
             </p>
             <div class="book-actions">
+              ${legibleEnSala ? `<button class="btn btn-accent" onclick="abrirEnSala('${idLibro}')">Leer en sala</button>` : ''}
               ${url_pdf !== '#' ? `<button class="btn" onclick="downloadPDF('${url_pdf}', '${titulo.replace(/[^a-z0-9]/gi, '_').toLowerCase()}.pdf')">${textoBoton}</button>` : ''}
             </div>
           </div>
@@ -1875,7 +2396,7 @@
         gridContainer.innerHTML = '<p style="color: var(--text-muted); text-align: center; grid-column: 1/-1;">No hay autores.</p>';
         return;
       }
-      const fallbackSVG = `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/200/svg" width="150" height="150" viewBox="0 0 150 150"><rect width="100%" height="100%" fill="%23d8d3cd"/></svg>`;
+      const fallbackSVG = `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="150" height="150" viewBox="0 0 150 150"><rect width="100%" height="100%" fill="%23d8d3cd"/></svg>`;
 
       autores.forEach((autorItem, idx) => {
         const idAutor = autorItem.id || `autor-${idx}`;
@@ -1908,59 +2429,6 @@
                 > (Seguir leyendo...)</button>
               ` : ''}
             </p>
-          </div>
-        `;
-        gridContainer.appendChild(card);
-      });
-    }
-
-    function renderGridPapers(papers) {
-      const gridContainer = document.getElementById('papers-grid-container');
-      gridContainer.innerHTML = '';
-      if (!papers || papers.length === 0) {
-        gridContainer.innerHTML = '<p style="color: var(--text-muted); text-align: center; grid-column: 1/-1;">No hay papers disponibles.</p>';
-        return;
-      }
-
-      papers.forEach((paper, idx) => {
-        const idPaper = paper.id || `paper-${idx}`;
-        const titulo = paper.titulo || paper.title || 'Sin Título';
-        const autor = paper.autor || paper.author || 'Autor Desconocido';
-        const resumenCompleto = paper.resumen || paper.abstract || paper.descripcion || 'Sin resumen disponible.';
-
-        const palabrasResumen = resumenCompleto.trim().split(/\s+/);
-        const esLargo = palabrasResumen.length > 30;
-        const resumenInicial = esLargo ? palabrasResumen.slice(0, 30).join(' ') + '...' : resumenCompleto;
-        const resumenCodificado = encodeURIComponent(resumenCompleto);
-
-        const url_pdf = obtenerUrlPDF(paper);
-
-        const card = document.createElement('div');
-        card.className = 'obra-card-item';
-        card.style.alignItems = 'flex-start';
-        card.style.textAlign = 'left';
-        card.innerHTML = `
-          <div class="book-info" style="align-items: flex-start; text-align: left; width: 100%;">
-            <h3 class="book-title">${titulo}</h3>
-            <p class="book-author">${autor}</p>
-            <div class="book-tags">
-              <span class="tag">Paper</span>
-              <span class="tag">PDF</span>
-            </div>
-            <p class="book-description" style="margin-top: 8px;">
-              <span id="paper-resumen-text-${idPaper}">${resumenInicial}</span>
-              ${esLargo ? `
-                <button 
-                  id="paper-resumen-btn-${idPaper}" 
-                  class="btn-toggle-inline" 
-                  data-expanded="false" 
-                  onclick="toggleTextoInSitu('${idPaper}', 'paper-resumen', '${resumenCodificado}', 30)"
-                > (Seguir leyendo...)</button>
-              ` : ''}
-            </p>
-            <div class="book-actions">
-              ${url_pdf !== '#' ? `<button class="btn" onclick="downloadPDF('${url_pdf}', '${titulo.replace(/[^a-z0-9]/gi, '_').toLowerCase()}.pdf')">Descargar PDF</button>` : ''}
-            </div>
           </div>
         `;
         gridContainer.appendChild(card);
@@ -2192,7 +2660,7 @@
        LÓGICA DE TALLERES (AUTO-SLIDER + FICHA COMPLETA AL CLIC)
        ===================================================================== */
     function obtenerUrlFotoTaller(taller) {
-      const fallbackSVG = `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="1140" height="540" viewBox="0 0 1140 540"><rect width="100%" height="100%" fill="%232B231D"/></svg>`;
+      const fallbackSVG = `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/200/svg" width="1140" height="540" viewBox="0 0 1140 540"><rect width="100%" height="100%" fill="%232B231D"/></svg>`;
       let rawFoto = (taller.foto_url || taller.imagen || taller.url_portada || taller.portada || '').trim();
       if (rawFoto) {
         if (rawFoto.startsWith('http://') || rawFoto.startsWith('https://')) return rawFoto;
@@ -2300,7 +2768,7 @@
           return;
         }
 
-        const fallbackSVG = `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="1140" height="540" viewBox="0 0 1140 540"><rect width="100%" height="100%" fill="%232B231D"/></svg>`;
+        const fallbackSVG = `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/200/svg" width="1140" height="540" viewBox="0 0 1140 540"><rect width="100%" height="100%" fill="%232B231D"/></svg>`;
 
         listaTalleres.forEach((taller, idx) => {
           const imgUrl = obtenerUrlFotoTaller(taller);
@@ -2312,7 +2780,7 @@
           };
 
           slide.innerHTML = `
-            <img src="${imgUrl}" alt="${taller.titulo || 'Taller'}" loading="lazy" onerror="this.onerror=null; this.src='${fallbackSVG}'">
+            <img src="${imgUrl}" alt="${taller.titulo || 'Taller'}" loading="lazy" onerror="this.onerror=null"; this.src='${fallbackSVG}'>
             <div class="taller-hero-caption">
               <span class="taller-hero-badge">Taller Virtual • ${idx + 1} de ${totalTalleresSlides}</span>
               <h2>${taller.titulo || 'Taller sin título'}</h2>
@@ -2349,6 +2817,9 @@
         if (document.getElementById('view-obras').classList.contains('active-view')) {
           renderGridObras(librosData);
         }
+        if (document.getElementById('view-sala').classList.contains('active-view')) {
+          inicializarSalaDeLectura();
+        }
       } catch (err) {
         console.error('Error cargando libros:', err.message);
       }
@@ -2366,21 +2837,6 @@
         }
       } catch (err) {
         console.error('Error cargando autores:', err.message);
-      }
-    }
-
-    async function loadPapers() {
-      if (!supabaseClient) return;
-      try {
-        let { data: papers, error } = await supabaseClient.from('papers').select('*');
-        if (!error) {
-          papersData = papers || [];
-          if (document.getElementById('view-papers').classList.contains('active-view')) {
-            renderGridPapers(papersData);
-          }
-        }
-      } catch (err) {
-        console.error('Error cargando papers:', err.message);
       }
     }
 
@@ -2415,12 +2871,15 @@
     loadBooks();
     loadAuthors();
     loadTalleres();
-    loadPapers();
     loadEdicion();
     registrarVisita();
 
     document.addEventListener('keydown', (e) => {
       if (e.key === 'Escape') cerrarContacto();
+      if (document.getElementById('view-sala').classList.contains('active-view') && document.activeElement.tagName !== 'INPUT') {
+        if (e.key === 'ArrowRight') cambiarPaginaPDF(1);
+        if (e.key === 'ArrowLeft') cambiarPaginaPDF(-1);
+      }
     });
 
     const irASeccionOriginal = irASeccion;
@@ -2441,7 +2900,7 @@
 
     function cargarSeccionDesdeURL() {
       const hash = window.location.hash.replace('#', '');
-      const seccionesValidas = ['obras', 'autores', 'talleres', 'papers', 'edicion'];
+      const seccionesValidas = ['obras', 'sala', 'autores', 'talleres', 'edicion'];
       if (seccionesValidas.includes(hash)) {
         irASeccionOriginal(hash);
       } else {
